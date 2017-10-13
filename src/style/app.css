@@ -1,0 +1,106 @@
+body {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-size: calc(3vw + 3vh);
+  color: #35445c;
+}
+
+.temp-text {
+  height: 90vh;
+  line-height: 90vh;
+  text-align: center;
+}
+
+.game-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #b9d8fd;
+}
+
+.game-wrapper_menu-page {
+  justify-content: center;
+  text-align: center;
+}
+
+.game-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menu-option {
+  margin-top: 5vh;
+}
+
+.menu-link {
+  text-decoration: none;
+  color: #35445c;
+}
+
+.menu-option:first-child {
+  margin: 0;
+}
+
+.header {
+  height: 10vh;
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+  padding-right: 6vw;
+}
+
+.close-btn {
+  position: relative;
+  display: block;
+  width: 4vw;
+  height: 4vw;
+}
+
+.close-btn-image {
+  width: 100%;
+  height: auto;
+  position: absolute;
+}
+
+.success-chart-capture {
+  font-size: 3vh;
+  margin-bottom: 2vh;
+  text-align: center;
+}
+
+.rc-progress-circle {
+  height: 30vh;
+}
+
+.question-field {
+  display: flex;
+  flex-flow: column;
+  margin: 2vh;
+  font-size: 3vh;
+  color: #3463af;
+}
+
+.keyboard {
+  width: 100%;
+}
+
+.keyboard-row {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: evenly;
+}
+
+.keyboard-cell {
+  width: 33%;
+  height: 10vh;
+  text-align: center;
+  line-height: 10vh;
+  border: 0.5px solid #d6dde7;
+  font-size: calc(2vw + 2vh);
+}
+
+
+
