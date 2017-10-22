@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import '../style/app.css';
 import { Route, Switch } from 'react-router-dom';
 
-
-import Home from './home.js';
-import Game from './game.js';
-import Settings from './settings.js';
-import Score from './score.js';
-import Exit from './exit.js';
+import Home from './home';
+import Game from './game';
+import Settings from './settings';
+import Score from './score';
+import Exit from './exit';
 
 
 
@@ -26,6 +25,7 @@ class App extends Component {
     );
   }
 }
+
 
 export default App;
 

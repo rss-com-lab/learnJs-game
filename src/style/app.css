@@ -14,10 +14,29 @@ body {
   width: 100%;
   height: 100vh;
   display: flex;
+  position: relative;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   background-color: #b9d8fd;
+}
+
+.game-wrapper-overlay {
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(52, 53, 55, 0.54);
+  z-index: 100;
+}
+
+.init-button {
+    width: 25vw;
+    height: 7vh;
 }
 
 .game-wrapper_menu-page {
@@ -102,5 +121,23 @@ body {
   font-size: calc(2vw + 2vh);
 }
 
+/*SETTINGS*/
+
+.settings-item {
+  display: flex;
+  flex-direction: column;
+  font-size: calc(2vh + 2vw);
+}
+
+.settings-buttons {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: calc(2vh + 2vw);
+  justify-content: center;
+}
+
+.settings-selected {
+  margin: 0 2vw;
+}
 
 

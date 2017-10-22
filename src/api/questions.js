@@ -1,22 +1,29 @@
-const questions = [
-  {id: 1, task: "2 + 2"},
-  {id: 2, task: "3 + 3"},
-  {id: 3, task: "4 + 4"},
-  {id: 4, task: "5 / 5"},
-  {id: 5, task: "1 * 3"},
-  {id: 6, task: "6 + 0"},
-  {id: 7, task: "9 - 3"},
-  {id: 8, task: "5 * 2"},
-  {id: 9, task: "0 + 1"}
-];
+export function generateQuestionsList(numberOfQuestions, maxNumber) {
+  let questionsList = []; 
+  
+  for (let i = 0; i < numberOfQuestions; i++) {
+    let firstNumber, secondNumber, question;
+    let operators = ['+', '-', '*', '/'];
+    let operator = operators[Math.floor(Math.random() * operators.length)];
+    secondNumber = Math.floor(Math.random() * maxNumber);
+    let multiplicator = Math.floor(Math.random() * (maxNumber / secondNumber - 1)) + 1;
+  
+    
+    if (operator === '/') {
+      firstNumber = Math.floor(secondNumber * multiplicator);
+    } else {
+      firstNumber = Math.floor(Math.random() * maxNumber);
+    }
 
+    if (operator === '-' && secondNumber > firstNumber) {
+      question = secondNumber + ' ' + operator + ' ' + firstNumber;
+    } else {
+      question = firstNumber + ' ' + operator + ' ' + secondNumber;
+    }
+    
+    questionsList.push(question);
+  }
 
-export function numberOfQuestions() {
-	return questions.length;
-}
-
-
-export function askQuestion() {
-	return questions[Math.floor(Math.random() * questions.length)]['task'];
+  return questionsList;
 }
 
