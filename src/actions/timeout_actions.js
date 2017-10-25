@@ -1,15 +1,15 @@
-import { TIMEOUT_INCREASED, TIMEOUT_DECREASED } from './constants'
+import {TIMEOUT_INCREASED, TIMEOUT_DECREASED} from './constants';
 
-export function timeoutIncreased () {
+export function timeoutIncreased() {
   return {
     type: TIMEOUT_INCREASED,
-    step: 1 
-  }
+    step: 1,
+  };
 }
 
-export function timeoutDecreased () {
+export function timeoutDecreased() {
   return {
     type: TIMEOUT_DECREASED,
-    step: 1 
-  }
+    step: 1,
+  };
 }

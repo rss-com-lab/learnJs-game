@@ -1,18 +1,18 @@
-import { TEST_PASSED, TEST_FAILED, TEST_RESET } from './constants'
+import {TEST_PASSED, TEST_FAILED, TEST_RESET} from './constants';
 
-export function testPassed () {
+export function testPassed() {
   return {
     type: TEST_PASSED,
     passed: 1,
-	  failed: 0,
+    failed: 0,
     total: 1,
     gamePassed: 1,
     gameTotal: 1,
-	  color: true
-  }
+    color: true,
+  };
 }
 
-export function testFailed () {
+export function testFailed() {
   return {
     type: TEST_FAILED,
     passed: 0,
@@ -20,12 +20,11 @@ export function testFailed () {
     total: 1,
     gamePassed: 0,
     gameTotal: 1,
-    color: false
-  }
+    color: false,
+  };
 }
 
-
-export function testReset () {
+export function testReset() {
   return {
     type: TEST_RESET,
     passed: 0,
@@ -33,7 +32,6 @@ export function testReset () {
     total: 0,
     gamePassed: 0,
     gameTotal: 0,
-    color: true
-  }
+    color: true,
+  };
 }
-
