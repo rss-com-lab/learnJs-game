@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Circle } from 'rc-progress'
 import { Link } from 'react-router-dom'
-import { createStore } from 'redux'
-import reducer from '../reducers/index'
+import { connect } from 'react-redux'
 
+import store from '../store/store'
 import { gameOver, gameStart, gamePlay, nextLevel } from '../actions/gamestatus_actions'
 import { testPassed, testFailed, testReset } from '../actions/progress_actions'
 import closeBtn from '../img/close-btn.png'
@@ -12,23 +12,38 @@ import { calculate } from '../api/calculate'
 
 import '../style/app.css'
 
+const mapStateToProps = (state) => {
+  return {
+    timeout: state.timeout,
+    progress: state.progress,
+    complexity: state.complexity,
+    maxnumber: state.maxnumber,
+    gameStatus: state.gameStatus
+  }
+}
+
 let questions = 5;
-let store = createStore(reducer);
 let maxNumber = store.getState().maxnumber;
 let questionsList = generateQuestionsList(questions, maxNumber);
 
 class Game extends Component {
   constructor() {
     super();
+
+    let questions = 5;
+    let maxNumber = store.getState().maxnumber;
+    let questionsList = generateQuestionsList(questions, maxNumber);
     this.state = {
       question: 'Сколько будет "' + questionsList[store.getState().progress.total] + '" ?',
       response: calculate(questionsList[store.getState().progress.total]),
-      value: ''
+      value: '',
+      submitted: false
     };
   }
 
-  newQuestion = () => {
-    console.log(store.getState());
+  nextQuestion = () => {
+    this.interval = setTimeout(this.handleInputChange, store.getState().timeout * 1000);
+
     let ask = questionsList[store.getState().progress.total];
     let answer = calculate(ask);
     this.setState({
@@ -39,7 +54,8 @@ class Game extends Component {
 
   clearInputField = () => {
     this.setState({
-      value: ''
+      value: '',
+      submitted: false
     });
   }
 
@@ -62,10 +78,6 @@ class Game extends Component {
     store.dispatch(gameOver('Игра закончена'));
   }
 
-  startGame = () => {
-    store.dispatch(gameStart('Start Game'));
-  }
-
   nextLevel = () => {
     store.dispatch(nextLevel());
   }
@@ -83,35 +95,58 @@ class Game extends Component {
     }
   }
 
+  onSubmit = () => {
+    this.setState({
+      submitted: true
+    }, function() {
+      this.handleInputChange();
+    });
+    
+  }
+
   handleInputChange = () => {
-    if (parseInt(this.state.value, 10) === this.state.response) {
+
+    clearTimeout(this.interval);
+
+    if (this.isAnswerCorrect()) {
       this.passed();
     } else {
       this.failed();
     }
 
-    console.log(store.getState());
-
-    if (store.getState().progress.total === questions && store.getState().gameStatus.levelCount < store.getState().complexity) {
-      store.dispatch(testReset());
-      console.log(store.getState().progress.total);
-      store.dispatch(gameStart("И еще один уровень"));
-      return;
-    } 
-
-    if (store.getState().progress.total === questions) {
-      this.gameOver("Игра окончена");
-      return;
-    } 
-    this.newQuestion(store.getState().progress.total);
-    this.clearInputField();
+    if (this.isLastQuestion()) {
+      if (this.isLastLevel()) {
+        this.gameOver("Игра окончена"); 
+      } else {
+        store.dispatch(testReset());
+        store.dispatch(gameStart("И еще один уровень"));   
+      } 
+    } else {
+      this.nextQuestion();
+      this.clearInputField();   
+    }  
   }
 
+  isAnswerCorrect = () => {
+    return this.state.submitted && parseInt(this.state.value, 10) === this.state.response;
+  }
+
+  isLastQuestion = () => {
+    return store.getState().progress.total === questions;
+  }
+
+  isLastLevel = () => {
+    return store.getState().gameStatus.levelCount === store.getState().complexity;
+  }
+
+  interval = () => {}
 
   gameStatusChange = () => {
     if (store.getState().gameStatus.currentStatus === 'start') {
       store.dispatch(gamePlay('Начать игру'));
-    } 
+      this.interval = setTimeout(this.handleInputChange, store.getState().timeout * 1000);
+    }
+
   }
 
   render() {
@@ -122,53 +157,53 @@ class Game extends Component {
     return (
 
       <div className="game-wrapper">
-      <div className="header">
-      <Link to = "/" className="close-btn"><img className="close-btn-image" src={ closeBtn } alt={"Close"}/></Link>
-      </div>
-      <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { questions} </div>
-      <div className="success-chart-capture">Из них успешно: { store.getState().progress.passed } </div>
-      <Circle
-      percent={percent}
-      strokeWidth="6"
-      strokeLinecap="round"
-      strokeColor="#3463af"
-      trailWidth="6"
-      trailColor={color}
-      />
-      <div className="question-field">
-      <div className="current-question">{this.state.question}</div>
-      <div className="current-answer">Твой ответ: {this.state.value}</div>
-      </div>
-      <div className="keyboard" ref={node => {this.node = node}}>
-      <div className="keyboard-row">
-      <div className="keyboard-cell">7</div>
-      <div className="keyboard-cell">8</div>
-      <div className="keyboard-cell">9</div>           
-      </div>
-      <div className="keyboard-row">
-      <div className="keyboard-cell">4</div>
-      <div className="keyboard-cell">5</div>
-      <div className="keyboard-cell">6</div>           
-      </div>
-      <div className="keyboard-row">
-      <div className="keyboard-cell">1</div>
-      <div className="keyboard-cell">2</div>
-      <div className="keyboard-cell">3</div>           
-      </div>
-      <div className="keyboard-row">
-      <div className="keyboard-cell">0</div>
-      <div className="keyboard-cell">.</div>
-      <div className="keyboard-cell" onClick={this.handleInputChange}>submit</div>
-      </div>
-      </div>
-      <div className="game-wrapper-overlay" style={{display: display}}>
-      <button className="init-button" onClick={this.gameStatusChange}>{store.getState().gameStatus.actionText}</button>
-      </div>
+        <div className="header">
+          <Link to = "/" className="close-btn"><img className="close-btn-image" src={ closeBtn } alt={"Close"}/></Link>
+        </div>
+        <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { questions} </div>
+        <div className="success-chart-capture">Из них успешно: { store.getState().progress.passed } </div>
+        <Circle
+        percent={percent}
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeColor="#3463af"
+        trailWidth="6"
+        trailColor={color}
+        />
+        <div className="question-field">
+          <div className="current-question">{this.state.question}</div>
+          <div className="current-answer">Твой ответ: {this.state.value}</div>
+        </div>
+        <div className="keyboard" ref={node => {this.node = node}}>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">7</div>
+            <div className="keyboard-cell">8</div>
+            <div className="keyboard-cell">9</div>           
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">4</div>
+            <div className="keyboard-cell">5</div>
+            <div className="keyboard-cell">6</div>           
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">1</div>
+            <div className="keyboard-cell">2</div>
+            <div className="keyboard-cell">3</div>           
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">0</div>
+            <div className="keyboard-cell">.</div>
+            <div className="keyboard-cell" onClick={this.onSubmit}>submit</div>
+          </div>
+        </div>
+        <div className="game-wrapper-overlay" style={{display: display}}>
+          <button className="init-button" onClick={this.gameStatusChange}>{store.getState().gameStatus.actionText}</button>
+        </div>
       </div>
 
       );
   }
 }
 
-export default Game;
+export default connect(mapStateToProps)(Game);
 

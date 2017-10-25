@@ -1,15 +1,15 @@
-import { MAXNUMBER_INCREASED, MAXNUMBER_DECREASED } from './constants'
+import { MAX_NUMBER_INCREASED, MAX_NUMBER_DECREASED } from './constants'
 
 export function maxnumberIncreased () {
   return {
-    type: MAXNUMBER_INCREASED,
+    type: MAX_NUMBER_INCREASED,
     step: 1 
   }
 }
 
 export function maxnumberDecreased () {
   return {
-    type: MAXNUMBER_DECREASED,
+    type: MAX_NUMBER_DECREASED,
     step: 1 
   }
 }

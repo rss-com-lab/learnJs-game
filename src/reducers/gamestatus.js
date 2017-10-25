@@ -5,29 +5,37 @@ let initialState = { levelCount: 1, actionText: 'Начать игру', current
 export default function gameStatus (state = initialState, action) {
   switch (action.type) {
     case START_GAME: 
-    	return { ...state, 
+    	return { 
+            ...state, 
             levelCount: state.levelCount + action.levelCount, 
             actionText: action.actionText, 
             playStatus: action.playStatus,
-            currentStatus: action.currentStatus }
+            currentStatus: action.currentStatus 
+        }
     case PLAY_GAME: 
-        return { ...state, 
+        return { 
+            ...state, 
             levelCount: state.levelCount + action.levelCount, 
             actionText: action.actionText, 
             playStatus: action.playStatus,
-            currentStatus: action.currentStatus }  
+            currentStatus: action.currentStatus 
+        }  
     case NEXT_LEVEL: 
-    	return { ...state, 
+    	return { 
+            ...state, 
             levelCount: state.levelCount + action.levelCount, 
             actionText: action.actionText, 
             playStatus: action.playStatus,
-            currentStatus: action.currentStatus }
+            currentStatus: action.currentStatus 
+        }
     case GAME_OVER: 
-        return  { ...state, 
+        return  { 
+            ...state, 
             levelCount: state.levelCount + action.levelCount, 
             actionText: action.actionText, 
             playStatus: action.playStatus,
-            currentStatus: action.currentStatus }
+            currentStatus: action.currentStatus 
+        }
     default: 
     	return state
   }
