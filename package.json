@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "MIT",
   "dependencies": {
+    "netlify-cli": "^1.2.2",
     "rc-progress": "^2.2.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -15,13 +16,15 @@
     "redux-thunk": "^2.2.0"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json,css}": [
+    "src/**/*.{js,jsx,json}": [
       "eslint --fix",
       "git add"
     ]
   },
   "scripts": {
     "precommit": "lint-staged",
+    "predeploy": "npm run build",
+    "deploy": "netlify deploy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
@@ -40,6 +43,7 @@
     "prettier": "^1.7.4",
     "react-scripts": "^1.0.14"
   },
+  "homepage": "https://simple-math-game.netlify.com/",
   "contributors": [
     {
       "name": "Dzianis Sheka",
