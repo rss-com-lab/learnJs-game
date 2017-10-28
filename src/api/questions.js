@@ -1,21 +1,33 @@
-export function generateQuestionsList(numberOfQuestions, maxNumber) {
+export function generateQuestionsList(numberOfQuestions, maxNumber, complexity) {
   let questionsList = []; 
+  let operators = [];
+
+  if (complexity === 1) {
+  	operators = ['+', '-'];
+  } else if (complexity === 2) {
+  	operators = ['+', '-', 'x'];
+  } else if (complexity === 3) {
+  	operators = ['+', '-', 'x', ':'];
+  }
   
   for (let i = 0; i < numberOfQuestions; i++) {
-    let firstNumber, secondNumber, question ,multiplicator;
-    let operators = ['+', '-', '*', '/'];
-    let operator = operators[Math.floor(Math.random() * operators.length)];
-    secondNumber = Math.floor(Math.random() * maxNumber);
-    if (secondNumber > 0) {
-      multiplicator = Math.floor(Math.random() * (maxNumber / secondNumber) - 1) + 1;
-    } else {
-      multiplicator = 1;
-    }
+    let firstNumber, secondNumber, question;
     
-    if (operator === '/') {
-      firstNumber = Math.floor(secondNumber * multiplicator);
-    } else {
-      firstNumber = Math.floor(Math.random() * maxNumber);
+    let operator = operators[Math.floor(Math.random() * operators.length)];
+
+    if (operator === ':') {
+    	secondNumber = Math.floor(Math.random() * (maxNumber / 2) + 1);
+    	firstNumber = secondNumber * 2;
+    }
+
+    if (operator === 'x') {
+    	firstNumber = Math.floor(Math.random() * maxNumber + 1);
+    	secondNumber = 2;
+    }
+
+    if (operator === '+' || operator === '-') {
+    	firstNumber = Math.floor(Math.random() * maxNumber);
+    	secondNumber = Math.floor(Math.random() * maxNumber);
     }
 
     if (operator === '-' && secondNumber > firstNumber) {

@@ -4,8 +4,12 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import store from '../store/store'
-import { gameOver, gameStart, gamePlay, nextLevel } from '../actions/gamestatus_actions'
-import { testPassed, testFailed, testReset } from '../actions/progress_actions'
+import { testPassed, testFailed, testNewGame, testNextLevel } from '../ducks/progress'
+import { gameOver, gameStart, gamePlay, nextLevel } from '../ducks/gamestatus'
+import { timeUsed, clearTimeUsed } from '../ducks/timeused'
+import { setScore, clearScore } from '../ducks/gameresults'
+import config from '../config'
+
 import closeBtn from '../img/close-btn.png'
 import { generateQuestionsList } from '../api/questions'
 import { calculate } from '../api/calculate'
@@ -13,146 +17,185 @@ import { calculate } from '../api/calculate'
 import '../style/app.css'
 
 const mapStateToProps = (state) => {
-  return {
-    timeout: state.timeout,
-    progress: state.progress,
-    complexity: state.complexity,
-    maxnumber: state.maxnumber,
-    gameStatus: state.gameStatus
-  }
+	return {
+		progress: state.progress,
+		gameStatus: state.gameStatus,
+		gameResults: state.gameResults,
+		gameTime: state.gameTime
+	}
 }
 
-let questions = 5;
-let maxNumber = store.getState().maxnumber;
-let questionsList = generateQuestionsList(questions, maxNumber);
-
 class Game extends Component {
-  constructor() {
-    super();
+	constructor() {
+		super();
 
-    let questions = 5;
-    let maxNumber = store.getState().maxnumber;
-    let questionsList = generateQuestionsList(questions, maxNumber);
-    this.state = {
-      question: 'Сколько будет "' + questionsList[store.getState().progress.total] + '" ?',
-      response: calculate(questionsList[store.getState().progress.total]),
-      value: '',
-      submitted: false
-    };
-  }
+		this.state = {
+			value: '',
+			submitted: false
+		};
+	}
 
-  nextQuestion = () => {
-    this.interval = setTimeout(this.handleInputChange, store.getState().timeout * 1000);
+	nextQuestion = () => {
+		this.timeout = setTimeout(this.handleInputChange, store.getState().timeout * 1000);
+		let ask = this.questionsList[store.getState().progress.total];
+		let answer = calculate(ask);
+		this.setState({
+			question: 'Сколько будет "' + ask + '" ?',
+			response: answer,
+		}); 
+	}
 
-    let ask = questionsList[store.getState().progress.total];
-    let answer = calculate(ask);
-    this.setState({
-      question: 'Сколько будет "' + ask + '" ?',
-      response: answer,
-    }); 
-  }
+	clearInputField = () => {
+		this.setState({
+			value: '',
+			submitted: false
+		});
+	}
 
-  clearInputField = () => {
-    this.setState({
-      value: '',
-      submitted: false
-    });
-  }
+	componentDidMount = () => {
+		this.node.addEventListener('click', this.handleClick);
+		this.unsubscribe = store.subscribe(() => this.forceUpdate());
+		
+	}
 
-  componentDidMount = () => {
-    this.node.addEventListener('click', this.handleClick);
-    this.unsubscribe = store.subscribe(() => this.forceUpdate());
-  }
+	passed = () => {
+		store.dispatch(testPassed());
+		store.dispatch(gamePlay());
+		this.recordResult();
+	}
 
-  passed = () => {
-    store.dispatch(testPassed());
-    store.dispatch(gamePlay());
-  }
+	failed = () => {
+		store.dispatch(testFailed());
+		store.dispatch(gamePlay());
+		this.recordResult();
+	}
 
-  failed = () => {
-    store.dispatch(testFailed());
-    store.dispatch(gamePlay());
-  }
+	recordResult = () => {
+		let time = store.getState().gameTime;
+		let levels = store.getState().gameStatus.levelCount;
+		let tests = (store.getState().progress.gamePassed/store.getState().progress.gameTotal).toFixed(2);
+		store.dispatch(setScore(time, levels, tests));
+	}
 
-  gameOver = () => {
-    store.dispatch(gameOver('Игра закончена'));
-  }
+	componentWillUnmount = () => {
+		this.node.removeEventListener('click', this.handleClick);
+		this.unsubscribe();
+		clearTimeout(this.timeout);
+		clearInterval(this.timer);
 
-  nextLevel = () => {
-    store.dispatch(nextLevel());
-  }
+		store.dispatch(testNewGame());
+		store.dispatch(clearTimeUsed());
+		store.dispatch(gameStart("Начать игру"));
+	}
 
-  componentWillUnmount = () => {
-    this.node.removeEventListener('click', this.handleClick);
-    this.unsubscribe();
-  }
+	handleClick = (e) => {
+		if (this.node.contains(e.target) && e.target.innerHTML !== "ответить" &&  e.target.innerHTML !== "назад") {
+			this.setState({
+				value: this.state.value + e.target.innerHTML
+			});
+		}
+	}
 
-  handleClick = (e) => {
-    if (this.node.contains(e.target) && e.target.innerHTML !== "submit") {
-      this.setState({
-        value: this.state.value + e.target.innerHTML
-      });
-    }
-  }
+	handleBackspace = () => {
+		this.setState({
+			value: this.state.value.slice(0, -1)
+		});
+	}
 
-  onSubmit = () => {
-    this.setState({
-      submitted: true
-    }, function() {
-      this.handleInputChange();
-    });
-    
-  }
+	onSubmit = () => {
+		this.setState({
+			submitted: true
+		}, function() {
+			this.handleInputChange();
+		});
+	}
 
-  handleInputChange = () => {
+	setQuestionsNextLevel = () => {
+		this.clearInputField();
+		store.dispatch(testNextLevel());
 
-    clearTimeout(this.interval);
+		let numberOfQuestions = config.numberOfQuestions;
+		let maxNumber = store.getState().maxnumber;
+ 		let complexity = store.getState().complexity;
+		this.questionsList = generateQuestionsList(numberOfQuestions, maxNumber, complexity);
+		
+		this.nextQuestion();      	
+	}
 
-    if (this.isAnswerCorrect()) {
-      this.passed();
-    } else {
-      this.failed();
-    }
+	handleInputChange = () => {
+		clearTimeout(this.timeout);
 
-    if (this.isLastQuestion()) {
-      if (this.isLastLevel()) {
-        this.gameOver("Игра окончена"); 
-      } else {
-        store.dispatch(testReset());
-        store.dispatch(gameStart("И еще один уровень"));   
-      } 
-    } else {
-      this.nextQuestion();
-      this.clearInputField();   
-    }  
-  }
+		if (this.isAnswerCorrect()) {
+			this.passed();
+		} else {
+			this.failed();
+		}
 
-  isAnswerCorrect = () => {
-    return this.state.submitted && parseInt(this.state.value, 10) === this.state.response;
-  }
+		if (this.isLastQuestion()) {
+			setTimeout(() => {
+				clearInterval(this.timer);
+			
+				if (this.isLastLevel()) {
+					store.dispatch(gameOver("Игра окончена")); 
+					store.dispatch(testNewGame());
+					store.dispatch(clearTimeUsed());
+				} else {
+					store.dispatch(nextLevel("И еще один уровень")); 
+					store.dispatch(testNextLevel());
+				} 
+			}, 1000);
 
-  isLastQuestion = () => {
-    return store.getState().progress.total === questions;
-  }
+		} else {
+			this.nextQuestion();
+			this.clearInputField();   
+		}  
+	}
 
-  isLastLevel = () => {
-    return store.getState().gameStatus.levelCount === store.getState().complexity;
-  }
+	isAnswerCorrect = () => {
+		return this.state.submitted && parseInt(this.state.value, 10) === this.state.response;
+	}
 
-  interval = () => {}
+	isLastQuestion = () => {
+		return store.getState().progress.total === config.numberOfQuestions;
+	}
 
-  gameStatusChange = () => {
-    if (store.getState().gameStatus.currentStatus === 'start') {
-      store.dispatch(gamePlay('Начать игру'));
-      this.interval = setTimeout(this.handleInputChange, store.getState().timeout * 1000);
-    }
+	isLastLevel = () => {
+		return store.getState().gameStatus.levelCount === config.numberOfLevels;
+	}
 
-  }
+	timeout = () => {}
 
-  render() {
-    let percent = Math.round(store.getState().progress.passed/questions*100) || 0;
-    let display = (store.getState().gameStatus.playStatus) ? "none" : "flex";
-    let color = store.getState().progress.color ? '#f4ea77' : '#f73f38';
+	timer = {}
+
+	countAnswerTime = () => {
+		store.dispatch(timeUsed());
+	} 
+
+	gameStatusChange = () => {
+		if (store.getState().gameStatus.currentStatus === 'start') {
+			this.setQuestionsNextLevel();
+			store.dispatch(clearTimeUsed());
+			store.dispatch(clearScore());
+			store.dispatch(gamePlay());
+			this.timer = setInterval(this.countAnswerTime, 1000);
+		}
+
+		if (store.getState().gameStatus.currentStatus === 'next') {
+			this.setQuestionsNextLevel();
+			store.dispatch(gamePlay());
+			this.timer = setInterval(this.countAnswerTime, 1000);
+		}
+
+		if (store.getState().gameStatus.currentStatus === 'end') {
+			store.dispatch(gameStart("Начать игру"));
+		}
+	}
+
+	render() {
+		let percent = Math.round(store.getState().progress.passed/config.numberOfQuestions * 100) || 0;
+		let display = (store.getState().gameStatus.playStatus) ? "none" : "flex";
+		let color = store.getState().progress.color ? '#f4ea77' : '#f73f38';
+		let link = store.getState().gameStatus.currentStatus === 'end' ? "/score" : "/game";
 
     return (
 
@@ -160,7 +203,7 @@ class Game extends Component {
         <div className="header">
           <Link to = "/" className="close-btn"><img className="close-btn-image" src={ closeBtn } alt={"Close"}/></Link>
         </div>
-        <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { questions} </div>
+        <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { config.numberOfQuestions }</div>
         <div className="success-chart-capture">Из них успешно: { store.getState().progress.passed } </div>
         <Circle
         percent={percent}
@@ -192,12 +235,14 @@ class Game extends Component {
           </div>
           <div className="keyboard-row">
             <div className="keyboard-cell">0</div>
-            <div className="keyboard-cell">.</div>
-            <div className="keyboard-cell" onClick={this.onSubmit}>submit</div>
+            <div className="keyboard-cell" onClick={this.handleBackspace}>назад</div>
+            <div className="keyboard-cell" onClick={this.onSubmit}>ответить</div>
           </div>
         </div>
         <div className="game-wrapper-overlay" style={{display: display}}>
-          <button className="init-button" onClick={this.gameStatusChange}>{store.getState().gameStatus.actionText}</button>
+          	<Link to = { link } className="game-btn" onClick={this.gameStatusChange}>
+          		<div className="init-button" >{store.getState().gameStatus.actionText}</div>
+          	</Link>
         </div>
       </div>
 
