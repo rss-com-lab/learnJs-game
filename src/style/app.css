@@ -35,8 +35,19 @@ body {
 }
 
 .init-button {
-    width: 25vw;
-    height: 7vh;
+  width: 42vw;
+  height: 7vh;
+  border: 1px solid #ededed;
+  border-radius: 1vh;
+  font-size: calc(1.5vh + 1.5vw);
+  text-align: center;
+  line-height: 7vh;
+  color: #000000;
+  background-color: #ededed;
+}
+
+.game-btn {
+    text-decoration: none;
 }
 
 .game-wrapper_menu-page {
@@ -123,10 +134,19 @@ body {
 
 /*SETTINGS*/
 
+.settings-list {
+  list-style: none;
+  height: 100%;
+  padding: 0;
+}
+
 .settings-item {
   display: flex;
   flex-direction: column;
   font-size: calc(2vh + 2vw);
+  margin-bottom: 2vh;
+  margin-right: 10vw;
+  margin-left: 10vw;
 }
 
 .settings-buttons {
@@ -138,6 +158,21 @@ body {
 
 .settings-selected {
   margin: 0 2vw;
+}
+
+/*SCORE*/
+
+.score-list {
+  list-style: none;
+  height: 100%;
+  padding: 0;
+}
+
+.score-item {
+  font-size: calc(2vh + 2vw);
+  margin-bottom: 2vh;
+  margin-right: 10vw;
+  margin-left: 10vw;
 }
 
 

@@ -8,8 +8,8 @@ export function calculate(example) {
 	switch (arr[1]) {
 		case '+': return a + b
 		case '-': return a - b
-		case '/': return a / b
-		case '*': return a * b
+		case ':': return a / b
+		case 'x': return a * b
 		default: return a + b
 	}
 }

@@ -8,8 +8,6 @@ import Settings from './settings';
 import Score from './score';
 import Exit from './exit';
 
-
-
 class App extends Component {
   render() {
     return (
@@ -25,7 +23,6 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;
 
