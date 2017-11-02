@@ -1,14 +1,5 @@
-export function generateQuestionsList(numberOfQuestions, maxNumber, complexity) {
+export function generateQuestionsList(numberOfQuestions, maxNumber, operators) {
   let questionsList = []; 
-  let operators = [];
-
-  if (complexity === 1) {
-  	operators = ['+', '-'];
-  } else if (complexity === 2) {
-  	operators = ['+', '-', 'x'];
-  } else if (complexity === 3) {
-  	operators = ['+', '-', 'x', ':'];
-  }
   
   for (let i = 0; i < numberOfQuestions; i++) {
     let firstNumber, secondNumber, question;

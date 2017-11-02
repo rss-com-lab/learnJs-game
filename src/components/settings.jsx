@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import store from '../store/store'
-import { maxnumberIncreased, maxnumberDecreased } from '../ducks/maxnumber'
 import { timeoutIncreased, timeoutDecreased } from '../ducks/timeout'
 import { complexitySelected } from '../ducks/complexity'
 import closeBtn from '../img/close-btn.png';
@@ -14,7 +13,6 @@ const mapStateToProps = (state) => {
     return {
       timeout: state.timeout,
       complexity: state.complexity,
-      maxnumber: state.maxnumber,
     }
 }
 
@@ -35,14 +33,6 @@ class Settings extends Component {
     });
   }
 
-  maxnumberIncreased = () => {
-    store.dispatch(maxnumberIncreased());
-  }
-
-  maxnumberDecreased = () => {
-    store.dispatch(maxnumberDecreased());
-  }
-
   timeoutIncreased = () => {
     store.dispatch(timeoutIncreased());
   }
@@ -56,7 +46,6 @@ class Settings extends Component {
   }
 
   render() {
-    let maxnumber = store.getState().maxnumber;
     let timeout = store.getState().timeout;
     
     return (
@@ -72,14 +61,6 @@ class Settings extends Component {
               <label><input onChange={ this.select } name="level" type="radio" value="1" checked={this.state.value === 1}/>1</label>
               <label><input onChange={ this.select } name="level" type="radio" value="2" checked={this.state.value === 2}/>2</label>
               <label><input onChange={ this.select } name="level" type="radio" value="3" checked={this.state.value === 3}/>3</label>
-            </div>
-          </li>
-          <li className="settings-item">
-            <div className="settings-item-description">Какое максимальное число</div>
-            <div className="settings-buttons">
-              <div className="settings-add-button" onClick={this.maxnumberDecreased}>-</div>
-              <div className="settings-selected">{ maxnumber }</div>
-              <div className="settings-add-button" onClick={this.maxnumberIncreased}>+</div>
             </div>
           </li>
           <li className="settings-item">

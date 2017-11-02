@@ -8,7 +8,6 @@ import { testPassed, testFailed, testNewGame, testNextLevel } from '../ducks/pro
 import { gameOver, gameStart, gamePlay, nextLevel } from '../ducks/gamestatus'
 import { timeUsed, clearTimeUsed } from '../ducks/timeused'
 import { setScore, clearScore } from '../ducks/gameresults'
-import config from '../config'
 
 import closeBtn from '../img/close-btn.png'
 import { generateQuestionsList } from '../api/questions'
@@ -31,8 +30,14 @@ class Game extends Component {
 
 		this.state = {
 			value: '',
-			submitted: false
+			submitted: false,
+			operators: [],
+			maxNumber: 0,
+			numberOfQuestions: 0,
+			numberOfLevels: 0
 		};
+
+
 	}
 
 	nextQuestion = () => {
@@ -55,7 +60,22 @@ class Game extends Component {
 	componentDidMount = () => {
 		this.node.addEventListener('click', this.handleClick);
 		this.unsubscribe = store.subscribe(() => this.forceUpdate());
-		
+
+		fetch('https://rawgit.com/AlesiaGit/math-game-web/01/src/config.json')
+		.then(results => {
+			return results.json();
+		}).then(data => {
+			let operators = data.complexity[store.getState().complexity].operators;
+			let maxNumber = data.complexity[store.getState().complexity].maxNumber;
+			let numberOfLevels = data.numberOfLevels;
+			let numberOfQuestions = data.numberOfQuestions;
+			this.setState({
+				operators: operators,
+				maxNumber: maxNumber,
+				numberOfQuestions: numberOfQuestions,
+				numberOfLevels: numberOfLevels
+			})
+		})		
 	}
 
 	passed = () => {
@@ -82,7 +102,6 @@ class Game extends Component {
 		this.unsubscribe();
 		clearTimeout(this.timeout);
 		clearInterval(this.timer);
-
 		store.dispatch(testNewGame());
 		store.dispatch(clearTimeUsed());
 		store.dispatch(gameStart("Начать игру"));
@@ -103,21 +122,19 @@ class Game extends Component {
 	}
 
 	onSubmit = () => {
-		this.setState({
-			submitted: true
-		}, function() {
-			this.handleInputChange();
-		});
+		if (store.getState().progress.total < this.state.numberOfQuestions) {
+			this.setState({
+				submitted: true
+			}, function() {
+				this.handleInputChange();
+			});
+		}
 	}
 
 	setQuestionsNextLevel = () => {
 		this.clearInputField();
 		store.dispatch(testNextLevel());
-
-		let numberOfQuestions = config.numberOfQuestions;
-		let maxNumber = store.getState().maxnumber;
- 		let complexity = store.getState().complexity;
-		this.questionsList = generateQuestionsList(numberOfQuestions, maxNumber, complexity);
+		this.questionsList = generateQuestionsList(this.state.numberOfQuestions, this.state.maxNumber, this.state.operators);
 		
 		this.nextQuestion();      	
 	}
@@ -156,11 +173,11 @@ class Game extends Component {
 	}
 
 	isLastQuestion = () => {
-		return store.getState().progress.total === config.numberOfQuestions;
+		return store.getState().progress.total === this.state.numberOfQuestions;
 	}
 
 	isLastLevel = () => {
-		return store.getState().gameStatus.levelCount === config.numberOfLevels;
+		return store.getState().gameStatus.levelCount === this.state.numberOfLevels;
 	}
 
 	timeout = () => {}
@@ -192,7 +209,7 @@ class Game extends Component {
 	}
 
 	render() {
-		let percent = Math.round(store.getState().progress.passed/config.numberOfQuestions * 100) || 0;
+		let percent = Math.round(store.getState().progress.passed/this.state.numberOfQuestions * 100) || 0;
 		let display = (store.getState().gameStatus.playStatus) ? "none" : "flex";
 		let color = store.getState().progress.color ? '#f4ea77' : '#f73f38';
 		let link = store.getState().gameStatus.currentStatus === 'end' ? "/score" : "/game";
@@ -203,7 +220,7 @@ class Game extends Component {
         <div className="header">
           <Link to = "/" className="close-btn"><img className="close-btn-image" src={ closeBtn } alt={"Close"}/></Link>
         </div>
-        <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { config.numberOfQuestions }</div>
+        <div className="success-chart-capture">Пройдено вопросов: { store.getState().progress.total } из { this.state.numberOfQuestions }</div>
         <div className="success-chart-capture">Из них успешно: { store.getState().progress.passed } </div>
         <Circle
         percent={percent}
