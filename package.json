@@ -1,29 +1,58 @@
 {
   "name": "math-game-web",
   "version": "0.1.0",
-  "private": true,
+  "license": "MIT",
   "dependencies": {
-    "prettier": "^1.7.4",
+    "netlify-cli": "^1.2.2",
     "rc-progress": "^2.2.2",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.14",
     "redux": "^3.7.2",
     "redux-form": "^7.1.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"
   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,json}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "scripts": {
+    "precommit": "lint-staged",
+    "predeploy": "npm run build",
+    "deploy": "netlify deploy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.js",
+    "prettier": "eslint src/**/*.js --fix"
   },
   "devDependencies": {
     "babel-polyfill": "^6.26.0",
-    "prettier": "1.7.4"
-  }
+    "eslint": "^4.9.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "husky": "^0.14.3",
+    "jest-cli": "^21.2.1",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.7.4",
+    "react-scripts": "^1.0.14"
+  },
+  "homepage": "https://simple-math-game.netlify.com/",
+  "contributors": [
+    {
+      "name": "Dzianis Sheka",
+      "email": "dzianis.sheka@gmail.com",
+      "url": "https://github.com/davojta"
+    },
+    {
+      "name": "Alesja",
+      "url": "https://github.com/AlesiaGit"
+    }
+  ]
 }
