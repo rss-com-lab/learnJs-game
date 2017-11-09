@@ -164,7 +164,7 @@ body {
 
 .score-list {
   list-style: none;
-  height: 100%;
+  //height: 100%;
   padding: 0;
 }
 
@@ -174,3 +174,73 @@ body {
   margin-right: 10vw;
   margin-left: 10vw;
 }
+
+.figures-wrapper {
+  display: flex;
+  flex-direction: row nowrap;
+  justify-content: center;
+}
+
+.figure-container {
+  width: 50%;
+  transform: scale(0.5);
+}
+
+.figure {
+  height: 200px;
+  width: 200px;
+}
+
+.time-count {
+  width: 12vw;
+  height: 12vw;
+  position: absolute;
+  left: 8vw;
+  bottom: 45%;
+  background-color: rgba(255, 235, 59, 0.7);
+  border-radius: 6vw;
+  text-align: center;
+  line-height: 12vw;
+  font-size: calc(2vh + 2vw);
+}
+
+.progress-line {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.progress-line-item {
+  position: relative;
+  top: 2vh;
+  width: calc(3vh + 3vw);
+  height: calc(3vh + 3vw);
+  background-color: #ffffff;
+  border-radius: calc(1.5vh + 1.5vw);
+  text-align: center;
+  line-height: calc(3vh + 3vw);
+  font-size: calc(1.5vh + 1.5vw);
+  margin-right: calc(1.5vh + 1.5vw);
+}
+
+.progress-line-item:last-child {
+  margin-right: 0;
+}
+
+.progress-line-item:after {
+  position: absolute;
+  content: "";
+  height: calc(1.5vh + 1.5vw);
+  width: calc(1.5vh + 1.5vw);
+  top: 25%;
+  right: calc(-1.5vh - 1.5vw);
+  background-image: url('../img/arrow.png');
+  background-size: contain;
+}
+
+.progress-line-item:last-child::after {
+  background: none;
+}
+
+
+

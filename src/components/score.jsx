@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
-import store from "../store/store";
-import closeBtn from "../img/close-btn.png";
+import store from '../store/store';
+import closeBtn from '../img/close-btn.png';
 
-import "../style/app.css";
+import '../style/app.css';
 
 const mapStateToProps = state => {
   return {
@@ -15,7 +15,7 @@ const mapStateToProps = state => {
     maxnumber: state.maxnumber,
     gameStatus: state.gameStatus,
     gameResults: state.gameResults,
-    timeUsed: state.timeUsed
+    timeUsed: state.timeUsed,
   };
 };
 
@@ -29,7 +29,7 @@ class Score extends Component {
       <div className="game-wrapper">
         <div className="header">
           <Link to="/" className="close-btn">
-            <img className="close-btn-image" src={closeBtn} alt={"Close"} />
+            <img className="close-btn-image" src={closeBtn} alt={'Close'} />
           </Link>
         </div>
         <div>Привет, умничка!</div>

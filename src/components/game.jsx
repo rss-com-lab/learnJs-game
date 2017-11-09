@@ -1,338 +1,391 @@
-import React, { Component } from "react";
-import { Circle } from "rc-progress";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+//import { Circle } from "rc-progress";
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
-import store from "../store/store";
+import store from '../store/store';
 import {
-	testPassed,
-	testFailed,
-	testNewGame,
-	testNextLevel
-} from "../ducks/progress";
-import { gameOver, gameStart, gamePlay, nextLevel } from "../ducks/gamestatus";
-import { timeUsed, clearTimeUsed } from "../ducks/timeused";
-import { setScore, clearScore } from "../ducks/gameresults";
+  testPassed,
+  testFailed,
+  testNewGame,
+  testNextLevel,
+} from '../ducks/progress';
+import {gameOver, gameStart, gamePlay, nextLevel} from '../ducks/gamestatus';
+import {timeUsed, clearTimeUsed} from '../ducks/timeused';
+import {setScore, clearScore} from '../ducks/gameresults';
+import ProgressLine from './progress-line';
+import Figure from './figure';
 
-import closeBtn from "../img/close-btn.png";
-import { generateQuestionsList } from "../api/questions";
-import { calculate } from "../api/calculate";
+import closeBtn from '../img/close-btn.png';
+import {generateQuestionsList} from '../api/questions';
+import {calculate} from '../api/calculate';
 
-import "../style/app.css";
+import '../style/app.css';
 
 const mapStateToProps = state => {
-	return {
-		progress: state.progress,
-		gameStatus: state.gameStatus,
-		gameResults: state.gameResults,
-		gameTime: state.gameTime
-	};
+  return {
+    progress: state.progress,
+    gameStatus: state.gameStatus,
+    gameResults: state.gameResults,
+    gameTime: state.gameTime,
+  };
 };
 
 class Game extends Component {
-	constructor() {
-		super();
+  constructor() {
+    super();
 
-		this.state = {
-			value: "",
-			submitted: false,
-			operators: [],
-			maxNumber: 0,
-			numberOfQuestions: 0,
-			numberOfLevels: 0
-		};
-	}
+    this.state = {
+      value: '',
+      submitted: false,
+      operators: [],
+      maxNumber: 0,
+      numberOfQuestions: 0,
+      numberOfLevels: 0,
+      remainingTime: 0,
+      colors: [],
+      figure: Math.floor(Math.random() * 3),
+      percent: '0%',
+    };
+  }
 
-	nextQuestion = () => {
-		this.timeout = setTimeout(
-			this.handleInputChange,
-			store.getState().timeout * 1000
-		);
-		let ask = this.questionsList[store.getState().progress.total];
-		let answer = calculate(ask);
-		this.setState({
-			question: 'Сколько будет "' + ask + '" ?',
-			response: answer
-		});
-	};
+  nextQuestion = () => {
+    this.timeout = setTimeout(
+      this.handleInputChange,
+      store.getState().timeout * 1000,
+    );
+    this.countdown = setInterval(this.countRemainingTime, 1000);
+    let ask = this.questionsList[store.getState().progress.total];
+    let answer = calculate(ask);
+    this.setState({
+      question: 'Сколько будет "' + ask + '" ?',
+      response: answer,
+      remainingTime: store.getState().timeout,
+    });
+  };
 
-	clearInputField = () => {
-		this.setState({
-			value: "",
-			submitted: false
-		});
-	};
+  clearInputField = () => {
+    this.setState({
+      value: '',
+      submitted: false,
+    });
+  };
 
-	componentDidMount = () => {
-		this.node.addEventListener("click", this.handleClick);
-		this.unsubscribe = store.subscribe(() => this.forceUpdate());
+  /*randomFigure = () => {
+		let percent = Math.round(
+				store.getState().progress.passed /
+					this.state.numberOfQuestions *
+					100
+			) || 0;
+		var figuresArray = [ <Star percent={this.state.percent}/>, <Circle percent={this.state.percent}/>]; 
+		return figuresArray[Math.floor(Math.random() * figuresArray.length)];
+	}*/
 
-		fetch("https://rawgit.com/AlesiaGit/math-game-web/01/src/config.json")
-			.then(results => {
-				return results.json();
-			})
-			.then(data => {
-				let operators =
-					data.complexity[store.getState().complexity].operators;
-				let maxNumber =
-					data.complexity[store.getState().complexity].maxNumber;
-				let numberOfLevels = data.numberOfLevels;
-				let numberOfQuestions = data.numberOfQuestions;
-				this.setState({
-					operators: operators,
-					maxNumber: maxNumber,
-					numberOfQuestions: numberOfQuestions,
-					numberOfLevels: numberOfLevels
-				});
-			});
-	};
+  componentDidMount = () => {
+    this.node.addEventListener('click', this.handleClick);
+    this.unsubscribe = store.subscribe(() => this.forceUpdate());
 
-	passed = () => {
-		store.dispatch(testPassed());
-		store.dispatch(gamePlay());
-		this.recordResult();
-	};
+    fetch('https://rawgit.com/AlesiaGit/math-game-web/01/src/config.json')
+      .then(results => {
+        return results.json();
+      })
+      .then(data => {
+        let operators = data.complexity[store.getState().complexity].operators;
+        let maxNumber = data.complexity[store.getState().complexity].maxNumber;
+        let numberOfLevels = data.numberOfLevels;
+        let numberOfQuestions = data.numberOfQuestions;
+        this.setState({
+          operators: operators,
+          maxNumber: maxNumber,
+          numberOfQuestions: numberOfQuestions,
+          numberOfLevels: numberOfLevels,
+          //figure: this.randomFigure()
+        });
+      });
+  };
 
-	failed = () => {
-		store.dispatch(testFailed());
-		store.dispatch(gamePlay());
-		this.recordResult();
-	};
+  passed = () => {
+    store.dispatch(testPassed());
+    store.dispatch(gamePlay());
+    this.recordResult();
+    this.setState({
+      colors: [...this.state.colors, store.getState().progress.color],
+      percent:
+        Math.round(
+          store.getState().progress.passed / this.state.numberOfQuestions * 100,
+        ) + '%',
+    });
+  };
 
-	recordResult = () => {
-		let time = store.getState().gameTime;
-		let levels = store.getState().gameStatus.levelCount;
-		let tests = (store.getState().progress.gamePassed /
-			store.getState().progress.gameTotal
-		).toFixed(2);
-		store.dispatch(setScore(time, levels, tests));
-	};
+  failed = () => {
+    store.dispatch(testFailed());
+    store.dispatch(gamePlay());
+    this.recordResult();
+    this.setState({
+      colors: [...this.state.colors, store.getState().progress.color],
+      percent:
+        Math.round(
+          store.getState().progress.passed / this.state.numberOfQuestions * 100,
+        ) + '%',
+    });
+  };
 
-	componentWillUnmount = () => {
-		this.node.removeEventListener("click", this.handleClick);
-		this.unsubscribe();
-		clearTimeout(this.timeout);
-		clearInterval(this.timer);
-		store.dispatch(testNewGame());
-		store.dispatch(clearTimeUsed());
-		store.dispatch(gameStart("Начать игру"));
-	};
+  recordResult = () => {
+    let time = store.getState().gameTime;
+    let levels = store.getState().gameStatus.levelCount;
+    let tests = (
+      store.getState().progress.gamePassed / store.getState().progress.gameTotal
+    ).toFixed(2);
+    store.dispatch(setScore(time, levels, tests));
+  };
 
-	handleClick = e => {
-		if (
-			this.node.contains(e.target) &&
-			e.target.innerHTML !== "ответить" &&
-			e.target.innerHTML !== "назад"
-		) {
-			this.setState({
-				value: this.state.value + e.target.innerHTML
-			});
-		}
-	};
+  recordScoresHistory = () => {
+    let scoresArray = JSON.parse(localStorage.getItem('history')) || [];
+    let percent =
+      Math.round(
+        store.getState().progress.passed / this.state.numberOfQuestions * 100,
+      ) + '%' || '0%';
 
-	handleBackspace = () => {
-		this.setState({
-			value: this.state.value.slice(0, -1)
-		});
-	};
+    let record = ['star', percent];
+    scoresArray.push(record);
+    localStorage.setItem('history', JSON.stringify(scoresArray));
+  };
 
-	onSubmit = () => {
-		if (store.getState().progress.total < this.state.numberOfQuestions) {
-			this.setState(
-				{
-					submitted: true
-				},
-				function() {
-					this.handleInputChange();
-				}
-			);
-		}
-	};
+  componentWillUnmount = () => {
+    this.node.removeEventListener('click', this.handleClick);
+    this.unsubscribe();
+    clearTimeout(this.timeout);
+    clearInterval(this.timer);
+    store.dispatch(testNewGame());
+    store.dispatch(clearTimeUsed());
+    store.dispatch(gameStart('Начать игру'));
+  };
 
-	setQuestionsNextLevel = () => {
-		this.clearInputField();
-		store.dispatch(testNextLevel());
-		this.questionsList = generateQuestionsList(
-			this.state.numberOfQuestions,
-			this.state.maxNumber,
-			this.state.operators
-		);
+  handleClick = e => {
+    if (
+      this.node.contains(e.target) &&
+      e.target.innerHTML !== 'ответить' &&
+      e.target.innerHTML !== 'назад'
+    ) {
+      this.setState({
+        value: this.state.value + e.target.innerHTML,
+      });
+    }
+  };
 
-		this.nextQuestion();
-	};
+  handleBackspace = () => {
+    this.setState({
+      value: this.state.value.slice(0, -1),
+    });
+  };
 
-	handleInputChange = () => {
-		clearTimeout(this.timeout);
+  onSubmit = () => {
+    if (store.getState().progress.total < this.state.numberOfQuestions) {
+      this.setState(
+        {
+          submitted: true,
+        },
+        function() {
+          this.handleInputChange();
+        },
+      );
+    }
+  };
 
-		if (this.isAnswerCorrect()) {
-			this.passed();
-		} else {
-			this.failed();
-		}
+  setQuestionsNextLevel = () => {
+    this.clearInputField();
+    store.dispatch(testNextLevel());
+    this.questionsList = generateQuestionsList(
+      this.state.numberOfQuestions,
+      this.state.maxNumber,
+      this.state.operators,
+    );
 
-		if (this.isLastQuestion()) {
-			setTimeout(() => {
-				clearInterval(this.timer);
+    this.nextQuestion();
+  };
 
-				if (this.isLastLevel()) {
-					store.dispatch(gameOver("Игра окончена"));
-					store.dispatch(testNewGame());
-					store.dispatch(clearTimeUsed());
-				} else {
-					store.dispatch(nextLevel("И еще один уровень"));
-					store.dispatch(testNextLevel());
-				}
-			}, 1000);
-		} else {
-			this.nextQuestion();
-			this.clearInputField();
-		}
-	};
+  handleInputChange = () => {
+    clearTimeout(this.timeout);
+    clearInterval(this.countdown);
+    this.restartCountdown();
 
-	isAnswerCorrect = () => {
-		return (
-			this.state.submitted &&
-			parseInt(this.state.value, 10) === this.state.response
-		);
-	};
+    if (this.isAnswerCorrect()) {
+      this.passed();
+    } else {
+      this.failed();
+    }
 
-	isLastQuestion = () => {
-		return store.getState().progress.total === this.state.numberOfQuestions;
-	};
+    if (this.isLastQuestion()) {
+      this.recordScoresHistory();
+      console.log(localStorage);
+      setTimeout(() => {
+        clearInterval(this.timer);
 
-	isLastLevel = () => {
-		return (
-			store.getState().gameStatus.levelCount === this.state.numberOfLevels
-		);
-	};
+        if (this.isLastLevel()) {
+          store.dispatch(gameOver('Игра окончена'));
+          store.dispatch(testNewGame());
+          store.dispatch(clearTimeUsed());
+        } else {
+          store.dispatch(nextLevel('И еще один уровень'));
+          store.dispatch(testNextLevel());
+          this.setState({
+            colors: [],
+            figure: Math.floor(Math.random() * 3),
+            percent: '0%',
+          });
+        }
+      }, 1000);
+    } else {
+      this.nextQuestion();
+      this.clearInputField();
+    }
+  };
 
-	timeout = () => {};
+  isAnswerCorrect = () => {
+    return (
+      this.state.submitted &&
+      parseInt(this.state.value, 10) === this.state.response
+    );
+  };
 
-	timer = {};
+  isLastQuestion = () => {
+    return store.getState().progress.total === this.state.numberOfQuestions;
+  };
 
-	countAnswerTime = () => {
-		store.dispatch(timeUsed());
-	};
+  isLastLevel = () => {
+    return store.getState().gameStatus.levelCount === this.state.numberOfLevels;
+  };
 
-	gameStatusChange = () => {
-		if (store.getState().gameStatus.currentStatus === "start") {
-			this.setQuestionsNextLevel();
-			store.dispatch(clearTimeUsed());
-			store.dispatch(clearScore());
-			store.dispatch(gamePlay());
-			this.timer = setInterval(this.countAnswerTime, 1000);
-		}
+  timeout = () => {};
 
-		if (store.getState().gameStatus.currentStatus === "next") {
-			this.setQuestionsNextLevel();
-			store.dispatch(gamePlay());
-			this.timer = setInterval(this.countAnswerTime, 1000);
-		}
+  timer = {};
 
-		if (store.getState().gameStatus.currentStatus === "end") {
-			store.dispatch(gameStart("Начать игру"));
-		}
-	};
+  countdown = () => {};
 
-	render() {
-		let percent =
+  restartCountdown = () => {
+    this.setState({
+      remainingTime: store.getState().timeout,
+    });
+  };
+
+  countRemainingTime = () => {
+    if (this.state.remainingTime <= 0) {
+      clearInterval(this.countdown);
+    } else {
+      this.setState({
+        remainingTime: this.state.remainingTime - 1,
+      });
+    }
+  };
+
+  countAnswerTime = () => {
+    store.dispatch(timeUsed());
+  };
+
+  gameStatusChange = () => {
+    if (store.getState().gameStatus.currentStatus === 'start') {
+      this.setQuestionsNextLevel();
+      store.dispatch(clearTimeUsed());
+      store.dispatch(clearScore());
+      store.dispatch(gamePlay());
+      this.timer = setInterval(this.countAnswerTime, 1000);
+    }
+
+    if (store.getState().gameStatus.currentStatus === 'next') {
+      this.setQuestionsNextLevel();
+      store.dispatch(clearScore());
+      store.dispatch(gamePlay());
+      this.timer = setInterval(this.countAnswerTime, 1000);
+    }
+
+    if (store.getState().gameStatus.currentStatus === 'end') {
+      store.dispatch(gameStart('Начать игру'));
+    }
+  };
+
+  render() {
+    /*let percent =
 			Math.round(
 				store.getState().progress.passed /
 					this.state.numberOfQuestions *
 					100
 			) || 0;
-		let display = store.getState().gameStatus.playStatus ? "none" : "flex";
-		let color = store.getState().progress.color ? "#f4ea77" : "#f73f38";
-		let link =
-			store.getState().gameStatus.currentStatus === "end"
-				? "/score"
-				: "/game";
+		let test = percent + "%";*/
+    let display = store.getState().gameStatus.playStatus ? 'none' : 'flex';
+    /*let color = store.getState().progress.color ? "#f4ea77" : "#f73f38";*/
+    let link =
+      store.getState().gameStatus.currentStatus === 'end' ? '/score' : '/game';
 
-		return (
-			<div className="game-wrapper">
-				<div className="header">
-					<Link to="/" className="close-btn">
-						<img
-							className="close-btn-image"
-							src={closeBtn}
-							alt={"Close"}
-						/>
-					</Link>
-				</div>
-				<div className="success-chart-capture">
-					Пройдено вопросов: {store.getState().progress.total} из{" "}
-					{this.state.numberOfQuestions}
-				</div>
-				<div className="success-chart-capture">
-					Из них успешно: {store.getState().progress.passed}{" "}
-				</div>
-				<Circle
+    return (
+      <div className="game-wrapper">
+        <div className="header">
+          <Link to="/" className="close-btn">
+            <img className="close-btn-image" src={closeBtn} alt={'Close'} />
+          </Link>
+        </div>
+        <div className="success-chart-capture">
+          Впереди еще{' '}
+          {this.state.numberOfQuestions - store.getState().progress.total}{' '}
+          вопросов
+        </div>
+        <div className="success-chart-capture">
+          Ты правильно ответил на {store.getState().progress.passed}{' '}
+        </div>
+        <ProgressLine questions={this.state.numberOfQuestions} />
+        <div className="time-count">{this.state.remainingTime}</div>
+        <Figure figure={this.state.figure} percent={this.state.percent} />
+        {/*<Circle
 					percent={percent}
 					strokeWidth="6"
 					strokeLinecap="round"
 					strokeColor="#3463af"
 					trailWidth="6"
 					trailColor={color}
-				/>
-				<div className="question-field">
-					<div className="current-question">
-						{this.state.question}
-					</div>
-					<div className="current-answer">
-						Твой ответ: {this.state.value}
-					</div>
-				</div>
-				<div
-					className="keyboard"
-					ref={node => {
-						this.node = node;
-					}}
-				>
-					<div className="keyboard-row">
-						<div className="keyboard-cell">7</div>
-						<div className="keyboard-cell">8</div>
-						<div className="keyboard-cell">9</div>
-					</div>
-					<div className="keyboard-row">
-						<div className="keyboard-cell">4</div>
-						<div className="keyboard-cell">5</div>
-						<div className="keyboard-cell">6</div>
-					</div>
-					<div className="keyboard-row">
-						<div className="keyboard-cell">1</div>
-						<div className="keyboard-cell">2</div>
-						<div className="keyboard-cell">3</div>
-					</div>
-					<div className="keyboard-row">
-						<div className="keyboard-cell">0</div>
-						<div
-							className="keyboard-cell"
-							onClick={this.handleBackspace}
-						>
-							назад
-						</div>
-						<div className="keyboard-cell" onClick={this.onSubmit}>
-							ответить
-						</div>
-					</div>
-				</div>
-				<div
-					className="game-wrapper-overlay"
-					style={{ display: display }}
-				>
-					<Link
-						to={link}
-						className="game-btn"
-						onClick={this.gameStatusChange}
-					>
-						<div className="init-button">
-							{store.getState().gameStatus.actionText}
-						</div>
-					</Link>
-				</div>
-			</div>
-		);
-	}
+				/>*/}
+        <div className="question-field">
+          <div className="current-question">{this.state.question}</div>
+          <div className="current-answer">Твой ответ: {this.state.value}</div>
+        </div>
+        <div
+          className="keyboard"
+          ref={node => {
+            this.node = node;
+          }}>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">7</div>
+            <div className="keyboard-cell">8</div>
+            <div className="keyboard-cell">9</div>
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">4</div>
+            <div className="keyboard-cell">5</div>
+            <div className="keyboard-cell">6</div>
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">1</div>
+            <div className="keyboard-cell">2</div>
+            <div className="keyboard-cell">3</div>
+          </div>
+          <div className="keyboard-row">
+            <div className="keyboard-cell">0</div>
+            <div className="keyboard-cell" onClick={this.handleBackspace}>
+              назад
+            </div>
+            <div className="keyboard-cell" onClick={this.onSubmit}>
+              ответить
+            </div>
+          </div>
+        </div>
+        <div className="game-wrapper-overlay" style={{display: display}}>
+          <Link to={link} className="game-btn" onClick={this.gameStatusChange}>
+            <div className="init-button">
+              {store.getState().gameStatus.actionText}
+            </div>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default connect(mapStateToProps)(Game);
