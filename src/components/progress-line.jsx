@@ -3,25 +3,29 @@ import React, {Component} from 'react';
 import '../style/app.css';
 
 class ProgressLine extends Component {
-  /*constructor(props) {
-	    super(props);
-	}*/
-
   render() {
-    var questions = [];
+    let questions = [];
 
-    for (var i = 0; i < this.props.questions; i++) {
+    for (let i = 0; i < this.props.questions; i++) {
       questions.push(
-        <span className="progress-line-item" key={i}>
+        <div className="progress-line-item" key={i}>
           {i}
-        </span>,
+        </div>,
       );
+    }
+
+    let coloredArray = this.props.colors.map(item => {
+      return item ? '#f4ea77' : '#f73f38';
+    });
+
+    function color(i) {
+      return {backgroundColor: coloredArray[i]};
     }
 
     return (
       <div className="progress-line">
         {questions.map((item, index) => (
-          <div className="progress-line-item" key={index}>
+          <div className="progress-line-item" style={color(index)} key={index}>
             {index + 1}
           </div>
         ))}

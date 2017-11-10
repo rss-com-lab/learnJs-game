@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-//import { Circle } from "rc-progress";
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
@@ -11,8 +10,6 @@ import {
   testNextLevel,
 } from '../ducks/progress';
 import {gameOver, gameStart, gamePlay, nextLevel} from '../ducks/gamestatus';
-import {timeUsed, clearTimeUsed} from '../ducks/timeused';
-import {setScore, clearScore} from '../ducks/gameresults';
 import ProgressLine from './progress-line';
 import Figure from './figure';
 
@@ -26,10 +23,10 @@ const mapStateToProps = state => {
   return {
     progress: state.progress,
     gameStatus: state.gameStatus,
-    gameResults: state.gameResults,
-    gameTime: state.gameTime,
   };
 };
+
+let figures = ['star', 'circle', 'triangle'];
 
 class Game extends Component {
   constructor() {
@@ -44,7 +41,7 @@ class Game extends Component {
       numberOfLevels: 0,
       remainingTime: 0,
       colors: [],
-      figure: Math.floor(Math.random() * 3),
+      figure: figures[Math.floor(Math.random() * figures.length)],
       percent: '0%',
     };
   }
@@ -71,16 +68,6 @@ class Game extends Component {
     });
   };
 
-  /*randomFigure = () => {
-		let percent = Math.round(
-				store.getState().progress.passed /
-					this.state.numberOfQuestions *
-					100
-			) || 0;
-		var figuresArray = [ <Star percent={this.state.percent}/>, <Circle percent={this.state.percent}/>]; 
-		return figuresArray[Math.floor(Math.random() * figuresArray.length)];
-	}*/
-
   componentDidMount = () => {
     this.node.addEventListener('click', this.handleClick);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
@@ -99,15 +86,16 @@ class Game extends Component {
           maxNumber: maxNumber,
           numberOfQuestions: numberOfQuestions,
           numberOfLevels: numberOfLevels,
-          //figure: this.randomFigure()
         });
+
+        this.setQuestionsNextLevel();
+        store.dispatch(gamePlay());
       });
   };
 
   passed = () => {
     store.dispatch(testPassed());
     store.dispatch(gamePlay());
-    this.recordResult();
     this.setState({
       colors: [...this.state.colors, store.getState().progress.color],
       percent:
@@ -120,7 +108,6 @@ class Game extends Component {
   failed = () => {
     store.dispatch(testFailed());
     store.dispatch(gamePlay());
-    this.recordResult();
     this.setState({
       colors: [...this.state.colors, store.getState().progress.color],
       percent:
@@ -130,15 +117,6 @@ class Game extends Component {
     });
   };
 
-  recordResult = () => {
-    let time = store.getState().gameTime;
-    let levels = store.getState().gameStatus.levelCount;
-    let tests = (
-      store.getState().progress.gamePassed / store.getState().progress.gameTotal
-    ).toFixed(2);
-    store.dispatch(setScore(time, levels, tests));
-  };
-
   recordScoresHistory = () => {
     let scoresArray = JSON.parse(localStorage.getItem('history')) || [];
     let percent =
@@ -146,7 +124,7 @@ class Game extends Component {
         store.getState().progress.passed / this.state.numberOfQuestions * 100,
       ) + '%' || '0%';
 
-    let record = ['star', percent];
+    let record = [this.state.figure, percent];
     scoresArray.push(record);
     localStorage.setItem('history', JSON.stringify(scoresArray));
   };
@@ -155,9 +133,7 @@ class Game extends Component {
     this.node.removeEventListener('click', this.handleClick);
     this.unsubscribe();
     clearTimeout(this.timeout);
-    clearInterval(this.timer);
     store.dispatch(testNewGame());
-    store.dispatch(clearTimeUsed());
     store.dispatch(gameStart('Начать игру'));
   };
 
@@ -217,20 +193,16 @@ class Game extends Component {
 
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
-      console.log(localStorage);
       setTimeout(() => {
-        clearInterval(this.timer);
-
         if (this.isLastLevel()) {
           store.dispatch(gameOver('Игра окончена'));
           store.dispatch(testNewGame());
-          store.dispatch(clearTimeUsed());
         } else {
           store.dispatch(nextLevel('И еще один уровень'));
           store.dispatch(testNextLevel());
           this.setState({
             colors: [],
-            figure: Math.floor(Math.random() * 3),
+            figure: figures[Math.floor(Math.random() * figures.length)],
             percent: '0%',
           });
         }
@@ -258,8 +230,6 @@ class Game extends Component {
 
   timeout = () => {};
 
-  timer = {};
-
   countdown = () => {};
 
   restartCountdown = () => {
@@ -278,24 +248,15 @@ class Game extends Component {
     }
   };
 
-  countAnswerTime = () => {
-    store.dispatch(timeUsed());
-  };
-
   gameStatusChange = () => {
     if (store.getState().gameStatus.currentStatus === 'start') {
       this.setQuestionsNextLevel();
-      store.dispatch(clearTimeUsed());
-      store.dispatch(clearScore());
       store.dispatch(gamePlay());
-      this.timer = setInterval(this.countAnswerTime, 1000);
     }
 
     if (store.getState().gameStatus.currentStatus === 'next') {
       this.setQuestionsNextLevel();
-      store.dispatch(clearScore());
       store.dispatch(gamePlay());
-      this.timer = setInterval(this.countAnswerTime, 1000);
     }
 
     if (store.getState().gameStatus.currentStatus === 'end') {
@@ -304,15 +265,7 @@ class Game extends Component {
   };
 
   render() {
-    /*let percent =
-			Math.round(
-				store.getState().progress.passed /
-					this.state.numberOfQuestions *
-					100
-			) || 0;
-		let test = percent + "%";*/
     let display = store.getState().gameStatus.playStatus ? 'none' : 'flex';
-    /*let color = store.getState().progress.color ? "#f4ea77" : "#f73f38";*/
     let link =
       store.getState().gameStatus.currentStatus === 'end' ? '/score' : '/game';
 
@@ -323,25 +276,12 @@ class Game extends Component {
             <img className="close-btn-image" src={closeBtn} alt={'Close'} />
           </Link>
         </div>
-        <div className="success-chart-capture">
-          Впереди еще{' '}
-          {this.state.numberOfQuestions - store.getState().progress.total}{' '}
-          вопросов
-        </div>
-        <div className="success-chart-capture">
-          Ты правильно ответил на {store.getState().progress.passed}{' '}
-        </div>
-        <ProgressLine questions={this.state.numberOfQuestions} />
+        <ProgressLine
+          questions={this.state.numberOfQuestions}
+          colors={this.state.colors}
+        />
         <div className="time-count">{this.state.remainingTime}</div>
         <Figure figure={this.state.figure} percent={this.state.percent} />
-        {/*<Circle
-					percent={percent}
-					strokeWidth="6"
-					strokeLinecap="round"
-					strokeColor="#3463af"
-					trailWidth="6"
-					trailColor={color}
-				/>*/}
         <div className="question-field">
           <div className="current-question">{this.state.question}</div>
           <div className="current-answer">Твой ответ: {this.state.value}</div>
