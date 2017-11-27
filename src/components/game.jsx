@@ -10,55 +10,67 @@ import {
   testNextLevel,
 } from '../ducks/progress';
 import {gameOver, gameStart, gamePlay, nextLevel} from '../ducks/gamestatus';
+import {setCurrentUser} from '../ducks/users';
+
 import ProgressLine from './progress-line';
-import Figure from './figure';
+import Keyboard from './keyboard';
 
-import closeBtn from '../img/close-btn.png';
+import beepSound from '../audio/Button-click-sound.mp3';
+import correctAnswerSound from '../audio/Correct-answer-sound.mp3';
+import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
+
 import {generateQuestionsList} from '../api/questions';
-import {calculate} from '../api/calculate';
-
 import '../style/app.css';
 
 const mapStateToProps = state => {
   return {
     progress: state.progress,
     gameStatus: state.gameStatus,
+    currentUser: state.currentUser,
   };
 };
 
-let figures = ['star', 'circle', 'triangle'];
+let figures = ['star', 'circle', 'flower'];
 
 class Game extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
+      user: this.props.location.state.user,
       value: '',
       submitted: false,
-      operators: [],
-      maxNumber: 0,
-      numberOfQuestions: 0,
-      numberOfLevels: 0,
       remainingTime: 0,
       colors: [],
       figure: figures[Math.floor(Math.random() * figures.length)],
       percent: '0%',
+      muted: false,
     };
   }
 
   nextQuestion = () => {
-    this.timeout = setTimeout(
-      this.handleInputChange,
-      store.getState().timeout * 1000,
+    this.setState(
+      {
+        question: this.questionsList[store.getState().progress.total].question,
+        response: this.questionsList[store.getState().progress.total]
+          .correctAnswer,
+        questionType: this.questionsList[store.getState().progress.total]
+          .questionType,
+        answers: this.questionsList[store.getState().progress.total].answers,
+        responseTime: this.questionsList[store.getState().progress.total]
+          .responseTime,
+        remainingTime:
+          this.questionsList[store.getState().progress.total].responseTime /
+          1000,
+      },
+      () => {
+        this.timeout = setTimeout(
+          this.handleInputChange,
+          this.state.responseTime,
+        );
+        this.countdown = setInterval(this.countRemainingTime, 1000);
+      },
     );
-    this.countdown = setInterval(this.countRemainingTime, 1000);
-    let ask = this.questionsList[store.getState().progress.total];
-    let answer = calculate(ask);
-    this.setState({
-      question: 'Сколько будет "' + ask + '" ?',
-      response: answer,
-      remainingTime: store.getState().timeout,
-    });
   };
 
   clearInputField = () => {
@@ -70,30 +82,29 @@ class Game extends Component {
 
   componentDidMount = () => {
     this.node.addEventListener('click', this.handleClick);
+    this.muteBtn.addEventListener('click', this.muteSounds);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
+
+    store.dispatch(setCurrentUser(this.state.user));
 
     fetch('https://rawgit.com/AlesiaGit/math-game-web/01/src/config.json')
       .then(results => {
         return results.json();
       })
       .then(data => {
-        let operators = data.complexity[store.getState().complexity].operators;
-        let maxNumber = data.complexity[store.getState().complexity].maxNumber;
-        let numberOfLevels = data.numberOfLevels;
-        let numberOfQuestions = data.numberOfQuestions;
         this.setState({
-          operators: operators,
-          maxNumber: maxNumber,
-          numberOfQuestions: numberOfQuestions,
-          numberOfLevels: numberOfLevels,
+          maxNumber: data.complexity[store.getState().complexity].maxNumber,
+          numberOfQuestions: data.numberOfQuestions,
+          numberOfLevels: data.numberOfLevels,
+          config: data,
         });
-
         this.setQuestionsNextLevel();
         store.dispatch(gamePlay());
       });
   };
 
   passed = () => {
+    this.correctAnswerSound.play();
     store.dispatch(testPassed());
     store.dispatch(gamePlay());
     this.setState({
@@ -106,6 +117,7 @@ class Game extends Component {
   };
 
   failed = () => {
+    this.wrongAnswerSound.play();
     store.dispatch(testFailed());
     store.dispatch(gamePlay());
     this.setState({
@@ -118,21 +130,30 @@ class Game extends Component {
   };
 
   recordScoresHistory = () => {
-    let scoresArray = JSON.parse(localStorage.getItem('history')) || [];
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
     let percent =
       Math.round(
         store.getState().progress.passed / this.state.numberOfQuestions * 100,
       ) + '%' || '0%';
 
     let record = [this.state.figure, percent];
-    scoresArray.push(record);
-    localStorage.setItem('history', JSON.stringify(scoresArray));
+
+    users = users.map(elem => {
+      if (elem.name === this.state.user) {
+        elem.score.push(record);
+      }
+      return elem;
+    });
+    localStorage.setItem('users', JSON.stringify(users));
   };
 
   componentWillUnmount = () => {
     this.node.removeEventListener('click', this.handleClick);
+    this.muteBtn.removeEventListener('click', this.muteSounds);
     this.unsubscribe();
     clearTimeout(this.timeout);
+    clearTimeout(this.countdown);
     store.dispatch(testNewGame());
     store.dispatch(gameStart('Начать игру'));
   };
@@ -140,13 +161,14 @@ class Game extends Component {
   handleClick = e => {
     if (
       this.node.contains(e.target) &&
-      e.target.innerHTML !== 'ответить' &&
-      e.target.innerHTML !== 'назад'
+      e.target.id !== 'clear' &&
+      e.target.id !== 'ok'
     ) {
       this.setState({
         value: this.state.value + e.target.innerHTML,
       });
     }
+    this.beepSound.play();
   };
 
   handleBackspace = () => {
@@ -168,13 +190,12 @@ class Game extends Component {
     }
   };
 
-  setQuestionsNextLevel = () => {
+  setQuestionsNextLevel = data => {
     this.clearInputField();
     store.dispatch(testNextLevel());
     this.questionsList = generateQuestionsList(
-      this.state.numberOfQuestions,
-      this.state.maxNumber,
-      this.state.operators,
+      store.getState().complexity,
+      this.state.config,
     );
 
     this.nextQuestion();
@@ -206,7 +227,7 @@ class Game extends Component {
             percent: '0%',
           });
         }
-      }, 1000);
+      }, 500);
     } else {
       this.nextQuestion();
       this.clearInputField();
@@ -234,7 +255,8 @@ class Game extends Component {
 
   restartCountdown = () => {
     this.setState({
-      remainingTime: store.getState().timeout,
+      remainingTime:
+        this.questionsList[store.getState().progress.total].responseTime / 1000,
     });
   };
 
@@ -264,65 +286,145 @@ class Game extends Component {
     }
   };
 
+  updateLink = status => {
+    if (status === 'end') {
+      return {
+        pathname: '/score',
+        state: {
+          user: this.state.user,
+        },
+      };
+    } else {
+      return {
+        pathname: '/game',
+        state: {
+          user: this.state.user,
+        },
+      };
+    }
+  };
+
+  muteSounds = () => {
+    if (!this.state.muted) {
+      this.beepSound.muted = true;
+      this.correctAnswerSound.muted = true;
+      this.wrongAnswerSound.muted = true;
+      this.setState({
+        muted: true,
+      });
+      return;
+    }
+
+    this.beepSound.muted = false;
+    this.correctAnswerSound.muted = false;
+    this.wrongAnswerSound.muted = false;
+    this.setState({
+      muted: false,
+    });
+  };
+
   render() {
-    let display = store.getState().gameStatus.playStatus ? 'none' : 'flex';
-    let link =
-      store.getState().gameStatus.currentStatus === 'end' ? '/score' : '/game';
+    let playStatus = store.getState().gameStatus.playStatus;
+    let zeroCellDisplay =
+      this.state.questionType === 'selective' ? 'none' : 'block';
+    let inputCellsWidth =
+      this.state.questionType === 'selective' ? '50%' : '33%';
+    let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
 
     return (
-      <div className="game-wrapper">
+      <div className="game-wrapper game-component">
         <div className="header">
-          <Link to="/" className="close-btn">
-            <img className="close-btn-image" src={closeBtn} alt={'Close'} />
-          </Link>
-        </div>
-        <ProgressLine
-          questions={this.state.numberOfQuestions}
-          colors={this.state.colors}
-        />
-        <div className="time-count">{this.state.remainingTime}</div>
-        <Figure figure={this.state.figure} percent={this.state.percent} />
-        <div className="question-field">
-          <div className="current-question">{this.state.question}</div>
-          <div className="current-answer">Твой ответ: {this.state.value}</div>
+          <ProgressLine
+            questions={this.state.numberOfQuestions}
+            colors={this.state.colors}
+          />
+          <Link to="/" className="close-btn" />
         </div>
         <div
-          className="keyboard"
-          ref={node => {
-            this.node = node;
+          className="game-component-body"
+          style={{
+            visibility: playStatus ? 'visible' : 'hidden',
           }}>
-          <div className="keyboard-row">
-            <div className="keyboard-cell">7</div>
-            <div className="keyboard-cell">8</div>
-            <div className="keyboard-cell">9</div>
-          </div>
-          <div className="keyboard-row">
-            <div className="keyboard-cell">4</div>
-            <div className="keyboard-cell">5</div>
-            <div className="keyboard-cell">6</div>
-          </div>
-          <div className="keyboard-row">
-            <div className="keyboard-cell">1</div>
-            <div className="keyboard-cell">2</div>
-            <div className="keyboard-cell">3</div>
-          </div>
-          <div className="keyboard-row">
-            <div className="keyboard-cell">0</div>
-            <div className="keyboard-cell" onClick={this.handleBackspace}>
-              назад
+          <div className="question-answer-wrapper">
+            <div className="question-field-wrapper">
+              <div className="question-title">Задача</div>
+              <div className="question-text">{this.state.question}</div>
             </div>
-            <div className="keyboard-cell" onClick={this.onSubmit}>
-              ответить
+            <div className="answer-field-wrapper">
+              <div className="answer-time-count">
+                {this.state.remainingTime}
+              </div>
+              <div
+                className={muteBtnStyle}
+                ref={node => {
+                  this.muteBtn = node;
+                }}
+              />
+              <div className="answer-field">
+                <div className="answer-text">Ответ: </div>
+                <div className="answer-input">{this.state.value}</div>
+              </div>
             </div>
+          </div>
+          <div
+            className="keyboard"
+            ref={node => {
+              this.node = node;
+            }}>
+            <Keyboard
+              questionType={this.state.questionType}
+              answers={this.state.answers}
+            />
+            <div className="keyboard-row">
+              <div
+                className="keyboard-cell clear-cell"
+                id="clear"
+                onClick={this.handleBackspace}
+                style={{width: inputCellsWidth}}
+              />
+              <div className="keyboard-cell" style={{display: zeroCellDisplay}}>
+                0
+              </div>
+              <div
+                className="keyboard-cell ok-cell"
+                id="ok"
+                onClick={this.onSubmit}
+                style={{width: inputCellsWidth}}>
+                OK
+              </div>
+            </div>
+            <audio
+              ref={audio => {
+                this.beepSound = audio;
+              }}>
+              <source src={beepSound} />
+            </audio>
           </div>
         </div>
-        <div className="game-wrapper-overlay" style={{display: display}}>
-          <Link to={link} className="game-btn" onClick={this.gameStatusChange}>
+        <div
+          className="game-wrapper-overlay"
+          style={{display: playStatus ? 'none' : 'flex'}}>
+          <Link
+            to={this.updateLink(store.getState().gameStatus.currentStatus)}
+            className="game-btn"
+            onClick={this.gameStatusChange}>
             <div className="init-button">
               {store.getState().gameStatus.actionText}
             </div>
           </Link>
         </div>
+        <audio
+          ref={audio => {
+            this.correctAnswerSound = audio;
+          }}>
+          <source src={correctAnswerSound} />
+        </audio>
+        <audio
+          ref={audio => {
+            this.wrongAnswerSound = audio;
+          }}>
+          <source src={wrongAnswerSound} />
+        </audio>
       </div>
     );
   }

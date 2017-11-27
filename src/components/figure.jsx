@@ -41,8 +41,8 @@ class Figure extends Component {
           height="100%"
           preserveAspectRatio="xMinYMinmeet">
           <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="100%">
-            <stop offset={this.props.percent} stopColor="#ffffff" />
-            <stop offset={this.props.percent} stopColor="#35445c" />
+            <stop offset={this.props.percent} stopColor="#f5f03f" />
+            <stop offset={this.props.percent} stopColor="#aed4dc" />
           </linearGradient>
 
           {this.selectFigure()}

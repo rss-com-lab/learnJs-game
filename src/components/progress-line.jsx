@@ -15,7 +15,7 @@ class ProgressLine extends Component {
     }
 
     let coloredArray = this.props.colors.map(item => {
-      return item ? '#f4ea77' : '#f73f38';
+      return item ? '#ffffff' : '#f4ea77';
     });
 
     function color(i) {
@@ -25,9 +25,11 @@ class ProgressLine extends Component {
     return (
       <div className="progress-line">
         {questions.map((item, index) => (
-          <div className="progress-line-item" style={color(index)} key={index}>
-            {index + 1}
-          </div>
+          <div
+            className="progress-line-item"
+            style={color(index)}
+            key={index}
+          />
         ))}
       </div>
     );
