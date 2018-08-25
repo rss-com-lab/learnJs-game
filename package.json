@@ -41,7 +41,7 @@
     "jest-cli": "^21.2.1",
     "lint-staged": "^4.3.0",
     "prettier": "^1.7.4",
-    "react-scripts": "^1.0.14"
+    "react-scripts": "1.1.5"
   },
   "homepage": "https://simple-math-game.netlify.com/",
   "contributors": [
