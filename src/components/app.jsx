@@ -8,11 +8,13 @@ import Game from './game';
 import Settings from './settings';
 import Score from './score';
 import Exit from './exit';
+import Loading from './loading';
 
 class App extends Component {
   render() {
     return (
       <Switch>
+        <Route exact path="/loading" component={Loading} />
         <Route exact path="/" component={Home} />
         <Route path="/register" component={Register} />
         <Route exact path="/game" component={Game} />
