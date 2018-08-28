@@ -16,8 +16,8 @@ class App extends Component {
     return (
       <Switch>
         <Route exact path="/loading" component={Loading} />
-        <Route exact path="/menu" component={Menu} />
-        <Route exact path="/players" component={Home} />
+        <Route exact path="/" component={Menu} />
+        <Route exact path="/player" component={Home} />
         <Route path="/register" component={Register} />
         <Route exact path="/game" component={Game} />
         <Route path="/settings" component={Settings} />
