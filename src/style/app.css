@@ -45,6 +45,22 @@ h2 {
   border-radius: 50%;
   background-color: #ecf7fd; }
 
+.menu-screen {
+  background-color: #ecf7fd;
+  width: 100%;
+  height: 100%; }
+  .menu-screen ul {
+    margin: 30vh auto;
+    padding: 0; }
+  .menu-screen li {
+    list-style: none;
+    margin: 10px auto;
+    text-align: center; }
+  .menu-screen a {
+    color: #afd3df;
+    font-size: 36px;
+    text-decoration: none; }
+
 body {
   font-family: "Ubuntu", sans-serif;
   font-size: calc(3vw + 3vh);
