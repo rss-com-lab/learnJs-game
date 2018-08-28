@@ -7,7 +7,7 @@ class Menu extends Component {
         <div className="menu-screen">
           <ul>
             <li>
-              <Link to="/game">Играть</Link>
+              <Link to="/players">Играть</Link>
             </li>
             <li>
               <Link to="/settings">Настройки</Link>

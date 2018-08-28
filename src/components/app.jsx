@@ -17,7 +17,7 @@ class App extends Component {
       <Switch>
         <Route exact path="/loading" component={Loading} />
         <Route exact path="/menu" component={Menu} />
-        <Route exact path="/" component={Home} />
+        <Route exact path="/players" component={Home} />
         <Route path="/register" component={Register} />
         <Route exact path="/game" component={Game} />
         <Route path="/settings" component={Settings} />
