@@ -1,3 +1,62 @@
+$color-background: #ecf7fd;
+$color-text: #b1d6df;
+$color-spinner-ring: #c3e8f1;
+$screen-height: 100vh;
+$spinner-height: $screen-height*0.33;
+
+h2{
+  font-size: 40px;
+}
+
+.loading-screen{
+  background: $color-background;
+  height: 100%;
+  width: 100%;
+
+  h2{
+    color: $color-text;
+    text-transform: uppercase;
+    text-align: center;
+  }
+}
+
+.spinner{
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #c3e8f1;
+  border: 3px solid $color-text;
+  border-radius: 50%;
+  height: $spinner-height;
+  width: $spinner-height;
+  margin: $spinner-height auto 0;
+  animation: spinner 2s ease-in-out infinite;
+}
+
+@keyframes spinner {
+  from{transform: rotate(45deg)}
+  to {transform: rotate(405deg)}
+};
+
+.spinner__ring{
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 25px solid $color-spinner-ring;
+  border-left-color: $color-background;
+  border-radius: 50%;
+}
+
+.spinner__circle{
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border: 3px solid $color-text;
+  border-radius: 50%;
+  background-color: $color-background;
+}
+
 body {
 	font-family: "Ubuntu", sans-serif;
 	font-size: calc(3vw + 3vh);
