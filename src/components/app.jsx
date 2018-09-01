@@ -8,8 +8,8 @@ import Game from './game';
 import Settings from './settings';
 import Score from './score';
 import Exit from './exit';
-import Loading from './loading';
-import Menu from './menu';
+import Loading from './loading/loading';
+import Menu from './menu/menu';
 
 class App extends Component {
   render() {
