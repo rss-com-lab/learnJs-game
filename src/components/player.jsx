@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 import '../style/app.css';
 
-class Home extends Component {
+class Player extends Component {
   sortArray = array => {
     if (array.length === 0) return 0;
     let scoresArray = array.map(elem => {
@@ -175,4 +175,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default Player;

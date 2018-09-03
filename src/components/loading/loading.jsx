@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 
-import '../style/app.css';
+import '../../style/app.css';
+import './loading.css';
 
 class Loading extends Component {
+  finishLoading() {
+    window.location.href += 'menu';
+  }
+
   render() {
+    setTimeout(this.finishLoading, 5000);
     return (
       <div className="game-wrapper">
         <div className="loading-screen">

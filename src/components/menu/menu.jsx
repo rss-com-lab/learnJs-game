@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+
+import '../../style/app.css';
+import './menu.css';
+
 class Menu extends Component {
   render() {
     return (
@@ -19,7 +23,7 @@ class Menu extends Component {
               <Link to="/score">Полка</Link>
             </li>
             <li>
-              <Link to="/loading">Загрузка</Link>
+              <Link to="/">Загрузка</Link>
             </li>
           </ul>
         </div>
