@@ -111,7 +111,8 @@ class Game extends Component {
       colors: [...this.state.colors, store.getState().progress.color],
       percent:
         Math.round(
-          store.getState().progress.passed / this.state.numberOfQuestions * 100,
+          (store.getState().progress.passed / this.state.numberOfQuestions) *
+            100,
         ) + '%',
     });
   };
@@ -124,7 +125,8 @@ class Game extends Component {
       colors: [...this.state.colors, store.getState().progress.color],
       percent:
         Math.round(
-          store.getState().progress.passed / this.state.numberOfQuestions * 100,
+          (store.getState().progress.passed / this.state.numberOfQuestions) *
+            100,
         ) + '%',
     });
   };
@@ -134,7 +136,7 @@ class Game extends Component {
 
     let percent =
       Math.round(
-        store.getState().progress.passed / this.state.numberOfQuestions * 100,
+        (store.getState().progress.passed / this.state.numberOfQuestions) * 100,
       ) + '%' || '0%';
 
     let record = [this.state.figure, percent];

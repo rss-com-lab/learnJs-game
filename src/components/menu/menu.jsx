@@ -23,7 +23,7 @@ class Menu extends Component {
               <Link to="/score">Полка</Link>
             </li>
             <li>
-              <Link to="/loading">Загрузка</Link>
+              <Link to="/">Загрузка</Link>
             </li>
           </ul>
         </div>
