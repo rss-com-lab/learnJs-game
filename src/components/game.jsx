@@ -340,7 +340,7 @@ class Game extends Component {
             questions={this.state.numberOfQuestions}
             colors={this.state.colors}
           />
-          <Link to="/" className="close-btn" />
+          <Link to="/menu" className="close-btn" />
         </div>
         <div
           className="game-component-body"

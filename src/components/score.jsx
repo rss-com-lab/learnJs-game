@@ -100,7 +100,7 @@ class Score extends Component {
     return (
       <div className="game-wrapper">
         <div className="header header-empty">
-          <Link to="/" className="close-btn" />
+          <Link to="/menu" className="close-btn" />
         </div>
         <div className="historic-results-title">Достижения</div>
         <div className="historic-results">

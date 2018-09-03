@@ -120,6 +120,7 @@ class Player extends Component {
       <div className="game-wrapper">
         {
           <div className="players-list">
+            <Link to="/menu" className="close-btn" />
             <Link to="/register" className="menu-link">
               Новый игрок
             </Link>
