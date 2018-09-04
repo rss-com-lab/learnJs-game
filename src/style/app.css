@@ -481,13 +481,83 @@ body {
   color: #000000; }
 
 @media (min-width: 960px) {
-  body:nth-child(2) {
+  body {
+    font-size: 26px; }
+  .root-node {
     display: flex;
     height: 100vh;
     justify-content: center;
     align-items: center; }
+  .close-btn {
+    width: 50px;
+    height: 50px;
+    margin: 10px; }
   .game-wrapper {
     height: 600px;
     width: 375px;
     margin: auto;
-    overflow: hidden; } }
+    overflow: hidden; }
+  .step-one-input {
+    font-size: 1.5rem; }
+  .step-one-confirm-btn {
+    height: 50px;
+    width: 50px; }
+  .settings-item {
+    font-size: 1.5rem; }
+  .settings-buttons {
+    font-size: 1.5rem; }
+  .best-score-figure-container {
+    width: 50px; }
+  .progress-line {
+    margin: 0 auto; }
+  .progress-line-item {
+    width: 50px;
+    height: 50px;
+    margin-right: 5px; }
+  .question-title {
+    font-size: 1rem; }
+  .question-text {
+    font-size: 1rem; }
+  .answer-time-count {
+    width: auto;
+    height: auto;
+    left: 0;
+    bottom: 0;
+    font-size: 1rem;
+    line-height: 1rem;
+    margin-left: 0;
+    padding: 5px; }
+  .unmute-btn, .mute-btn {
+    width: 30px;
+    height: 30px;
+    left: 0; }
+  .question-answer-wrapper {
+    font-size: 1rem; }
+  .answer-input {
+    font-size: 1rem; }
+  .keyboard-cell {
+    font-size: 30px; }
+  .historic-results-container {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin: 5px; }
+  .clear-historic-results {
+    bottom: 10vh;
+    width: 300px; }
+  .step-two-text {
+    font-size: 1rem;
+    line-height: 1.2rem;
+    margin: 5px auto;
+    padding: 5px;
+    text-align: center; }
+  .complexity-btn-image {
+    height: auto;
+    width: auto;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    padding: 5px;
+    border-width: 3px; }
+  .step-two-confirm-btn {
+    width: 50px;
+    height: 50px; } }

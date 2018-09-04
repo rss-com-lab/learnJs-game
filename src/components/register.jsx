@@ -127,7 +127,7 @@ class Register extends Component {
     let question = testQuestions[this.state.questionNumber];
 
     if (this.state.setupCompleted) {
-      return <Redirect push to="/" />;
+      return <Redirect push to="/menu" />;
     }
 
     return (
