@@ -2,12 +2,14 @@ $color-background: #ecf7fd;
 $color-text: #afd3df;
 
 .menu-screen {
+  display: flex;
+  justify-content: center;
   background-color: $color-background;
   width: 100%;
   height: 100%;
 
   ul {
-    margin: 30vh auto;
+    margin: auto;
     padding: 0;
   }
 
