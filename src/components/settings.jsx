@@ -1,25 +1,25 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 
-import store from "../store/store";
-import { timeoutIncreased, timeoutDecreased } from "../ducks/timeout";
-import { complexitySelected } from "../ducks/complexity";
-import closeBtn from "../img/close-btn.png";
+import store from '../store/store';
+import {timeoutIncreased, timeoutDecreased} from '../ducks/timeout';
+import {complexitySelected} from '../ducks/complexity';
+import closeBtn from '../img/close-btn.png';
 
-import "../style/app.css";
+import '../style/app.css';
 
 const mapStateToProps = state => {
   return {
     timeout: state.timeout,
-    complexity: state.complexity
+    complexity: state.complexity,
   };
 };
 
 class Settings extends Component {
   constructor(props) {
     super(props);
-    this.state = { value: store.getState().complexity };
+    this.state = {value: store.getState().complexity};
   }
 
   componentDidMount = () => {
@@ -29,7 +29,7 @@ class Settings extends Component {
   select = e => {
     store.dispatch(complexitySelected(parseInt(e.target.value, 10)));
     this.setState({
-      value: store.getState().complexity
+      value: store.getState().complexity,
     });
   };
 
@@ -51,9 +51,7 @@ class Settings extends Component {
     return (
       <div className="game-wrapper">
         <div className="header">
-          <Link to="/" className="close-btn">
-            <img className="close-btn-image" src={closeBtn} alt={"Close"} />
-          </Link>
+          <Link to="/menu" className="close-btn" />
         </div>
         <div>Настройки игры</div>
         <ul className="settings-list">
@@ -69,7 +67,8 @@ class Settings extends Component {
                   type="radio"
                   value="1"
                   checked={this.state.value === 1}
-                />1
+                />
+                1
               </label>
               <label>
                 <input
@@ -78,7 +77,8 @@ class Settings extends Component {
                   type="radio"
                   value="2"
                   checked={this.state.value === 2}
-                />2
+                />
+                2
               </label>
               <label>
                 <input
@@ -87,7 +87,8 @@ class Settings extends Component {
                   type="radio"
                   value="3"
                   checked={this.state.value === 3}
-                />3
+                />
+                3
               </label>
             </div>
           </li>
@@ -98,15 +99,13 @@ class Settings extends Component {
             <div className="settings-buttons">
               <div
                 className="settings-add-button"
-                onClick={this.timeoutDecreased}
-              >
+                onClick={this.timeoutDecreased}>
                 -
               </div>
               <div className="settings-selected">{timeout}</div>
               <div
                 className="settings-add-button"
-                onClick={this.timeoutIncreased}
-              >
+                onClick={this.timeoutIncreased}>
                 +
               </div>
             </div>

@@ -140,7 +140,7 @@ class Register extends Component {
             }}>
             Привет, {this.state.name}!
           </div>
-          <Link to="/" className="close-btn" />
+          <Link to="/menu" className="close-btn" />
         </div>
         <div className="body">
           <form
@@ -180,16 +180,14 @@ class Register extends Component {
                 Давай подберем тебе уровень сложности.
               </p>
               <p className="step-two-text">
-                Нажми на кнопку<span className="complexity-btn-image">
-                  Легко
-                </span>{' '}
-                если задание кажется тебе легким.
+                Нажми на кнопку
+                <span className="complexity-btn-image">Легко</span> если задание
+                кажется тебе легким.
               </p>
               <p className="step-two-text">
-                Или на кнопку<span className="complexity-btn-image tough">
-                  Сложно
-                </span>{' '}
-                если кажется сложным.
+                Или на кнопку
+                <span className="complexity-btn-image tough">Сложно</span> если
+                кажется сложным.
               </p>
             </div>
             <div
