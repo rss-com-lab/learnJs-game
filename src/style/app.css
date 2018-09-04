@@ -483,7 +483,7 @@ body {
 @media (min-width: 960px) {
   body {
     font-size: 26px; }
-  body:nth-child(2) {
+  .root-node {
     display: flex;
     height: 100vh;
     justify-content: center;
