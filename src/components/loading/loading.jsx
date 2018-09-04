@@ -1,15 +1,29 @@
 import React, {Component} from 'react';
+import {Redirect} from 'react-router';
 
 import '../../style/app.css';
 import './loading.css';
 
 class Loading extends Component {
-  finishLoading() {
-    window.location.href += 'menu';
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoaded: false,
+    };
+  }
+
+  finishLoading = () => this.setState({isLoaded: true});
+
+  componentDidMount() {
+    setTimeout(this.finishLoading, 5000);
   }
 
   render() {
-    setTimeout(this.finishLoading, 5000);
+    if (this.state.isLoaded) {
+      return <Redirect to="/menu" />;
+    }
+
     return (
       <div className="game-wrapper">
         <div className="loading-screen">
