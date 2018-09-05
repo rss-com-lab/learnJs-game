@@ -1,5 +1,6 @@
 {
     "numberOfLevels": 2,
+    "numberOfStages": 2,
     "numberOfQuestions": 5,
     "complexity": {
         "1": {
