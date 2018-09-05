@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import '../style/app.css';
 import {Route, Switch} from 'react-router-dom';
 
-import Player from './player';
+import Players from './players';
 import Register from './register';
 import Game from './game';
 import Settings from './settings';
@@ -10,6 +10,7 @@ import Score from './score';
 import Exit from './exit';
 import Loading from './loading/loading';
 import Menu from './menu/menu';
+import Stages from './stages/stages';
 
 class App extends Component {
   render() {
@@ -17,7 +18,8 @@ class App extends Component {
       <Switch>
         <Route exact path="/" component={Loading} />
         <Route exact path="/menu" component={Menu} />
-        <Route exact path="/player" component={Player} />
+        <Route exact path="/player" component={Players} />
+        <Route exact path="/stages" component={Stages} />
         <Route path="/register" component={Register} />
         <Route exact path="/game" component={Game} />
         <Route path="/settings" component={Settings} />

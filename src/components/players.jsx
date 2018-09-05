@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 import '../style/app.css';
 
-class Player extends Component {
+class Players extends Component {
   sortArray = array => {
     if (array.length === 0) return 0;
     let scoresArray = array.map(elem => {
@@ -128,7 +128,7 @@ class Player extends Component {
               <div className="player" key={index}>
                 <Link
                   to={{
-                    pathname: '/game',
+                    pathname: '/stages',
                     state: {user: item.name},
                   }}
                   className="menu-link">
@@ -176,4 +176,4 @@ class Player extends Component {
   }
 }
 
-export default Player;
+export default Players;

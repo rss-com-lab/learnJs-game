@@ -8,8 +8,15 @@ import {
   testFailed,
   testNewGame,
   testNextLevel,
+  testNextStage,
 } from '../ducks/progress';
-import {gameOver, gameStart, gamePlay, nextLevel} from '../ducks/gamestatus';
+import {
+  gameOver,
+  gameStart,
+  gamePlay,
+  nextLevel,
+  nextStage,
+} from '../ducks/gamestatus';
 import {setCurrentUser} from '../ducks/users';
 
 import ProgressLine from './progress-line';
@@ -87,7 +94,7 @@ class Game extends Component {
 
     store.dispatch(setCurrentUser(this.state.user));
 
-    fetch('https://rawgit.com/AlesiaGit/math-game-web/01/src/config.json')
+    fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
       .then(results => {
         return results.json();
       })
@@ -96,6 +103,7 @@ class Game extends Component {
           maxNumber: data.complexity[store.getState().complexity].maxNumber,
           numberOfQuestions: data.numberOfQuestions,
           numberOfLevels: data.numberOfLevels,
+          numberOfStages: data.numberOfStages,
           config: data,
         });
         this.setQuestionsNextLevel();
@@ -217,12 +225,22 @@ class Game extends Component {
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
       setTimeout(() => {
-        if (this.isLastLevel()) {
-          store.dispatch(gameOver('Игра окончена'));
-          store.dispatch(testNewGame());
+        if (this.isLastStage()) {
+          if (this.isLastLevel()) {
+            store.dispatch(gameOver('Игра окончена'));
+            store.dispatch(testNewGame());
+          } else {
+            store.dispatch(nextLevel('И еще один уровень'));
+            store.dispatch(testNextLevel());
+            this.setState({
+              colors: [],
+              figure: figures[Math.floor(Math.random() * figures.length)],
+              percent: '0%',
+            });
+          }
         } else {
-          store.dispatch(nextLevel('И еще один уровень'));
-          store.dispatch(testNextLevel());
+          store.dispatch(nextStage('Следующий этап'));
+          store.dispatch(testNextStage());
           this.setState({
             colors: [],
             figure: figures[Math.floor(Math.random() * figures.length)],
@@ -249,6 +267,10 @@ class Game extends Component {
 
   isLastLevel = () => {
     return store.getState().gameStatus.levelCount === this.state.numberOfLevels;
+  };
+
+  isLastStage = () => {
+    return store.getState().gameStatus.stageCount === this.state.numberOfStages;
   };
 
   timeout = () => {};
@@ -278,7 +300,12 @@ class Game extends Component {
       store.dispatch(gamePlay());
     }
 
-    if (store.getState().gameStatus.currentStatus === 'next') {
+    if (store.getState().gameStatus.currentStatus === 'next_stage') {
+      this.setQuestionsNextLevel();
+      store.dispatch(gamePlay());
+    }
+
+    if (store.getState().gameStatus.currentStatus === 'next_level') {
       this.setQuestionsNextLevel();
       store.dispatch(gamePlay());
     }
