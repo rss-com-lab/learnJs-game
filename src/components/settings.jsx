@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import store from '../store/store';
 import {timeoutIncreased, timeoutDecreased} from '../ducks/timeout';
 import {complexitySelected} from '../ducks/complexity';
-import closeBtn from '../img/close-btn.png';
 
 import '../style/app.css';
 
