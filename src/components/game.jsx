@@ -27,6 +27,7 @@ import correctAnswerSound from '../audio/Correct-answer-sound.mp3';
 import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
 
 import {generateQuestionsList} from '../api/questions';
+import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import '../style/app.css';
 
 const mapStateToProps = state => {
@@ -381,7 +382,7 @@ class Game extends Component {
             </div>
             <div className="answer-field-wrapper">
               <div className="answer-time-count">
-                {this.state.remainingTime}
+                {convertSecondsToTime(this.state.remainingTime)}
               </div>
               <div
                 className={muteBtnStyle}
