@@ -44,7 +44,7 @@ class Menu extends Component {
             <li>
               <Link
                 to="/settings"
-                className={this.liAvailabilityColor()}
+                className={this.listItemClass()}
                 onClick={this.handleClick}>
                 Настройки
               </Link>
@@ -52,7 +52,7 @@ class Menu extends Component {
             <li>
               <Link
                 to="/score"
-                className={this.liAvailabilityColor()}
+                className={this.listItemClass()}
                 onClick={this.handleClick}>
                 Полка
               </Link>
