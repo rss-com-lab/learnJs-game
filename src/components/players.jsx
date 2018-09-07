@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import '../style/app.css';
-import {setCurrentUser} from '../ducks/users';
-import store from '../store/store';
 
 class Players extends Component {
   sortArray = array => {
@@ -115,8 +113,6 @@ class Players extends Component {
     }
   };
 
-  handlePlayerChoice = player => store.dispatch(setCurrentUser(player));
-
   render() {
     let users = JSON.parse(localStorage.getItem('users')) || [];
 
@@ -136,11 +132,7 @@ class Players extends Component {
                     state: {user: item.name},
                   }}
                   className="menu-link">
-                  <div
-                    className="player-name"
-                    onClick={this.handlePlayerChoice.bind(null, item)}>
-                    {item.name}
-                  </div>
+                  <div className="player-name">{item.name}</div>
                 </Link>
                 <Link
                   to={{

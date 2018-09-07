@@ -1,6 +1,5 @@
 $color-background: #ecf7fd;
-$color-text-available: #afd3df;
-$color-text-not-available: #d6d6d6;
+$color-text: #afd3df;
 
 .menu-screen {
   display: flex;
@@ -21,17 +20,8 @@ $color-text-not-available: #d6d6d6;
   }
 
   a {
+    color: $color-text;
     font-size: 36px;
     text-decoration: none;
   }
-
-  .available{
-    color: $color-text-available;
-  }
-
-  .not-available{
-    color: $color-text-not-available;
-  }
 }
-
-

@@ -8,11 +8,11 @@ import './stages.css';
 
 class Stages extends Component {
   getStageNumber = () => {
-    return store.getState().currentUser.currentSession.stage;
+    return store.getState().gameStatus.stageCount;
   };
 
   getLevelNumber = () => {
-    return store.getState().currentUser.currentSession.level;
+    return store.getState().gameStatus.levelCount;
   };
 
   render() {
@@ -23,7 +23,13 @@ class Stages extends Component {
             stage {this.getStageNumber()} level {this.getLevelNumber()}
           </h3>
           <div className="stage-circle">
-            <Link to="/game" className="menu-link" />
+            <Link
+              to={{
+                pathname: '/game',
+                state: {user: this.props.location.state.user},
+              }}
+              className="menu-link"
+            />
           </div>
         </div>
       </div>

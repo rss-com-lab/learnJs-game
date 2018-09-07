@@ -17,7 +17,7 @@ import {
   nextLevel,
   nextStage,
 } from '../ducks/gamestatus';
-//import {setCurrentUser} from '../ducks/users';
+import {setCurrentUser} from '../ducks/users';
 
 import ProgressLine from './progress-line';
 import Keyboard from './keyboard';
@@ -45,7 +45,7 @@ class Game extends Component {
     super(props);
 
     this.state = {
-      //user: this.props.location.state.user,
+      user: this.props.location.state.user,
       value: '',
       submitted: false,
       remainingTime: 0,
@@ -93,7 +93,7 @@ class Game extends Component {
     this.muteBtn.addEventListener('click', this.muteSounds);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
 
-    //store.dispatch(setCurrentUser(this.state.user));
+    store.dispatch(setCurrentUser(this.state.user));
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
       .then(results => {
