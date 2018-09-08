@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router';
 
 import store from '../store/store';
 import {
@@ -29,6 +30,7 @@ import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
 import {generateQuestionsList} from '../api/questions';
 import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import '../style/app.css';
+import {setCurrentUser} from '../ducks/users';
 
 const mapStateToProps = state => {
   return {
@@ -45,7 +47,7 @@ class Game extends Component {
     super(props);
 
     this.state = {
-      //user: this.props.location.state.user,
+      user: store.getState().currentUser.name,
       value: '',
       submitted: false,
       remainingTime: 0,
@@ -53,6 +55,8 @@ class Game extends Component {
       figure: figures[Math.floor(Math.random() * figures.length)],
       percent: '0%',
       muted: false,
+      stageCompleted: false,
+      levelCompleted: false,
     };
   }
 
@@ -159,7 +163,7 @@ class Game extends Component {
     localStorage.setItem('users', JSON.stringify(users));
   };
 
-  componentWillUnmount = () => {
+  /*componentWillUnmount = () => {
     this.node.removeEventListener('click', this.handleClick);
     this.muteBtn.removeEventListener('click', this.muteSounds);
     this.unsubscribe();
@@ -167,7 +171,7 @@ class Game extends Component {
     clearTimeout(this.countdown);
     store.dispatch(testNewGame());
     store.dispatch(gameStart('Начать игру'));
-  };
+  };*/
 
   handleClick = e => {
     if (
@@ -212,6 +216,21 @@ class Game extends Component {
     this.nextQuestion();
   };
 
+  updateCurrentSession = () => {
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+
+    users = users.map(elem => {
+      if (elem.name === this.state.user) {
+        elem.currentSession.stage = store.getState().gameStatus.stageCount;
+        elem.currentSession.level = store.getState().gameStatus.levelCount;
+        this.setState({user: elem});
+        store.dispatch(setCurrentUser(this.state.user));
+      }
+      return elem;
+    });
+    localStorage.setItem('users', JSON.stringify(users));
+  };
+
   handleInputChange = () => {
     clearTimeout(this.timeout);
     clearInterval(this.countdown);
@@ -233,19 +252,23 @@ class Game extends Component {
           } else {
             store.dispatch(nextLevel('И еще один уровень'));
             store.dispatch(testNextLevel());
+            this.updateCurrentSession();
             this.setState({
               colors: [],
               figure: figures[Math.floor(Math.random() * figures.length)],
               percent: '0%',
+              levelCompleted: true,
             });
           }
         } else {
           store.dispatch(nextStage('Следующий этап'));
           store.dispatch(testNextStage());
+          this.updateCurrentSession();
           this.setState({
             colors: [],
             figure: figures[Math.floor(Math.random() * figures.length)],
             percent: '0%',
+            stageCompleted: true,
           });
         }
       }, 500);
@@ -360,6 +383,10 @@ class Game extends Component {
     let inputCellsWidth =
       this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
+
+    if (this.state.stageCompleted || this.state.levelCompleted) {
+      return <Redirect push to="/stages" />;
+    }
 
     return (
       <div className="game-wrapper game-component">
