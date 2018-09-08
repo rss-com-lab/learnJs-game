@@ -109,14 +109,17 @@ class Register extends Component {
       this.setState({
         setupCompleted: true,
       });
-      store.dispatch(setCurrentUser(this.state.name));
       let users = JSON.parse(localStorage.getItem('users')) || [];
       let currentUser = {
         name: this.state.name,
         score: [],
         complexity: this.state.complexity,
+        currentSession: {
+          level: 1,
+          stage: 1,
+        },
       };
-
+      store.dispatch(setCurrentUser(currentUser));
       store.dispatch(complexitySelected(this.state.complexity));
       users.push(currentUser);
       localStorage.setItem('users', JSON.stringify(users));
@@ -127,7 +130,7 @@ class Register extends Component {
     let question = testQuestions[this.state.questionNumber];
 
     if (this.state.setupCompleted) {
-      return <Redirect push to="/menu" />;
+      return <Redirect push to="/stages" />;
     }
 
     return (
