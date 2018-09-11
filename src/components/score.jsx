@@ -2,16 +2,15 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import '../style/app.css';
+import store from '../store/store';
 
 class Score extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      user: this.props.location.state.user,
+      user: store.getState().currentUser.name,
     };
-
-    console.log(this.props.location.state.user);
   }
 
   renderHistoricResults = item => {
