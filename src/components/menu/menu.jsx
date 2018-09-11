@@ -12,7 +12,6 @@ class Menu extends Component {
   handleClick = e => {
     if (!this.isLoggedIn()) {
       e.preventDefault();
-      console.log('hahahahahahahah u r not logged in!');
     }
   };
 

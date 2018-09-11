@@ -11,6 +11,7 @@ import Exit from './exit';
 import Loading from './loading/loading';
 import Menu from './menu/menu';
 import Stages from './stages/stages';
+import Shelve from './shelve/shelve';
 
 class App extends Component {
   render() {
@@ -24,7 +25,7 @@ class App extends Component {
         <Route exact path="/game" component={Game} />
         <Route path="/settings" component={Settings} />
         <Route path="/score" component={Score} />
-        <Route path="/exit" component={Exit} />
+        <Route path="/exit" component={Shelve} />
       </Switch>
     );
   }
