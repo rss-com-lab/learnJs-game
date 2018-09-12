@@ -25,7 +25,8 @@ class App extends Component {
         <Route exact path="/game" component={Game} />
         <Route path="/settings" component={Settings} />
         <Route path="/score" component={Score} />
-        <Route path="/exit" component={Shelve} />
+        <Route path="/exit" component={Exit} />
+        <Route exact path="/shelve" component={Shelve} />
       </Switch>
     );
   }

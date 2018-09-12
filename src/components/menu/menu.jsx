@@ -57,8 +57,8 @@ class Menu extends Component {
               </Link>
             </li>
             <li>
-              <Link className="available" to="/">
-                Загрузка
+              <Link className="available" to="/shelve">
+                Новая полка
               </Link>
             </li>
           </ul>

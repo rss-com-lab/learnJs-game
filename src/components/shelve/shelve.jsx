@@ -21,8 +21,15 @@ class Shelve extends Component {
               .fill('')
               .map((item, i) => (
                 <div className="shelve-cell" key={i + 1}>
-                  <div className="shelve-digit">{i + 1}</div>
-                  <div className="award" />
+                  <div
+                    className="shelve-digit"
+                    style={i === 0 ? {display: 'none'} : null}>
+                    {i + 1}
+                  </div>
+                  <div
+                    className="award"
+                    style={i === 0 ? {display: 'block'} : null}
+                  />
                 </div>
               ))}
           </div>
