@@ -56,6 +56,7 @@ class Game extends Component {
       muted: false,
       stageCompleted: false,
       levelCompleted: false,
+      awardShowed: false,
     };
   }
 
@@ -223,6 +224,7 @@ class Game extends Component {
       if (elem.name === this.state.user) {
         elem.currentSession.stage = store.getState().gameStatus.stageCount;
         elem.currentSession.level = store.getState().gameStatus.levelCount;
+        elem.currentSession.awards++;
         this.setState({user: elem});
         store.dispatch(setCurrentUser(this.state.user));
       }
@@ -253,23 +255,27 @@ class Game extends Component {
             store.dispatch(nextLevel('И еще один уровень'));
             store.dispatch(testNextLevel());
             this.updateCurrentSession();
-            this.setState({
-              colors: [],
-              figure: figures[Math.floor(Math.random() * figures.length)],
-              percent: '0%',
-              levelCompleted: true,
-            });
+            setTimeout(() => {
+              this.setState({
+                colors: [],
+                figure: figures[Math.floor(Math.random() * figures.length)],
+                percent: '0%',
+                levelCompleted: true,
+              });
+            }, 2000);
           }
         } else {
           store.dispatch(nextStage('Следующий этап'));
           store.dispatch(testNextStage());
           this.updateCurrentSession();
-          this.setState({
-            colors: [],
-            figure: figures[Math.floor(Math.random() * figures.length)],
-            percent: '0%',
-            stageCompleted: true,
-          });
+          setTimeout(() => {
+            this.setState({
+              colors: [],
+              figure: figures[Math.floor(Math.random() * figures.length)],
+              percent: '0%',
+              stageCompleted: true,
+            });
+          }, 2000);
         }
       }, 500);
     } else {
@@ -385,7 +391,7 @@ class Game extends Component {
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
 
     if (this.state.stageCompleted || this.state.levelCompleted) {
-      return <Redirect push to="/stages" />;
+      return <Redirect push to="/shelve" />;
     }
 
     return (
@@ -460,7 +466,7 @@ class Game extends Component {
         </div>
         <div
           className="game-wrapper-overlay"
-          style={{display: playStatus ? 'none' : 'flex'}}>
+          style={{display: playStatus ? 'none' : 'none'}}>
           <Link
             to={this.updateLink(store.getState().gameStatus.currentStatus)}
             className="game-btn"
@@ -482,6 +488,12 @@ class Game extends Component {
           }}>
           <source src={wrongAnswerSound} />
         </audio>
+        <div
+          className={
+            'game-component__award game-component__award_' +
+            (playStatus ? 'hidden' : 'visible')
+          }
+        />
       </div>
     );
   }

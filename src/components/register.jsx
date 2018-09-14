@@ -117,6 +117,7 @@ class Register extends Component {
         currentSession: {
           level: 1,
           stage: 1,
+          awards: 0,
         },
       };
       store.dispatch(setCurrentUser(currentUser));

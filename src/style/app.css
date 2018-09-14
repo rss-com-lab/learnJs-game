@@ -480,6 +480,26 @@ body {
   padding: 10vh;
   color: #000000; }
 
+.game-component__award {
+  position: absolute;
+  background-image: url("../img/cactus.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center; }
+
+.game-component__award_hidden {
+  width: 5vmin;
+  height: 5vmin;
+  margin-top: calc(50vh - 2.5vmin);
+  visibility: hidden; }
+
+.game-component__award_visible {
+  width: 90vmin;
+  height: 90vmin;
+  margin-top: calc(50vh - 45vmin);
+  visibility: visible;
+  transition: 2s; }
+
 @media (min-width: 960px) {
   body {
     font-size: 26px; }
