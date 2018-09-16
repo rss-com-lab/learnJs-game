@@ -56,7 +56,6 @@ class Game extends Component {
       muted: false,
       stageCompleted: false,
       levelCompleted: false,
-      awardShowed: false,
     };
   }
 
@@ -96,8 +95,6 @@ class Game extends Component {
     this.node.addEventListener('click', this.handleClick);
     this.muteBtn.addEventListener('click', this.muteSounds);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
-
-    //store.dispatch(setCurrentUser(this.state.user));
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
       .then(results => {
@@ -224,7 +221,12 @@ class Game extends Component {
       if (elem.name === this.state.user) {
         elem.currentSession.stage = store.getState().gameStatus.stageCount;
         elem.currentSession.level = store.getState().gameStatus.levelCount;
-        elem.currentSession.awards++;
+        if (
+          store.getState().gameStatus.currentStatus === 'next_level' ||
+          store.getState().gameStatus.currentStatus === 'end'
+        ) {
+          elem.currentSession.awards++;
+        }
         this.setState({user: elem});
         store.dispatch(setCurrentUser(this.state.user));
       }
@@ -251,11 +253,17 @@ class Game extends Component {
           if (this.isLastLevel()) {
             store.dispatch(gameOver('Игра окончена'));
             store.dispatch(testNewGame());
+            setTimeout(() => {
+              this.updateCurrentSession();
+              this.setState({
+                levelCompleted: true,
+              });
+            }, 2000);
           } else {
             store.dispatch(nextLevel('И еще один уровень'));
             store.dispatch(testNextLevel());
-            this.updateCurrentSession();
             setTimeout(() => {
+              this.updateCurrentSession();
               this.setState({
                 colors: [],
                 figure: figures[Math.floor(Math.random() * figures.length)],
@@ -268,14 +276,12 @@ class Game extends Component {
           store.dispatch(nextStage('Следующий этап'));
           store.dispatch(testNextStage());
           this.updateCurrentSession();
-          setTimeout(() => {
-            this.setState({
-              colors: [],
-              figure: figures[Math.floor(Math.random() * figures.length)],
-              percent: '0%',
-              stageCompleted: true,
-            });
-          }, 2000);
+          this.setState({
+            colors: [],
+            figure: figures[Math.floor(Math.random() * figures.length)],
+            percent: '0%',
+            stageCompleted: true,
+          });
         }
       }, 500);
     } else {
@@ -348,7 +354,7 @@ class Game extends Component {
   updateLink = status => {
     if (status === 'end') {
       return {
-        pathname: '/score',
+        pathname: '/shelve',
         state: {
           user: this.state.user,
         },
@@ -384,14 +390,19 @@ class Game extends Component {
 
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
+    let currentStatus = store.getState().gameStatus.currentStatus;
     let zeroCellDisplay =
       this.state.questionType === 'selective' ? 'none' : 'block';
     let inputCellsWidth =
       this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
 
-    if (this.state.stageCompleted || this.state.levelCompleted) {
+    if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
+    }
+
+    if (this.state.stageCompleted) {
+      return <Redirect push to="/stages" />;
     }
 
     return (
@@ -466,7 +477,7 @@ class Game extends Component {
         </div>
         <div
           className="game-wrapper-overlay"
-          style={{display: playStatus ? 'none' : 'none'}}>
+          style={{display: currentStatus === 'end' ? 'flex' : 'none'}}>
           <Link
             to={this.updateLink(store.getState().gameStatus.currentStatus)}
             className="game-btn"
@@ -491,7 +502,9 @@ class Game extends Component {
         <div
           className={
             'game-component__award game-component__award_' +
-            (playStatus ? 'hidden' : 'visible')
+            (currentStatus === 'next_level' || currentStatus === 'end'
+              ? 'visible'
+              : 'hidden')
           }
         />
       </div>
