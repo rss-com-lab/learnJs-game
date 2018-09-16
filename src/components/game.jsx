@@ -18,7 +18,6 @@ import {
   nextLevel,
   nextStage,
 } from '../ducks/gamestatus';
-//import {setCurrentUser} from '../ducks/users';
 
 import ProgressLine from './progress-line';
 import Keyboard from './keyboard';
@@ -163,6 +162,7 @@ class Game extends Component {
     localStorage.setItem('users', JSON.stringify(users));
   };
 
+  //при переходе на экран уровней ошибка
   /*componentWillUnmount = () => {
     this.node.removeEventListener('click', this.handleClick);
     this.muteBtn.removeEventListener('click', this.muteSounds);
