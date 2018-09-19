@@ -160,16 +160,13 @@ class Game extends Component {
     localStorage.setItem('users', JSON.stringify(users));
   };
 
-  //при переходе на экран уровней ошибка
-  /*componentWillUnmount = () => {
-    this.node.removeEventListener('click', this.handleClick);
-    this.muteBtn.removeEventListener('click', this.muteSounds);
+  componentWillUnmount = () => {
+    //this.node.removeEventListener('click', this.handleClick);
+    //this.muteBtn.removeEventListener('click', this.muteSounds);
     this.unsubscribe();
     clearTimeout(this.timeout);
     clearTimeout(this.countdown);
-    store.dispatch(testNewGame());
-    store.dispatch(gameStart('Начать игру'));
-  };*/
+  };
 
   handleClick = e => {
     if (
