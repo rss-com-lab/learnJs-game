@@ -130,12 +130,7 @@ class Players extends Component {
             </Link>
             {users.map((item, index) => (
               <div className="player" key={index}>
-                <Link
-                  to={{
-                    pathname: '/stages',
-                    state: {user: item.name},
-                  }}
-                  className="menu-link">
+                <Link to="/menu" className="menu-link">
                   <div
                     className="player-name"
                     onClick={this.handlePlayerChoice.bind(null, item)}>

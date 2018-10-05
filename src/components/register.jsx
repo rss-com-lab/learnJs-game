@@ -118,6 +118,7 @@ class Register extends Component {
           level: 1,
           stage: 1,
           awards: 0,
+          gamePassed: false,
         },
       };
       store.dispatch(setCurrentUser(currentUser));
@@ -131,7 +132,7 @@ class Register extends Component {
     let question = testQuestions[this.state.questionNumber];
 
     if (this.state.setupCompleted) {
-      return <Redirect push to="/stages" />;
+      return <Redirect push to="/menu" />;
     }
 
     return (
