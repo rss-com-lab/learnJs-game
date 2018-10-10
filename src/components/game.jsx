@@ -92,8 +92,6 @@ class Game extends Component {
   };
 
   componentDidMount = () => {
-    this.node.addEventListener('click', this.handleClick);
-    this.muteBtn.addEventListener('click', this.muteSounds);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
@@ -161,8 +159,6 @@ class Game extends Component {
   };
 
   componentWillUnmount = () => {
-    //this.node.removeEventListener('click', this.handleClick);
-    //this.muteBtn.removeEventListener('click', this.muteSounds);
     this.unsubscribe();
     clearTimeout(this.timeout);
     clearTimeout(this.countdown);
@@ -425,12 +421,7 @@ class Game extends Component {
               <div className="answer-time-count">
                 {convertSecondsToTime(this.state.remainingTime)}
               </div>
-              <div
-                className={muteBtnStyle}
-                ref={node => {
-                  this.muteBtn = node;
-                }}
-              />
+              <div className={muteBtnStyle} onClick={this.muteSounds} />
               <div className="answer-field">
                 <div className="answer-text">Ответ: </div>
                 <div className="answer-input">{this.state.value}</div>
@@ -441,7 +432,8 @@ class Game extends Component {
             className="keyboard"
             ref={node => {
               this.node = node;
-            }}>
+            }}
+            onClick={this.handleClick}>
             <Keyboard
               questionType={this.state.questionType}
               answers={this.state.answers}
