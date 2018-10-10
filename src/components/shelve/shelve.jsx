@@ -7,6 +7,10 @@ import '../../style/app.css';
 import './shelve.css';
 
 class Shelve extends Component {
+  state = {
+    user: store.getState().currentUser,
+  };
+
   render() {
     const numberOfRewards = 28;
 
@@ -23,12 +27,20 @@ class Shelve extends Component {
                 <div className="shelve-cell" key={i + 1}>
                   <div
                     className="shelve-digit"
-                    style={i === 0 ? {display: 'none'} : null}>
+                    style={
+                      i < this.state.user.currentSession.awards
+                        ? {display: 'none'}
+                        : null
+                    }>
                     {i + 1}
                   </div>
                   <div
                     className="award"
-                    style={i === 0 ? {display: 'block'} : null}
+                    style={
+                      i < this.state.user.currentSession.awards
+                        ? {display: 'block'}
+                        : null
+                    }
                   />
                 </div>
               ))}

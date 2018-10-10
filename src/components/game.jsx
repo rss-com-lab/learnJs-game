@@ -96,8 +96,6 @@ class Game extends Component {
     this.muteBtn.addEventListener('click', this.muteSounds);
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
 
-    //store.dispatch(setCurrentUser(this.state.user));
-
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
       .then(results => {
         return results.json();
@@ -162,16 +160,13 @@ class Game extends Component {
     localStorage.setItem('users', JSON.stringify(users));
   };
 
-  //при переходе на экран уровней ошибка
-  /*componentWillUnmount = () => {
-    this.node.removeEventListener('click', this.handleClick);
-    this.muteBtn.removeEventListener('click', this.muteSounds);
+  componentWillUnmount = () => {
+    //this.node.removeEventListener('click', this.handleClick);
+    //this.muteBtn.removeEventListener('click', this.muteSounds);
     this.unsubscribe();
     clearTimeout(this.timeout);
     clearTimeout(this.countdown);
-    store.dispatch(testNewGame());
-    store.dispatch(gameStart('Начать игру'));
-  };*/
+  };
 
   handleClick = e => {
     if (
@@ -223,6 +218,12 @@ class Game extends Component {
       if (elem.name === this.state.user) {
         elem.currentSession.stage = store.getState().gameStatus.stageCount;
         elem.currentSession.level = store.getState().gameStatus.levelCount;
+        if (
+          store.getState().gameStatus.currentStatus === 'next_level' ||
+          store.getState().gameStatus.currentStatus === 'end'
+        ) {
+          elem.currentSession.awards++;
+        }
         this.setState({user: elem});
         store.dispatch(setCurrentUser(this.state.user));
       }
@@ -249,16 +250,24 @@ class Game extends Component {
           if (this.isLastLevel()) {
             store.dispatch(gameOver('Игра окончена'));
             store.dispatch(testNewGame());
+            setTimeout(() => {
+              this.updateCurrentSession();
+              this.setState({
+                levelCompleted: true,
+              });
+            }, 2000);
           } else {
             store.dispatch(nextLevel('И еще один уровень'));
             store.dispatch(testNextLevel());
-            this.updateCurrentSession();
-            this.setState({
-              colors: [],
-              figure: figures[Math.floor(Math.random() * figures.length)],
-              percent: '0%',
-              levelCompleted: true,
-            });
+            setTimeout(() => {
+              this.updateCurrentSession();
+              this.setState({
+                colors: [],
+                figure: figures[Math.floor(Math.random() * figures.length)],
+                percent: '0%',
+                levelCompleted: true,
+              });
+            }, 2000);
           }
         } else {
           store.dispatch(nextStage('Следующий этап'));
@@ -342,7 +351,7 @@ class Game extends Component {
   updateLink = status => {
     if (status === 'end') {
       return {
-        pathname: '/score',
+        pathname: '/shelve',
         state: {
           user: this.state.user,
         },
@@ -378,13 +387,18 @@ class Game extends Component {
 
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
+    let currentStatus = store.getState().gameStatus.currentStatus;
     let zeroCellDisplay =
       this.state.questionType === 'selective' ? 'none' : 'block';
     let inputCellsWidth =
       this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
 
-    if (this.state.stageCompleted || this.state.levelCompleted) {
+    if (this.state.levelCompleted) {
+      return <Redirect push to="/shelve" />;
+    }
+
+    if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
 
@@ -460,7 +474,7 @@ class Game extends Component {
         </div>
         <div
           className="game-wrapper-overlay"
-          style={{display: playStatus ? 'none' : 'flex'}}>
+          style={{display: currentStatus === 'end' ? 'flex' : 'none'}}>
           <Link
             to={this.updateLink(store.getState().gameStatus.currentStatus)}
             className="game-btn"
@@ -482,6 +496,14 @@ class Game extends Component {
           }}>
           <source src={wrongAnswerSound} />
         </audio>
+        <div
+          className={
+            'game-component__award game-component__award_' +
+            (currentStatus === 'next_level' || currentStatus === 'end'
+              ? 'visible'
+              : 'hidden')
+          }
+        />
       </div>
     );
   }
