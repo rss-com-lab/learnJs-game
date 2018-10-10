@@ -1,0 +1,29 @@
+.game-wrapper{
+  background-color: #f9f9ef;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+}
+
+.game-header{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.game-condition{
+  flex-grow: 1;
+}
+
+.game-answer{
+  height: 10%;
+  width: 100%;
+  background-color: #ca8e6c;
+}
+
+.game-keyboard{
+  height: 20%;
+  width: 100%;
+  background-color: #8abfc6;
+}
