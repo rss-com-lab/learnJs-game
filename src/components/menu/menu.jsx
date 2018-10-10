@@ -7,15 +7,26 @@ import '../../style/app.css';
 import './menu.css';
 
 class Menu extends Component {
-  isLoggedIn = () => store.getState().currentUser !== '';
+  isLoggedIn = () => store.getState().currentUser;
+
+  isGameFinished = () => store.getState().currentUser.currentSession.gamePassed;
 
   handleClick = e => {
     if (!this.isLoggedIn()) {
       e.preventDefault();
+    } else {
+      if (e.target.id === 'play-link') {
+        if (this.isGameFinished()) {
+          e.preventDefault();
+        }
+      }
     }
   };
 
-  listItemClass = () => (this.isLoggedIn() ? 'available' : 'not-available');
+  linkClass = () => (this.isLoggedIn() ? 'available' : 'not-available');
+
+  playGameClass = () =>
+    this.isLoggedIn() && !this.isGameFinished() ? 'available' : 'not-available';
 
   render() {
     return (
@@ -25,7 +36,8 @@ class Menu extends Component {
             <li>
               <Link
                 to="/stages"
-                className={this.listItemClass()}
+                id="play-link"
+                className={this.playGameClass()}
                 onClick={this.handleClick}>
                 Играть
               </Link>
@@ -43,7 +55,7 @@ class Menu extends Component {
             <li>
               <Link
                 to="/settings"
-                className={this.listItemClass()}
+                className={this.linkClass()}
                 onClick={this.handleClick}>
                 Настройки
               </Link>
@@ -51,7 +63,7 @@ class Menu extends Component {
             <li>
               <Link
                 to="/score"
-                className={this.listItemClass()}
+                className={this.linkClass()}
                 onClick={this.handleClick}>
                 Полка
               </Link>

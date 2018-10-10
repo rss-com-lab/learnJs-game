@@ -214,11 +214,12 @@ class Game extends Component {
       if (elem.name === this.state.user) {
         elem.currentSession.stage = store.getState().gameStatus.stageCount;
         elem.currentSession.level = store.getState().gameStatus.levelCount;
-        if (
-          store.getState().gameStatus.currentStatus === 'next_level' ||
-          store.getState().gameStatus.currentStatus === 'end'
-        ) {
+        if (store.getState().gameStatus.currentStatus === 'next_level') {
           elem.currentSession.awards++;
+        }
+        if (store.getState().gameStatus.currentStatus === 'end') {
+          elem.currentSession.awards++;
+          elem.currentSession.gamePassed = true;
         }
         this.setState({user: elem});
         store.dispatch(setCurrentUser(this.state.user));
