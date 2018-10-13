@@ -1,12 +1,18 @@
+body{
+  margin: 0;
+}
+
 .game-wrapper{
   background-color: #f9f9ef;
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
 }
 
 .game-header{
   width: 100%;
+  height: 10%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -19,7 +25,7 @@
 .game-answer{
   height: 10%;
   width: 100%;
-  background-color: #ca8e6c;
+  background-color: #ca3721;
 }
 
 .game-keyboard{

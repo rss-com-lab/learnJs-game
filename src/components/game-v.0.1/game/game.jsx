@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 
-import CloseBtn from '../close-btn/close-btn';
+import ProgressLine from '../ProgressLine/ProgressLine';
+import Button from '../Button/Button';
 
 import './game.css';
 
@@ -10,7 +10,9 @@ class Game extends Component {
     return (
       <div className="game-wrapper">
         <div className="game-header">
-          <CloseBtn />
+          <ProgressLine />
+          <Button type="faq-btn" />
+          <Button type="close-btn" />
         </div>
         <div className="game-condition" />
         <div className="game-answer" />

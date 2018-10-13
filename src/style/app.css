@@ -4,7 +4,8 @@ h2 {
 body {
   font-family: "Ubuntu", sans-serif;
   font-size: calc(3vw + 3vh);
-  color: #afcfdb; }
+  color: #afcfdb;
+  margin: 0; }
 
 .temp-text {
   height: 90vh;
