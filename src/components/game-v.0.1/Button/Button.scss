@@ -3,12 +3,16 @@
   height: 15vmin;
   margin: 1vmin;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(15deg);
 }
 
 .close-btn{
-  background-color: red;
+  background-color: #c4323d;
 }
 
 .faq-btn{
-  background-color: cornflowerblue;
+  background-color: #0cb3c6;
 }
