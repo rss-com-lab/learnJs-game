@@ -7,19 +7,19 @@ const ProgressLine = () => {
   return (
     <div className="progress-line">
       <div className="progress-line__item">
-        <FontAwesomeIcon icon="circle" color="#0cb3c6" />
+        <FontAwesomeIcon icon="circle" className="progress-line__item_dot" />
       </div>
       <div className="progress-line__item">
-        <FontAwesomeIcon icon="circle" color="#0cb3c6" />
+        <FontAwesomeIcon icon="circle" className="progress-line__item_dot" />
       </div>
       <div className="progress-line__item">
-        <FontAwesomeIcon icon="star" size="2x" color="#fdd14c" />
+        <FontAwesomeIcon icon="star" className="progress-line__item_star" />
       </div>
       <div className="progress-line__item">
-        <FontAwesomeIcon icon="star" size="2x" color="#fdd14c" />
+        <FontAwesomeIcon icon="star" className="progress-line__item_star" />
       </div>
       <div className="progress-line__item">
-        <FontAwesomeIcon icon="star" size="2x" color="#fdd14c" />
+        <FontAwesomeIcon icon="star" className="progress-line__item_star" />
       </div>
     </div>
   );

@@ -2,6 +2,14 @@ body{
   margin: 0;
 }
 
+$default-margin : 5vmin;
+
+%flex-n-centering{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .game-wrapper{
   background-color: #f9f9ef;
   height: 100vh;
@@ -11,25 +19,38 @@ body{
 }
 
 .game-header{
-  width: 100%;
-  height: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  @extend %flex-n-centering;
+  margin: $default-margin;
 }
 
 .game-condition{
+  @extend %flex-n-centering;
   flex-grow: 1;
+  font-size: 30px;
+  font-style: italic;
 }
 
-.game-answer{
-  height: 10%;
-  width: 100%;
-  background-color: #ca3721;
+.game-answer {
+  @extend %flex-n-centering;
+  margin: $default-margin $default-margin 0;
+  font-size: 20px;
+  font-style: italic;
+
+  .game-answer__input{
+    width: 100%;
+    margin: $default-margin;
+    padding: 1vmin 3vmin;
+    background-color: #fdd14c;
+    border: none;
+    border-radius: 20vmin;
+    transform: skew(-20deg);
+    font-style: normal;
+  }
 }
 
 .game-keyboard{
-  height: 20%;
-  width: 100%;
-  background-color: #8abfc6;
+  @extend %flex-n-centering;
+  margin: 0 $default-margin;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

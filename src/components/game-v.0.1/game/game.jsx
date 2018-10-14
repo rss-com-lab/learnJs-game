@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 
 import ProgressLine from '../ProgressLine/ProgressLine';
-import Button from '../Button/Button';
+import {
+  CheckBtn,
+  BackspaceBtn,
+  CloseBtn,
+  DigitBtn,
+  FaqBtn,
+} from '../Buttons/Buttons';
 
 import {} from '@fortawesome/fontawesome-free-solid';
 
@@ -13,12 +19,23 @@ class Game extends Component {
       <div className="game-wrapper">
         <div className="game-header">
           <ProgressLine />
-          <Button type="faq" />
-          <Button type="close" />
+          <FaqBtn />
+          <CloseBtn />
         </div>
-        <div className="game-condition" />
-        <div className="game-answer" />
-        <div className="game-keyboard" />
+        <div className="game-condition">2 + 2 =</div>
+        <div className="game-answer">
+          <div>Ответ: </div>
+          <div className="game-answer__input">your answer</div>
+        </div>
+        <div className="game-keyboard">
+          <CheckBtn />
+          {Array(10)
+            .fill('')
+            .map((item, i) => (
+              <DigitBtn key={i} value={i} />
+            ))}
+          <BackspaceBtn />
+        </div>
       </div>
     );
   }
