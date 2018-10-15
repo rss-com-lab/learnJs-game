@@ -230,6 +230,7 @@ class Game extends Component {
   };
 
   handleInputChange = () => {
+    const ANIMATION_CACTUS_TIME = 500;
     clearTimeout(this.timeout);
     clearInterval(this.countdown);
     this.restartCountdown();
@@ -277,7 +278,7 @@ class Game extends Component {
             stageCompleted: true,
           });
         }
-      }, 500);
+      }, ANIMATION_CACTUS_TIME);
     } else {
       this.nextQuestion();
       this.clearInputField();

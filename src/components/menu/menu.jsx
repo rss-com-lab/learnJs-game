@@ -69,7 +69,10 @@ class Menu extends Component {
               </Link>
             </li>
             <li>
-              <Link className="available" to="/shelve">
+              <Link
+                to="/shelve"
+                className={this.linkClass()}
+                onClick={this.handleClick}>
                 Новая полка
               </Link>
             </li>
