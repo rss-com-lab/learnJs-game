@@ -14,10 +14,10 @@ const space = 1;
 class Shelve extends Component {
   getFirstLayerDashArray = () => {
     const numberOfStages = store.getState().levels.config[
-      store.getState().currentUser.currentSession.level - 1
+      store.getState().currentUser.user.currentSession.level - 1
     ].stages.length;
     const numberOfCompletedStages =
-      store.getState().currentUser.currentSession.stage - 1;
+      store.getState().currentUser.user.currentSession.stage - 1;
     const paintedPartOfCircle =
       (circleLength / numberOfStages) * numberOfCompletedStages +
       (numberOfCompletedStages && space);
@@ -28,10 +28,10 @@ class Shelve extends Component {
 
   getSecondLayerDashArray = () => {
     const numberOfStages = store.getState().levels.config[
-      store.getState().currentUser.currentSession.level - 1
+      store.getState().currentUser.user.currentSession.level - 1
     ].stages.length;
     const numberOfCompletedStages =
-      store.getState().currentUser.currentSession.stage - 1;
+      store.getState().currentUser.user.currentSession.stage - 1;
     const paintedPartOfCircle = circleLength / numberOfStages - space * 2;
     const unpaintedPartOfCircle =
       (circleLength / numberOfStages) *
@@ -69,7 +69,8 @@ class Shelve extends Component {
                   <div
                     className="shelve-digit"
                     style={
-                      i <= store.getState().currentUser.currentSession.awards
+                      i <=
+                      store.getState().currentUser.user.currentSession.awards
                         ? {display: 'none'}
                         : null
                     }>
@@ -78,7 +79,8 @@ class Shelve extends Component {
                   <div
                     className="award-progress"
                     style={
-                      i === store.getState().currentUser.currentSession.awards
+                      i ===
+                      store.getState().currentUser.user.currentSession.awards
                         ? {display: 'block'}
                         : {display: 'none'}
                     }>
@@ -120,7 +122,8 @@ class Shelve extends Component {
                   <div
                     className="award"
                     style={
-                      i < store.getState().currentUser.currentSession.awards
+                      i <
+                      store.getState().currentUser.user.currentSession.awards
                         ? {display: 'block'}
                         : null
                     }

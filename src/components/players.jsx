@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import '../style/app.css';
-import {setCurrentUser} from '../ducks/users';
+import {logInUser} from '../ducks/users';
 import store from '../store/store';
 
 class Players extends Component {
@@ -115,7 +115,7 @@ class Players extends Component {
     }
   };
 
-  handlePlayerChoice = player => store.dispatch(setCurrentUser(player));
+  handlePlayerChoice = player => store.dispatch(logInUser(player));
 
   render() {
     let users = JSON.parse(localStorage.getItem('users')) || [];

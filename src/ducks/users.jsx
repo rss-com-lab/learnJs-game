@@ -1,23 +1,48 @@
 // users.js
 
 // Actions
-export const CURRENT_USER = 'math-game-web/users/CURRENT_USER';
+export const LOG_IN_USER = 'math-game-web/users/LOG_IN_USER';
+export const LOG_OUT_USER = 'math-game-web/users/LOG_OUT_USER';
+
+let initialState = {
+  status: false,
+  user: '',
+};
 
 // Reducers
-export default function currentUser(state = '', action) {
+export default function currentUser(state = initialState, action) {
   switch (action.type) {
-    case CURRENT_USER:
-      return action.name;
+    case LOG_IN_USER:
+      return {
+        ...state,
+        status: true,
+        user: action.user,
+      };
+    case LOG_OUT_USER:
+      return {
+        ...state,
+        status: false,
+        user: '',
+      };
     default:
       return state;
   }
 }
 
 //Actions creators
-export function setCurrentUser(name) {
+export function logInUser(user) {
   return {
-    type: CURRENT_USER,
-    name: name,
+    type: LOG_IN_USER,
+    status: true,
+    user: user,
+  };
+}
+
+export function logOutUser() {
+  return {
+    type: LOG_OUT_USER,
+    status: false,
+    user: '',
   };
 }
 
