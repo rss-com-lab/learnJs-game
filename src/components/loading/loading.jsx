@@ -4,19 +4,22 @@ import {Redirect} from 'react-router';
 import '../../style/app.css';
 import './loading.css';
 
-class Loading extends Component {
-  constructor(props) {
-    super(props);
+import {setLevelsConfig} from '../../ducks/levels';
+import store from '../../store/store';
 
-    this.state = {
-      isLoaded: false,
-    };
-  }
+class Loading extends Component {
+  state = {
+    isLoaded: false,
+  };
 
   finishLoading = () => this.setState({isLoaded: true});
 
   componentDidMount() {
     setTimeout(this.finishLoading, 5000);
+
+    fetch('https://rawgit.com/ivan-kolesen/hello-world/master/levels.json')
+      .then(result => result.json())
+      .then(data => store.dispatch(setLevelsConfig(data)));
   }
 
   render() {

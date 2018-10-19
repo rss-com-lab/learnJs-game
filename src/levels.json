@@ -1,0 +1,180 @@
+[
+  {
+    level_prize: 'path/to/img_cactus',
+    stages: [
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    level_prize: 'path/to/img_cactus',
+    stages: [
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+      {
+        complexity: 1,
+        type: 'primer_open',
+        questions: [
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+          {
+            type: 'arithmetics',
+          },
+        ],
+      },
+    ],
+  },
+];

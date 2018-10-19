@@ -1,8 +1,11 @@
-export function generateQuestionsList(complexityLevel, config) {
+export function generateQuestionsList(
+  complexityLevel,
+  config,
+  numberOfQuestions,
+) {
   let questionsList = [];
   let operators = config.complexity[complexityLevel].operators;
   let maxNumber = config.complexity[complexityLevel].maxNumber;
-  let numberOfQuestions = config.numberOfQuestions;
   let firstNumber, secondNumber, operator;
 
   for (let i = 1; i <= numberOfQuestions; i++) {

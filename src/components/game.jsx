@@ -94,6 +94,17 @@ class Game extends Component {
   componentDidMount = () => {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
 
+    this.setState({
+      numberOfLevels: store.getState().levels.config.length,
+      numberOfStages: store.getState().levels.config[
+        store.getState().currentUser.currentSession.level - 1
+      ].stages.length,
+      numberOfQuestions: store.getState().levels.config[
+        store.getState().currentUser.currentSession.level - 1
+      ].stages[store.getState().currentUser.currentSession.stage - 1].questions
+        .length,
+    });
+
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
       .then(results => {
         return results.json();
@@ -101,9 +112,6 @@ class Game extends Component {
       .then(data => {
         this.setState({
           maxNumber: data.complexity[store.getState().complexity].maxNumber,
-          numberOfQuestions: data.numberOfQuestions,
-          numberOfLevels: data.numberOfLevels,
-          numberOfStages: data.numberOfStages,
           config: data,
         });
         this.setQuestionsNextLevel();
@@ -202,6 +210,7 @@ class Game extends Component {
     this.questionsList = generateQuestionsList(
       store.getState().complexity,
       this.state.config,
+      this.state.numberOfQuestions,
     );
 
     this.nextQuestion();

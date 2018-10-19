@@ -6,18 +6,18 @@ import store from '../../store/store';
 import '../../style/app.css';
 import './shelve.css';
 
+const PI = 3.14;
+const radius = 35;
+const circleLength = 2 * PI * radius;
+const space = 1;
+
 class Shelve extends Component {
   getFirstLayerDashArray = () => {
-    const PI = 3.14;
-    const radius = 35;
-    const circleLength = 2 * PI * radius;
-
-    const numberOfStages = 9;
+    const numberOfStages = store.getState().levels.config[
+      store.getState().currentUser.currentSession.level - 1
+    ].stages.length;
     const numberOfCompletedStages =
       store.getState().currentUser.currentSession.stage - 1;
-
-    const space = 1;
-
     const paintedPartOfCircle =
       (circleLength / numberOfStages) * numberOfCompletedStages +
       (numberOfCompletedStages && space);
@@ -26,25 +26,12 @@ class Shelve extends Component {
     return `${paintedPartOfCircle}% ${unpaintedPartOfCircle}%`;
   };
 
-  getFirstLayerDashOffset = () => {
-    const PI = 3.14;
-    const radius = 35;
-    const circleLength = 2 * PI * radius;
-
-    return `${circleLength / 4}%`;
-  };
-
   getSecondLayerDashArray = () => {
-    const PI = 3.14;
-    const radius = 35;
-    const circleLength = 2 * PI * radius;
-
-    const numberOfStages = 9;
+    const numberOfStages = store.getState().levels.config[
+      store.getState().currentUser.currentSession.level - 1
+    ].stages.length;
     const numberOfCompletedStages =
       store.getState().currentUser.currentSession.stage - 1;
-
-    const space = 1;
-
     const paintedPartOfCircle = circleLength / numberOfStages - space * 2;
     const unpaintedPartOfCircle =
       (circleLength / numberOfStages) *
@@ -61,15 +48,9 @@ class Shelve extends Component {
     return dasharray;
   };
 
-  getSecondLayerDashOffset = () => {
-    const PI = 3.14;
-    const radius = 35;
-    const circleLength = 2 * PI * radius;
+  getFirstLayerDashOffset = () => `${circleLength / 4}%`;
 
-    const space = 1;
-
-    return `${circleLength / 4 + space}%`;
-  };
+  getSecondLayerDashOffset = () => `${circleLength / 4 + space}%`;
 
   render() {
     const numberOfRewards = 28;
