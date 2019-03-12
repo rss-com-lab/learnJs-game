@@ -4,6 +4,7 @@ import progress from './progress';
 import complexity from './complexity';
 import gameStatus from './gamestatus';
 import currentUser from './users';
+import levels from './levels';
 
 const reducers = {
   timeout: timeout,
@@ -11,6 +12,7 @@ const reducers = {
   complexity: complexity,
   gameStatus: gameStatus,
   currentUser: currentUser,
+  levels: levels,
 };
 
 export default combineReducers(reducers);
