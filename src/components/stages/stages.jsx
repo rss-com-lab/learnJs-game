@@ -8,11 +8,11 @@ import './stages.css';
 
 class Stages extends Component {
   getStageNumber = () => {
-    return store.getState().currentUser.currentSession.stage;
+    return store.getState().currentUser.user.currentSession.stage;
   };
 
   getLevelNumber = () => {
-    return store.getState().currentUser.currentSession.level;
+    return store.getState().currentUser.user.currentSession.level;
   };
 
   render() {

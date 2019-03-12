@@ -29,7 +29,7 @@ import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
 import {generateQuestionsList} from '../api/questions';
 import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import '../style/app.css';
-import {setCurrentUser} from '../ducks/users';
+import {logInUser} from '../ducks/users';
 
 const mapStateToProps = state => {
   return {
@@ -46,7 +46,7 @@ class Game extends Component {
     super(props);
 
     this.state = {
-      user: store.getState().currentUser.name,
+      user: store.getState().currentUser.user.name,
       value: '',
       submitted: false,
       remainingTime: 0,
@@ -97,12 +97,12 @@ class Game extends Component {
     this.setState({
       numberOfLevels: store.getState().levels.config.length,
       numberOfStages: store.getState().levels.config[
-        store.getState().currentUser.currentSession.level - 1
+        store.getState().currentUser.user.currentSession.level - 1
       ].stages.length,
       numberOfQuestions: store.getState().levels.config[
-        store.getState().currentUser.currentSession.level - 1
-      ].stages[store.getState().currentUser.currentSession.stage - 1].questions
-        .length,
+        store.getState().currentUser.user.currentSession.level - 1
+      ].stages[store.getState().currentUser.user.currentSession.stage - 1]
+        .questions.length,
     });
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
@@ -231,7 +231,7 @@ class Game extends Component {
           elem.currentSession.gamePassed = true;
         }
         this.setState({user: elem});
-        store.dispatch(setCurrentUser(this.state.user));
+        store.dispatch(logInUser(this.state.user));
       }
       return elem;
     });

@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router';
 
 import store from '../store/store';
-import {setCurrentUser} from '../ducks/users';
+import {logInUser} from '../ducks/users';
 import {complexitySelected} from '../ducks/complexity';
 
 import '../style/app.css';
@@ -121,7 +121,7 @@ class Register extends Component {
           gamePassed: false,
         },
       };
-      store.dispatch(setCurrentUser(currentUser));
+      store.dispatch(logInUser(currentUser));
       store.dispatch(complexitySelected(this.state.complexity));
       users.push(currentUser);
       localStorage.setItem('users', JSON.stringify(users));
