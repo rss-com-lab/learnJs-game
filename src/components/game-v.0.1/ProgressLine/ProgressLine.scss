@@ -1,23 +1,26 @@
-.progress-line{
+.progress-line {
   display: flex;
   flex-grow: 1;
 }
 
-.progress-line__item{
-  height: 10vh;
-  padding: 0 2vmin;
+.progress-line__item {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 10vh;
+  padding: 0 2vmin;
+
   transform: rotate(10deg);
 }
 
-.progress-line__item_star{
+.progress-line__item_star {
   color: #fdd14c;
+
   transform: scale(1.5);
 }
 
-.progress-line__item_dot{
+.progress-line__item_dot {
   color: #0cb3c6;
+
   transform: scale(0.7);
 }

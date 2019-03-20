@@ -1,31 +1,33 @@
-.btn-container{
-  height: 10vh;
+.btn-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 15vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 10vh;
 }
 
-.btn{
-  border-radius: 50%;
+.btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: rotate(15deg);
+
   color: #ffffff;
+
+  border-radius: 50%;
+  transform: rotate(15deg);
 }
 
-.btn-large{
-  height: 80%;
+.btn-large {
   width: 80%;
+  height: 80%;
 }
 
-.btn-small{
-  height: 65%;
+.btn-small {
   width: 65%;
+  height: 65%;
 }
 
-.btn-close{
+.btn-close {
   background-color: #c4323d;
 
   svg {
@@ -33,7 +35,7 @@
   }
 }
 
-.btn-faq{
+.btn-faq {
   background-color: #0cb3c6;
 
   svg {
@@ -41,7 +43,7 @@
   }
 }
 
-.btn-check{
+.btn-check {
   background-color: #748d39;
 
   svg {
@@ -49,7 +51,7 @@
   }
 }
 
-.btn-backspace{
+.btn-backspace {
   background-color: #c4323d;
 
   svg {
@@ -57,10 +59,10 @@
   }
 }
 
-.btn-digit{
+.btn-digit {
   background-color: #0cb3c6;
 
-  p{
+  p {
     transform: rotate(-15deg);
   }
 }

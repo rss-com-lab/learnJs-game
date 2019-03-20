@@ -4,16 +4,17 @@ $height-elem: 12.5vh;
 $diameter: $height-elem * 0.6;
 
 .shelve-screen {
-  background-color: $color-background;
   width: 100%;
   height: 100%;
+
+  background-color: $color-background;
 }
 
 .shelve-header {
-  height: $height-elem;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  height: $height-elem;
 }
 
 .shelve-main {
@@ -23,40 +24,45 @@ $diameter: $height-elem * 0.6;
 }
 
 .shelve-cell {
-  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: $height-elem;
+  box-sizing: border-box;
   width: 25%;
+  height: $height-elem;
+
   border-bottom: $color-shelve solid 5px;
 }
 
 .shelve-digit {
-  height: $diameter;
-  width: $diameter;
-  border-radius: 50%;
-  background-color: $color-shelve;
-  color: #000000;
-  font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: $diameter;
+  height: $diameter;
+
+  font-size: 20px;
+  color: #000000;
+
+  background-color: $color-shelve;
+  border-radius: 50%;
 }
 
 .award {
+  display: none;
   width: 100%;
   height: 100%;
-  display: none;
+
   background: {
-    image: url("../../img/cactus.png");
-    size: contain;
-    repeat: no-repeat;
     position: center center;
+
+    image: url("../../img/cactus.png");
+    repeat: no-repeat;
+    size: contain;
   }
 }
 
-.award-progress{
-  height: 100%;
+.award-progress {
   width: 100%;
+  height: 100%;
 }
