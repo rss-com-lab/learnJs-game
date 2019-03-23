@@ -4,18 +4,27 @@ You will find some information on how to perform common tasks in file docs/CRA-R
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Available Scripts](#available-scripts)
-  - [npm start](#npm-start)
-  - [npm test](#npm-test)
-  - [npm run build](#npm-run-build)
-  - [npm run eject](#npm-run-eject)
-- [Debugging in the Editor](#debugging-in-the-editor)
+  - [`npm start`](#npm-start)
+  - [`npm test`](#npm-test)
+  - [`npm run build`](#npm-run-build)
+  - [`npm run eject`](#npm-run-eject)
+  - [Visual Studio Code](#visual-studio-code)
+  - [WebStorm](#webstorm)
 - [Formatting Code Automatically](#formatting-code-automatically)
 - [Changing the Page `<title>`](#changing-the-page-title)
 - [Installing a Dependency](#installing-a-dependency)
 - [Importing a Component](#importing-a-component)
+  - [`Button.js`](#buttonjs)
+  - [`DangerButton.js`](#dangerbuttonjs)
 - [Code Splitting](#code-splitting)
+  - [`moduleA.js`](#moduleajs)
+  - [`App.js`](#appjs)
+  - [With React Router](#with-react-router)
 - [Adding a Stylesheet](#adding-a-stylesheet)
+  - [`Button.css`](#buttoncss)
+  - [`Button.js`](#buttonjs-1)
 - [Post-Processing CSS](#post-processing-css)
 - [Adding a CSS Preprocessor (Sass, Less etc.)](#adding-a-css-preprocessor-sass-less-etc)
 - [Adding Images, Fonts, and Files](#adding-images-fonts-and-files)
@@ -30,16 +39,21 @@ You will find some information on how to perform common tasks in file docs/CRA-R
 - [Adding Custom Environment Variables](#adding-custom-environment-variables)
   - [Referencing Environment Variables in the HTML](#referencing-environment-variables-in-the-html)
   - [Adding Temporary Environment Variables In Your Shell](#adding-temporary-environment-variables-in-your-shell)
+    - [Windows (cmd.exe)](#windows-cmdexe)
+    - [Linux, macOS (Bash)](#linux-macos-bash)
   - [Adding Development Environment Variables In `.env`](#adding-development-environment-variables-in-env)
+    - [What other `.env` files are can be used?](#what-other-env-files-are-can-be-used)
 - [Can I Use Decorators?](#can-i-use-decorators)
 - [Integrating with an API Backend](#integrating-with-an-api-backend)
   - [Node](#node)
   - [Ruby on Rails](#ruby-on-rails)
 - [Proxying API Requests in Development](#proxying-api-requests-in-development)
-  - ["Invalid Host Header" Errors After Configuring Proxy](#invalid-host-header-errors-after-configuring-proxy)
+  - ["Invalid Host Header" Errors After Configuring Proxy](#%22invalid-host-header%22-errors-after-configuring-proxy)
   - [Configuring the Proxy Manually](#configuring-the-proxy-manually)
   - [Configuring a WebSocket Proxy](#configuring-a-websocket-proxy)
 - [Using HTTPS in Development](#using-https-in-development)
+    - [Windows (cmd.exe)](#windows-cmdexe-1)
+    - [Linux, macOS (Bash)](#linux-macos-bash-1)
 - [Generating Dynamic `<meta>` Tags on the Server](#generating-dynamic-meta-tags-on-the-server)
 - [Pre-Rendering into Static HTML Files](#pre-rendering-into-static-html-files)
 - [Injecting Data from the Server into the Page](#injecting-data-from-the-server-into-the-page)
@@ -51,9 +65,16 @@ You will find some information on how to perform common tasks in file docs/CRA-R
   - [Testing Components](#testing-components)
   - [Using Third Party Assertion Libraries](#using-third-party-assertion-libraries)
   - [Initializing Test Environment](#initializing-test-environment)
+    - [`src/setupTests.js`](#srcsetuptestsjs)
   - [Focusing and Excluding Tests](#focusing-and-excluding-tests)
   - [Coverage Reporting](#coverage-reporting)
   - [Continuous Integration](#continuous-integration)
+  - [On CI servers](#on-ci-servers)
+    - [Travis CI](#travis-ci)
+    - [CircleCI](#circleci)
+  - [On your own environment](#on-your-own-environment)
+      - [Windows (cmd.exe)](#windows-cmdexe-2)
+      - [Linux, macOS (Bash)](#linux-macos-bash-2)
   - [Disabling jsdom](#disabling-jsdom)
   - [Snapshot Testing](#snapshot-testing)
   - [Editor Integration](#editor-integration)
@@ -70,10 +91,20 @@ You will find some information on how to perform common tasks in file docs/CRA-R
   - [Other Solutions](#other-solutions)
   - [Serving Apps with Client-Side Routing](#serving-apps-with-client-side-routing)
   - [Building for Relative Paths](#building-for-relative-paths)
+    - [Serving the Same Build from Different Paths](#serving-the-same-build-from-different-paths)
   - [Azure](#azure)
   - [Firebase](#firebase)
   - [GitHub Pages](#github-pages)
+    - [Step 1: Add `homepage` to `package.json`](#step-1-add-homepage-to-packagejson)
+    - [Step 2: Install `gh-pages` and add `deploy` to `scripts` in `package.json`](#step-2-install-gh-pages-and-add-deploy-to-scripts-in-packagejson)
+    - [Step 3: Deploy the site by running `npm run deploy`](#step-3-deploy-the-site-by-running-npm-run-deploy)
+    - [Step 4: Ensure your project’s settings use `gh-pages`](#step-4-ensure-your-projects-settings-use-gh-pages)
+    - [Step 5: Optionally, configure the domain](#step-5-optionally-configure-the-domain)
+    - [Notes on client-side routing](#notes-on-client-side-routing)
   - [Heroku](#heroku)
+    - [Resolving Heroku Deployment Errors](#resolving-heroku-deployment-errors)
+      - ["Module not found: Error: Cannot resolve 'file' or 'directory'"](#%22module-not-found-error-cannot-resolve-file-or-directory%22)
+      - ["Could not find a required file."](#%22could-not-find-a-required-file%22)
   - [Netlify](#netlify)
   - [Now](#now)
   - [S3 and CloudFront](#s3-and-cloudfront)
@@ -84,8 +115,8 @@ You will find some information on how to perform common tasks in file docs/CRA-R
   - [`npm test` hangs on macOS Sierra](#npm-test-hangs-on-macos-sierra)
   - [`npm run build` exits too early](#npm-run-build-exits-too-early)
   - [`npm run build` fails on Heroku](#npm-run-build-fails-on-heroku)
-  - [`npm run build` fails to minify](#npm-run-build-fails-to-minify)
   - [Moment.js locales are missing](#momentjs-locales-are-missing)
+  - [`npm run build` fails to minify](#npm-run-build-fails-to-minify)
 - [Something Missing?](#something-missing)
 
 ## Available Scripts
@@ -168,18 +199,20 @@ The same way you can debug your application in IntelliJ IDEA Ultimate, PhpStorm,
 To format our code whenever we make a commit in git, we need to install the following dependencies:
 
 ```sh
-npm install --save husky lint-staged prettier
+npm install --save-dev husky lint-staged prettier csscomb eslint eslint-config-prettier eslint-plugin-import eslint-plugin-prettier
 ```
 
 Alternatively you may use `yarn`:
 
 ```sh
-yarn add husky lint-staged prettier
+yarn add husky lint-staged prettier csscomb eslint eslint-config-prettier eslint-plugin-import eslint-plugin-prettier
 ```
 
 * `husky` makes it easy to use githooks as if they are npm scripts.
 * `lint-staged` allows us to run scripts on staged files in git. See this [blog post about lint-staged to learn more about it](https://medium.com/@okonetchnikov/make-linting-great-again-f3890e1ad6b8).
 * `prettier` is the JavaScript formatter we will run before commits.
+* `csscomb` is css/scss formatter we will run before commits.
+* `eslint` is the pluggable linting utility for JavaScript and JSX.
 
 Now we can make sure every file is formatted correctly by adding a few lines to the `package.json` in the project root.
 
@@ -190,6 +223,10 @@ Add the following line to `scripts` section:
 +   "precommit": "lint-staged",
     "start": "react-scripts start",
     "build": "react-scripts build",
++   "lint": "eslint src/**/*.js",
++   "prettier": "eslint src/**/*.js --fix",
++   "style-css": "csscomb --tty-mode --",
++   "style-all-css": "csscomb src/"
 ```
 
 Next we add a 'lint-staged' field to the `package.json`, for example:
@@ -199,17 +236,22 @@ Next we add a 'lint-staged' field to the `package.json`, for example:
     // ...
   },
 + "lint-staged": {
-+   "src/**/*.{js,jsx,json,css}": [
-+     "prettier --single-quote --write",
++   "src/**/*.{js,jsx,json}": [
++     "eslint --fix",
 +     "git add"
-+   ]
++   ],
++   "src/**/*.{css, scss}": [
++     "npm run style-css",
++     "git add"
++   ],
 + },
   "scripts": {
 ```
 
-Now, whenever you make a commit, Prettier will format the changed files automatically. You can also run `./node_modules/.bin/prettier --single-quote --write "src/**/*.{js,jsx}"` to format your entire project for the first time.
+Now, whenever you make a commit, ESLint and CSSComb will format the changed files automatically. 
+You can run `npm run prettier` to format all your JS and JSX files for the first time and `npm run style-all-css` to format all css/scss in `src/` folder. There is csscomb configuration file in the root folder.
 
-Next you might want to integrate Prettier in your favorite editor. Read the section on [Editor Integration](https://github.com/prettier/prettier#editor-integration) on the Prettier GitHub page.
+Next you might want to integrate CSSComb in your favorite editor. Find more on [the official web page](http://csscomb.com/).
 
 ## Changing the Page `<title>`
 
