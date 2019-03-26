@@ -24,7 +24,7 @@
     "redux-thunk": "^2.2.0"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,json}": [
+    "src/**/*.{js,jsx}": [
       "eslint --fix",
       "git add"
     ],
@@ -66,9 +66,11 @@
     "eslint-config-prettier": "^2.10.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^2.6.2",
+    "front-matter": "^3.0.1",
     "husky": "^0.14.3",
     "jest-cli": "^21.2.1",
     "lint-staged": "^4.3.0",
+    "node-fetch": "^2.3.0",
     "prettier": "1.14.2",
     "react-scripts": "1.1.5"
   },
