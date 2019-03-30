@@ -20,16 +20,15 @@ import {
 } from '../ducks/gamestatus';
 
 import ProgressLine from './progress-line';
-import Keyboard from './keyboard';
-
 import beepSound from '../audio/Button-click-sound.mp3';
 import correctAnswerSound from '../audio/Correct-answer-sound.mp3';
 import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
 
 import {generateQuestionsList} from '../api/questions';
 import {convertSecondsToTime} from '../api/convertSecondsToTime';
-import '../style/app.css';
 import {logInUser} from '../ducks/users';
+
+import '../style/app.css';
 
 const mapStateToProps = state => {
   return {
@@ -63,11 +62,16 @@ class Game extends Component {
     this.setState(
       {
         question: this.questionsList[store.getState().progress.total].question,
-        response: this.questionsList[store.getState().progress.total]
-          .correctAnswer,
+        //response: this.questionsList[store.getState().progress.total]
+        //.correctAnswer,
         questionType: this.questionsList[store.getState().progress.total]
           .questionType,
-        answers: this.questionsList[store.getState().progress.total].answers,
+        explanation: this.questionsList[store.getState().progress.total]
+          .explanation,
+        questionTitle: this.questionsList[store.getState().progress.total]
+          .questionTitle,
+        correctAnswer: this.questionsList[store.getState().progress.total]
+          .correctAnswer,
         responseTime: this.questionsList[store.getState().progress.total]
           .responseTime,
         remainingTime:
@@ -105,7 +109,7 @@ class Game extends Component {
         .questions.length,
     });
 
-    fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
+    fetch('https://raw.githubusercontent.com/AntiHero/Questions/master/example')
       .then(results => {
         return results.json();
       })
@@ -212,7 +216,6 @@ class Game extends Component {
       this.state.config,
       this.state.numberOfQuestions,
     );
-
     this.nextQuestion();
   };
 
@@ -297,7 +300,7 @@ class Game extends Component {
   isAnswerCorrect = () => {
     return (
       this.state.submitted &&
-      parseInt(this.state.value, 10) === this.state.response
+      this.state.value.trim().toLowerCase() === this.state.correctAnswer
     );
   };
 
@@ -392,6 +395,29 @@ class Game extends Component {
     });
   };
 
+  handleInput = event => {
+    this.setState({
+      value: event.target.value,
+    });
+    console.log(this.state.value);
+  };
+
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      if (store.getState().progress.total < this.state.numberOfQuestions) {
+        this.setState(
+          {
+            submitted: true,
+          },
+          function() {
+            this.handleInputChange();
+          },
+        );
+      }
+      console.log('enter');
+    }
+  };
+
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
@@ -425,8 +451,17 @@ class Game extends Component {
           }}>
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
-              <div className="question-title">Задача</div>
+              <div className="question-title">{this.state.questionTitle}</div>
               <div className="question-text">{this.state.question}</div>
+            </div>
+            <div>
+              Additional Info:
+              <a
+                href={this.state.explanation}
+                target="_blank"
+                style={{textAlign: 'start'}}>
+                link
+              </a>
             </div>
             <div className="answer-field-wrapper">
               <div className="answer-time-count">
@@ -435,45 +470,48 @@ class Game extends Component {
               <div className={muteBtnStyle} onClick={this.muteSounds} />
               <div className="answer-field">
                 <div className="answer-text">Ответ: </div>
-                <div className="answer-input">{this.state.value}</div>
+                <div className="answer-input">
+                  <input
+                    type="text"
+                    onKeyPress={this.handleKeyPress}
+                    onChange={this.handleInput}
+                    placeholder="your answer..."
+                    autoFocus
+                    value={this.state.value}
+                    style={{height: '100%', outline: 'none'}}
+                  />
+                </div>
               </div>
             </div>
           </div>
-          <div
-            className="keyboard"
-            ref={node => {
-              this.node = node;
-            }}
-            onClick={this.handleClick}>
-            <Keyboard
-              questionType={this.state.questionType}
-              answers={this.state.answers}
+        </div>
+        <div
+          className="keyboard"
+          ref={node => {
+            this.node = node;
+          }}
+          onClick={this.handleClick}>
+          <div className="keyboard-row">
+            <div
+              className="keyboard-cell clear-cell"
+              id="clear"
+              onClick={this.handleBackspace}
+              style={{width: '50vw'}}
             />
-            <div className="keyboard-row">
-              <div
-                className="keyboard-cell clear-cell"
-                id="clear"
-                onClick={this.handleBackspace}
-                style={{width: inputCellsWidth}}
-              />
-              <div className="keyboard-cell" style={{display: zeroCellDisplay}}>
-                0
-              </div>
-              <div
-                className="keyboard-cell ok-cell"
-                id="ok"
-                onClick={this.onSubmit}
-                style={{width: inputCellsWidth}}>
-                OK
-              </div>
+            <div
+              className="keyboard-cell ok-cell"
+              id="ok"
+              onClick={this.onSubmit}
+              style={{width: '50vw'}}>
+              OK
             </div>
-            <audio
-              ref={audio => {
-                this.beepSound = audio;
-              }}>
-              <source src={beepSound} />
-            </audio>
           </div>
+          <audio
+            ref={audio => {
+              this.beepSound = audio;
+            }}>
+            <source src={beepSound} />
+          </audio>
         </div>
         <div
           className="game-wrapper-overlay"
