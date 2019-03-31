@@ -23,9 +23,21 @@ export function generateQuestionsList(
     result.responseTime = config.questionType['open'].responseTime;
     result.questionTitle =
       config.questionType.open.data[randomOpen].questionTitle;
-    result.question =
-      config.questionType.open.data[randomOpen].questionDescription[0];
+    result.question = [];
+    //result.question =
+    //config.questionType.open.data[randomOpen].questionDescription[0];
     result.explanation = config.questionType.open.data[randomOpen].explanation;
+
+    for (
+      let j = 0;
+      j < config.questionType.open.data[randomOpen].questionDescription.length;
+      j++
+    ) {
+      result.question.push(
+        config.questionType.open.data[randomOpen].questionDescription[j],
+      );
+    }
+
     console.log(result);
     // if (operator === ':') {
     //   secondNumber = Math.floor(Math.random() * (maxNumber / 2) + 1);

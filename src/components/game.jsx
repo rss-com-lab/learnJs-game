@@ -109,7 +109,9 @@ class Game extends Component {
         .questions.length,
     });
 
-    fetch('https://raw.githubusercontent.com/AntiHero/Questions/master/example')
+    fetch(
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all.json',
+    )
       .then(results => {
         return results.json();
       })
@@ -300,7 +302,10 @@ class Game extends Component {
   isAnswerCorrect = () => {
     return (
       this.state.submitted &&
-      this.state.value.trim().toLowerCase() === this.state.correctAnswer
+      this.state.value
+        .trim()
+        .toLowerCase()
+        .replace(/'/g, '"') === this.state.correctAnswer
     );
   };
 
@@ -426,7 +431,6 @@ class Game extends Component {
     let inputCellsWidth =
       this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
-
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
     }
@@ -434,6 +438,16 @@ class Game extends Component {
     if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
+
+    let question = [];
+
+    for (let key in this.state.question) {
+      question.push(this.state.question[key]);
+    }
+
+    let questionDescription = question.map((line, index) => {
+      return <div key={index}>{question[index]}</div>;
+    });
 
     return (
       <div className="game-wrapper game-component">
@@ -452,7 +466,7 @@ class Game extends Component {
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
               <div className="question-title">{this.state.questionTitle}</div>
-              <div className="question-text">{this.state.question}</div>
+              <div className="question-text">{questionDescription}</div>
             </div>
             <div>
               Additional Info:
