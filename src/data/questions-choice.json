@@ -202,9 +202,6 @@
         "explanation": "Почитать про порядок выполнения операторов и ассоциативность на [MDN](https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Operators/Operator_Precedence)",
         "complexity": "low",
         "theme": 1
-      },
-      {
-        "responseTime": 300000
       }
     ]
   }
