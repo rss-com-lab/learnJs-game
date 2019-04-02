@@ -62,8 +62,6 @@ class Game extends Component {
     this.setState(
       {
         question: this.questionsList[store.getState().progress.total].question,
-        //response: this.questionsList[store.getState().progress.total]
-        //.correctAnswer,
         questionType: this.questionsList[store.getState().progress.total]
           .questionType,
         explanation: this.questionsList[store.getState().progress.total]
@@ -210,7 +208,7 @@ class Game extends Component {
     }
   };
 
-  setQuestionsNextLevel = data => {
+  setQuestionsNextLevel = () => {
     this.clearInputField();
     store.dispatch(testNextLevel());
     this.questionsList = generateQuestionsList(
@@ -404,7 +402,6 @@ class Game extends Component {
     this.setState({
       value: event.target.value,
     });
-    console.log(this.state.value);
   };
 
   handleKeyPress = event => {
@@ -419,7 +416,6 @@ class Game extends Component {
           },
         );
       }
-      console.log('enter');
     }
   };
 

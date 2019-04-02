@@ -59,7 +59,7 @@ class Settings extends Component {
               Выбери сложность задач
             </div>
             <div className="settings-buttons">
-              <label>
+              <div>
                 <input
                   onChange={this.select}
                   name="level"
@@ -67,9 +67,9 @@ class Settings extends Component {
                   value="1"
                   checked={this.state.value === 1}
                 />
-                1
-              </label>
-              <label>
+                Basic
+              </div>
+              <div>
                 <input
                   onChange={this.select}
                   name="level"
@@ -77,9 +77,9 @@ class Settings extends Component {
                   value="2"
                   checked={this.state.value === 2}
                 />
-                2
-              </label>
-              <label>
+                Intermediate
+              </div>
+              <div>
                 <input
                   onChange={this.select}
                   name="level"
@@ -87,8 +87,8 @@ class Settings extends Component {
                   value="3"
                   checked={this.state.value === 3}
                 />
-                3
-              </label>
+                Advanced
+              </div>
             </div>
           </li>
           <li className="settings-item">
