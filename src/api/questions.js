@@ -1,8 +1,10 @@
 export function generateQuestionsList(
   complexityLevel,
+  selectedTheme,
   config,
   numberOfQuestions,
 ) {
+  console.log(selectedTheme);
   let questions = [];
   let questionsList = [];
   let result = {};
@@ -10,7 +12,8 @@ export function generateQuestionsList(
   for (let i = 0; i < config.questionType.open.data.length; i++) {
     if (
       complexityLevel / Number(config.questionType.open.data[i].complexity) ===
-      1
+        1 &&
+      selectedTheme === config.questionType.open.data[i].theme
     ) {
       questions.push(config.questionType.open.data[i]);
     }
@@ -19,7 +22,6 @@ export function generateQuestionsList(
   console.log(questions);
   for (let i = 1; i <= numberOfQuestions; i++) {
     let randomOpen = Math.floor(Math.random() * questions.length);
-    console.log(randomOpen);
     result.questionType = 'open';
     result.correctAnswer = questions[randomOpen].correctAnswer;
     result.responseTime = config.questionType['open'].responseTime;

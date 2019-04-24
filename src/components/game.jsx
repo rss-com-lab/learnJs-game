@@ -115,7 +115,7 @@ class Game extends Component {
       })
       .then(data => {
         this.setState({
-          maxNumber: data.complexity[store.getState().complexity].maxNumber,
+          // maxNumber: data.complexity[store.getState().complexity].maxNumber,
           config: data,
         });
         this.setQuestionsNextLevel();
@@ -213,6 +213,7 @@ class Game extends Component {
     store.dispatch(testNextLevel());
     this.questionsList = generateQuestionsList(
       store.getState().complexity,
+      store.getState().theme,
       this.state.config,
       this.state.numberOfQuestions,
     );
