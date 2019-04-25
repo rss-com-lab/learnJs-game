@@ -4,7 +4,6 @@ export function generateQuestionsList(
   config,
   numberOfQuestions,
 ) {
-  console.log(selectedTheme);
   let questions = [];
   let questionsList = [];
   let result = {};
@@ -46,7 +45,5 @@ export function generateQuestionsList(
     questionsList.push(result);
     result = {};
   }
-
-  console.log(questionsList);
   return questionsList;
 }

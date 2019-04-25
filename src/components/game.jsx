@@ -425,10 +425,10 @@ class Game extends Component {
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
-    let zeroCellDisplay =
-      this.state.questionType === 'selective' ? 'none' : 'block';
-    let inputCellsWidth =
-      this.state.questionType === 'selective' ? '50%' : '33%';
+    // let zeroCellDisplay =
+    //   this.state.questionType === 'selective' ? 'none' : 'block';
+    // let inputCellsWidth =
+    //   this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
