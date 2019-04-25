@@ -37,16 +37,30 @@ class Settings extends Component {
       .then(data => {
         let temp = [];
         for (let i = 0; i < data.questionType.open.data.length; i++) {
-          temp.push({
-            value: data.questionType.open.data[i].theme,
-            label: data.questionType.open.data[i].theme,
-          });
+          console.log(
+            store.getState().complexity,
+            data.questionType.open.data[i].complexity,
+          );
+          if (
+            data.questionType.open.data[i].complexity ===
+            `${store.getState().complexity}`
+          ) {
+            temp.push({
+              value: data.questionType.open.data[i].theme,
+              label: data.questionType.open.data[i].theme,
+            });
+          }
         }
         for (let i = 0; i < data.questionType.close.data.length; i++) {
-          temp.push({
-            value: data.questionType.close.data[i].theme,
-            label: data.questionType.close.data[i].theme,
-          });
+          if (
+            data.questionType.open.data[i].complexity ===
+            store.getState().complexity
+          ) {
+            temp.push({
+              value: data.questionType.close.data[i].theme,
+              label: data.questionType.close.data[i].theme,
+            });
+          }
         }
         let themes = temp.reduce((unique, el) => {
           if (
@@ -72,6 +86,7 @@ class Settings extends Component {
     this.setState({
       value: store.getState().complexity,
     });
+    this.createOptions();
   };
 
   selectTheme = theme => {

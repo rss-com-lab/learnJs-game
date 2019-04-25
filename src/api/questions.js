@@ -20,20 +20,26 @@ export function generateQuestionsList(
   }
 
   console.log(questions);
-  for (let i = 1; i <= numberOfQuestions; i++) {
-    let randomOpen = Math.floor(Math.random() * questions.length);
-    result.questionType = 'open';
-    result.correctAnswer = questions[randomOpen].correctAnswer;
-    result.responseTime = config.questionType['open'].responseTime;
-    result.questionTitle = questions[randomOpen].questionTitle;
-    result.question = [];
-    result.explanation = questions[randomOpen].explanation;
+  if (questions.length !== 0) {
+    for (let i = 1; i <= numberOfQuestions; i++) {
+      let randomOpen = Math.floor(Math.random() * questions.length);
+      result.questionType = 'open';
+      result.correctAnswer = questions[randomOpen].correctAnswer;
+      result.responseTime = config.questionType['open'].responseTime;
+      result.questionTitle = questions[randomOpen].questionTitle;
+      result.question = [];
+      result.explanation = questions[randomOpen].explanation;
 
-    for (let j = 0; j < questions[randomOpen].questionDescription.length; j++) {
-      result.question.push(questions[randomOpen].questionDescription[j]);
+      for (
+        let j = 0;
+        j < questions[randomOpen].questionDescription.length;
+        j++
+      ) {
+        result.question.push(questions[randomOpen].questionDescription[j]);
+      }
+      questionsList.push(result);
+      result = {};
     }
-    questionsList.push(result);
-    result = {};
   }
 
   console.log(questionsList);

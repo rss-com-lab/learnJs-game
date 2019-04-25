@@ -59,31 +59,34 @@ class Game extends Component {
   }
 
   nextQuestion = () => {
-    this.setState(
-      {
-        question: this.questionsList[store.getState().progress.total].question,
-        questionType: this.questionsList[store.getState().progress.total]
-          .questionType,
-        explanation: this.questionsList[store.getState().progress.total]
-          .explanation,
-        questionTitle: this.questionsList[store.getState().progress.total]
-          .questionTitle,
-        correctAnswer: this.questionsList[store.getState().progress.total]
-          .correctAnswer,
-        responseTime: this.questionsList[store.getState().progress.total]
-          .responseTime,
-        remainingTime:
-          this.questionsList[store.getState().progress.total].responseTime /
-          1000,
-      },
-      () => {
-        this.timeout = setTimeout(
-          this.handleInputChange,
-          this.state.responseTime,
-        );
-        this.countdown = setInterval(this.countRemainingTime, 1000);
-      },
-    );
+    if (this.questionsList.length !== 0) {
+      this.setState(
+        {
+          question: this.questionsList[store.getState().progress.total]
+            .question,
+          questionType: this.questionsList[store.getState().progress.total]
+            .questionType,
+          explanation: this.questionsList[store.getState().progress.total]
+            .explanation,
+          questionTitle: this.questionsList[store.getState().progress.total]
+            .questionTitle,
+          correctAnswer: this.questionsList[store.getState().progress.total]
+            .correctAnswer,
+          responseTime: this.questionsList[store.getState().progress.total]
+            .responseTime,
+          remainingTime:
+            this.questionsList[store.getState().progress.total].responseTime /
+            1000,
+        },
+        () => {
+          this.timeout = setTimeout(
+            this.handleInputChange,
+            this.state.responseTime,
+          );
+          this.countdown = setInterval(this.countRemainingTime, 1000);
+        },
+      );
+    }
   };
 
   clearInputField = () => {
@@ -115,7 +118,6 @@ class Game extends Component {
       })
       .then(data => {
         this.setState({
-          // maxNumber: data.complexity[store.getState().complexity].maxNumber,
           config: data,
         });
         this.setQuestionsNextLevel();
