@@ -73,12 +73,17 @@ class Settings extends Component {
           return unique;
         }, []);
         this.setState({themes: themes});
+        this.setState({theme: this.state.themes[0].value});
+        console.log(this.state.themes[0].value);
       });
   };
 
   componentDidMount = () => {
-    this.createOptions();
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
+  };
+
+  componentWillMount = () => {
+    this.createOptions();
   };
 
   select = e => {
@@ -87,6 +92,7 @@ class Settings extends Component {
       value: store.getState().complexity,
     });
     this.createOptions();
+    store.dispatch(themeSelected({value: null}));
   };
 
   selectTheme = theme => {
@@ -158,11 +164,7 @@ class Settings extends Component {
             Выбери тему
             <Select
               options={this.state.themes}
-              placeholder={
-                typeof this.state.theme === 'object'
-                  ? 'Select theme...'
-                  : `${store.getState().theme}`
-              }
+              placeholder={'Select theme..'}
               onChange={this.selectTheme}
             />
           </li>
