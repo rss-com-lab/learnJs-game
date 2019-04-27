@@ -236,8 +236,7 @@ body {
   height: calc(5vh + 5vw);
   height: 80%;
   margin: 0 3vw;
-  overflow: hidden;
-  //line-height: 120%;
+  overflow: hidden;//line-height: 120%;
 
   font-size: calc(2.5vh + 2.5vh);
   text-align: center;
@@ -789,5 +788,13 @@ body {
   .step-two-confirm-btn {
     width: 50px;
     height: 50px;
+  }
+
+  .settings__topic-select {
+    width: 300px;
+    margin: 0 auto;
+
+    font-size: 20px;
+    text-align: center;
   }
 }
