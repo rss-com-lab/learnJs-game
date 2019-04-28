@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
@@ -7,6 +8,11 @@ import store from '../store/store';
 import {timeoutIncreased, timeoutDecreased} from '../ducks/timeout';
 import {complexitySelected} from '../ducks/complexity';
 import {themeSelected} from '../ducks/theme';
+
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 import '../style/app.css';
 
@@ -23,6 +29,8 @@ class Settings extends Component {
     this.state = {
       value: store.getState().complexity,
       theme: store.getState().theme,
+      placeholder: typeof store.getState().theme === 'object' ? '...' : store.getState().theme,
+      default: null,
       themes: [],
     };
   }
@@ -36,11 +44,8 @@ class Settings extends Component {
       })
       .then(data => {
         let temp = [];
+        temp.push({value: null, label: 'Все темы'});
         for (let i = 0; i < data.questionType.open.data.length; i++) {
-          console.log(
-            store.getState().complexity,
-            data.questionType.open.data[i].complexity,
-          );
           if (
             data.questionType.open.data[i].complexity ===
             `${store.getState().complexity}`
@@ -53,8 +58,8 @@ class Settings extends Component {
         }
         for (let i = 0; i < data.questionType.close.data.length; i++) {
           if (
-            data.questionType.open.data[i].complexity ===
-            store.getState().complexity
+            data.questionType.close.data[i].complexity ===
+            `${store.getState().complexity}`
           ) {
             temp.push({
               value: data.questionType.close.data[i].theme,
@@ -73,8 +78,6 @@ class Settings extends Component {
           return unique;
         }, []);
         this.setState({themes: themes});
-        this.setState({theme: this.state.themes[0].value});
-        console.log(this.state.themes[0].value);
       });
   };
 
@@ -82,23 +85,33 @@ class Settings extends Component {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
   };
 
+  componentWillUnmount = () => {
+    this.unsubscribe();
+  };
+
   componentWillMount = () => {
     this.createOptions();
   };
+ 
 
   select = e => {
     store.dispatch(complexitySelected(parseInt(e.target.value, 10)));
+    store.dispatch(themeSelected({value: null}));
     this.setState({
       value: store.getState().complexity,
+      theme: store.getState().theme,
+      placeholder: '...',
+      default: null,
     });
+    console.log(this.state);
     this.createOptions();
-    store.dispatch(themeSelected({value: null}));
   };
 
   selectTheme = theme => {
     store.dispatch(themeSelected(theme));
     this.setState({
       theme: store.getState().theme,
+      default: theme,
     });
   };
 
@@ -108,10 +121,6 @@ class Settings extends Component {
 
   timeoutDecreased = () => {
     store.dispatch(timeoutDecreased());
-  };
-
-  componentWillUnmount = () => {
-    this.unsubscribe();
   };
 
   render() {
@@ -125,9 +134,35 @@ class Settings extends Component {
         <ul className="settings-list">
           <li className="settings-item">
             <div className="settings-item-description">
-              Выбери сложность задач
+              Сложность
             </div>
-            <div className="settings-buttons">
+            <FormControl component="fieldset">
+              <RadioGroup
+                name="complexity"
+                value={`${this.state.value}`}
+                onChange={this.select}
+                row>
+                <FormControlLabel
+                  value="1"
+                  control={<Radio color="primary" />}
+                  label="Легко"
+                  labelPlacement="top"
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio color="primary" />}
+                  label="Нормально"
+                  labelPlacement="top"
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio color="primary" />}
+                  label="Сложно"
+                  labelPlacement="top"
+                />
+              </RadioGroup>
+            </FormControl>
+            {/* <div className="settings-buttons">
               <div>
                 <input
                   onChange={this.select}
@@ -158,13 +193,15 @@ class Settings extends Component {
                 />
                 Advanced
               </div>
-            </div>
+            </div> */}
           </li>
-          <li className="settings__topic-select">
-            Выбери тему
+          <li className="settings-item">
+            <div className="settings-item-description">Тема</div>
             <Select
+              value={this.state.default}
               options={this.state.themes}
-              placeholder={'Select theme..'}
+              className="settings-item__topic-select"
+              placeholder={this.state.placeholder}
               onChange={this.selectTheme}
             />
           </li>
