@@ -1,3 +1,5 @@
+const ANSWERS_NUM = 4;
+
 export function generateQuestionsList(
   complexityLevel,
   selectedTheme,
@@ -55,10 +57,10 @@ export function generateQuestionsList(
 
     if (!questions[randomOpen].hasOwnProperty('answers')) {
       result.questionType = 'open';
+      result.question = [];
       result.correctAnswer = questions[randomOpen].correctAnswer;
       result.responseTime = config.questionType['open'].responseTime;
       result.questionTitle = questions[randomOpen].questionTitle;
-      result.question = [];
       result.explanation = questions[randomOpen].explanation;
 
       for (
@@ -69,19 +71,25 @@ export function generateQuestionsList(
         result.question.push(questions[randomOpen].questionDescription[j]);
       }
     } else {
-      // result.questionType = 'close';
-      // result.correctAnswer = questions[randomOpen].correctAnswer;
-      // result.responseTime = config.questionType['open'].responseTime;
-      // result.questionTitle = questions[randomOpen].questionTitle;
-      // result.question = [];
-      // result.explanation = questions[randomOpen].explanation;
-      // for (
-      //   let j = 0;
-      //   j < questions[randomOpen].questionDescription.length;
-      //   j++
-      // ) {
-      //   result.question.push(questions[randomOpen].questionDescription[j]);
-      // }
+      result.questionType = 'close';
+      result.question = [];
+      result.answers = [];
+      result.correctAnswer = questions[randomOpen].correctAnswer;
+      result.responseTime = config.questionType['close'].responseTime;
+      result.questionTitle = questions[randomOpen].questionTitle;
+      //result.explanation = questions[randomOpen].explanation;
+
+      for (
+        let j = 0;
+        j < questions[randomOpen].questionDescription.length;
+        j++
+      ) {
+        result.question.push(questions[randomOpen].questionDescription[j]);
+      }
+
+      for (let j = 0; j < ANSWERS_NUM - 1; j++) {
+        result.question.push(questions[randomOpen].answers[j]);
+      }
     }
 
     questionsList.push(result);

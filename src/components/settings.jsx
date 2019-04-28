@@ -134,7 +134,7 @@ class Settings extends Component {
         <ul className="settings-list">
           <li className="settings-item">
             <div className="settings-item-description">
-              Выбери сложность задач
+              Сложность
             </div>
             <FormControl component="fieldset">
               <RadioGroup
@@ -196,7 +196,7 @@ class Settings extends Component {
             </div> */}
           </li>
           <li className="settings-item">
-            <div className="settings-item-description">Выбери тему</div>
+            <div className="settings-item-description">Тема</div>
             <Select
               value={this.state.default}
               options={this.state.themes}
