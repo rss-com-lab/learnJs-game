@@ -59,33 +59,34 @@ class Game extends Component {
   }
 
   nextQuestion = () => {
-    this.setState(
-      {
-        question: this.questionsList[store.getState().progress.total].question,
-        //response: this.questionsList[store.getState().progress.total]
-        //.correctAnswer,
-        questionType: this.questionsList[store.getState().progress.total]
-          .questionType,
-        explanation: this.questionsList[store.getState().progress.total]
-          .explanation,
-        questionTitle: this.questionsList[store.getState().progress.total]
-          .questionTitle,
-        correctAnswer: this.questionsList[store.getState().progress.total]
-          .correctAnswer,
-        responseTime: this.questionsList[store.getState().progress.total]
-          .responseTime,
-        remainingTime:
-          this.questionsList[store.getState().progress.total].responseTime /
-          1000,
-      },
-      () => {
-        this.timeout = setTimeout(
-          this.handleInputChange,
-          this.state.responseTime,
-        );
-        this.countdown = setInterval(this.countRemainingTime, 1000);
-      },
-    );
+    if (this.questionsList.length !== 0) {
+      this.setState(
+        {
+          question: this.questionsList[store.getState().progress.total]
+            .question,
+          questionType: this.questionsList[store.getState().progress.total]
+            .questionType,
+          explanation: this.questionsList[store.getState().progress.total]
+            .explanation,
+          questionTitle: this.questionsList[store.getState().progress.total]
+            .questionTitle,
+          correctAnswer: this.questionsList[store.getState().progress.total]
+            .correctAnswer,
+          responseTime: this.questionsList[store.getState().progress.total]
+            .responseTime,
+          remainingTime:
+            this.questionsList[store.getState().progress.total].responseTime /
+            1000,
+        },
+        () => {
+          this.timeout = setTimeout(
+            this.handleInputChange,
+            this.state.responseTime,
+          );
+          this.countdown = setInterval(this.countRemainingTime, 1000);
+        },
+      );
+    }
   };
 
   clearInputField = () => {
@@ -109,13 +110,14 @@ class Game extends Component {
         .questions.length,
     });
 
-    fetch('https://raw.githubusercontent.com/AntiHero/Questions/master/example')
+    fetch(
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all.json',
+    )
       .then(results => {
         return results.json();
       })
       .then(data => {
         this.setState({
-          maxNumber: data.complexity[store.getState().complexity].maxNumber,
           config: data,
         });
         this.setQuestionsNextLevel();
@@ -208,11 +210,12 @@ class Game extends Component {
     }
   };
 
-  setQuestionsNextLevel = data => {
+  setQuestionsNextLevel = () => {
     this.clearInputField();
     store.dispatch(testNextLevel());
     this.questionsList = generateQuestionsList(
       store.getState().complexity,
+      store.getState().theme,
       this.state.config,
       this.state.numberOfQuestions,
     );
@@ -300,7 +303,10 @@ class Game extends Component {
   isAnswerCorrect = () => {
     return (
       this.state.submitted &&
-      this.state.value.trim().toLowerCase() === this.state.correctAnswer
+      this.state.value
+        .trim()
+        .toLowerCase()
+        .replace(/'/g, '"') === this.state.correctAnswer
     );
   };
 
@@ -399,7 +405,6 @@ class Game extends Component {
     this.setState({
       value: event.target.value,
     });
-    console.log(this.state.value);
   };
 
   handleKeyPress = event => {
@@ -414,19 +419,17 @@ class Game extends Component {
           },
         );
       }
-      console.log('enter');
     }
   };
 
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
-    let zeroCellDisplay =
-      this.state.questionType === 'selective' ? 'none' : 'block';
-    let inputCellsWidth =
-      this.state.questionType === 'selective' ? '50%' : '33%';
+    // let zeroCellDisplay =
+    //   this.state.questionType === 'selective' ? 'none' : 'block';
+    // let inputCellsWidth =
+    //   this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
-
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
     }
@@ -434,6 +437,16 @@ class Game extends Component {
     if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
+
+    let question = [];
+
+    for (let key in this.state.question) {
+      question.push(this.state.question[key]);
+    }
+
+    let questionDescription = question.map((line, index) => {
+      return <div key={index}>{question[index]}</div>;
+    });
 
     return (
       <div className="game-wrapper game-component">
@@ -452,7 +465,7 @@ class Game extends Component {
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
               <div className="question-title">{this.state.questionTitle}</div>
-              <div className="question-text">{this.state.question}</div>
+              <div className="question-text">{questionDescription}</div>
             </div>
             <div>
               Additional Info:
