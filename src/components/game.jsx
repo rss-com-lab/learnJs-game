@@ -55,6 +55,7 @@ class Game extends Component {
       muted: false,
       stageCompleted: false,
       levelCompleted: false,
+      answerWrong: true,
     };
   }
 
@@ -253,9 +254,24 @@ class Game extends Component {
     if (this.isAnswerCorrect()) {
       this.passed();
     } else {
-      this.failed();
+      if (this.state.answerWrong) {
+        this.failed();
+        this.setState((state, props) => {
+          return {
+            answerWrong: false,
+            questionTitle: 'Правильный ответ :',
+          };
+        });
+        return false;
+      } else {
+        this.setState((state, props) => {
+          return {
+            answerWrong: true,
+          };
+        });
+      }
     }
-
+    console.log(this.state);
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
       setTimeout(() => {
@@ -444,9 +460,12 @@ class Game extends Component {
       question.push(this.state.question[key]);
     }
 
-    let questionDescription = question.map((line, index) => {
-      return <div key={index}>{question[index]}</div>;
-    });
+    let questionDescription =
+      this.state.questionTitle === 'Правильный ответ :'
+        ? this.state.correctAnswer
+        : question.map((line, index) => {
+            return <div key={index}>{question[index]}</div>;
+          });
 
     return (
       <div className="game-wrapper game-component">
