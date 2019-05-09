@@ -141,7 +141,6 @@ class Game extends Component {
   };
 
   failed = () => {
-    this.wrongAnswerSound.play();
     store.dispatch(testFailed());
     store.dispatch(gamePlay());
     this.setState({
@@ -255,7 +254,7 @@ class Game extends Component {
       this.passed();
     } else {
       if (this.state.answerWrong) {
-        this.failed();
+        this.wrongAnswerSound.play();
         this.setState((state, props) => {
           return {
             answerWrong: false,
@@ -264,6 +263,7 @@ class Game extends Component {
         });
         return false;
       } else {
+        this.failed();
         this.setState((state, props) => {
           return {
             answerWrong: true,
@@ -271,7 +271,6 @@ class Game extends Component {
         });
       }
     }
-    console.log(this.state);
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
       setTimeout(() => {
