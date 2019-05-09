@@ -500,20 +500,22 @@ class Game extends Component {
                 {convertSecondsToTime(this.state.remainingTime)}
               </div>
               <div className={muteBtnStyle} onClick={this.muteSounds} />
-              <div className="answer-field">
-                <div className="answer-text">Ответ: </div>
-                <div className="answer-input">
-                  <input
-                    type="text"
-                    onKeyPress={this.handleKeyPress}
-                    onChange={this.handleInput}
-                    placeholder="your answer..."
-                    autoFocus
-                    value={this.state.value}
-                    style={{height: '100%', outline: 'none'}}
-                  />
+              {this.state.questionType === 'open' ? (
+                <div className="answer-field">
+                  <div className="answer-text">Ответ: </div>
+                  <div className="answer-input">
+                    <input
+                      type="text"
+                      onKeyPress={this.handleKeyPress}
+                      onChange={this.handleInput}
+                      placeholder="your answer..."
+                      autoFocus
+                      value={this.state.value}
+                      style={{height: '100%', outline: 'none'}}
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           </div>
         </div>
