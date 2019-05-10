@@ -73,6 +73,11 @@ class Game extends Component {
             .questionTitle,
           correctAnswer: this.questionsList[store.getState().progress.total]
             .correctAnswer,
+          answers: this.questionsList[
+            store.getState().progress.total
+          ].hasOwnProperty('answers')
+            ? this.questionsList[store.getState().progress.total].answers
+            : null,
           responseTime: this.questionsList[store.getState().progress.total]
             .responseTime,
           remainingTime:
@@ -179,14 +184,22 @@ class Game extends Component {
   };
 
   handleClick = e => {
-    if (
-      this.node.contains(e.target) &&
-      e.target.id !== 'clear' &&
-      e.target.id !== 'ok'
-    ) {
-      this.setState({
-        value: this.state.value + e.target.innerHTML,
+    if (this.state.questionType === 'open') {
+      if (
+        this.node.contains(e.target) &&
+        e.target.id !== 'clear' &&
+        e.target.id !== 'ok'
+      ) {
+        this.setState({
+          value: this.state.value + e.target.innerHTML,
+        });
+      }
+    } else {
+      const value = e.target.innerText;
+      this.setState(() => {
+        return {value: value};
       });
+      this.onSubmit();
     }
     this.beepSound.play();
   };
@@ -253,23 +266,7 @@ class Game extends Component {
     if (this.isAnswerCorrect()) {
       this.passed();
     } else {
-      if (this.state.answerWrong) {
-        this.wrongAnswerSound.play();
-        this.setState((state, props) => {
-          return {
-            answerWrong: false,
-            questionTitle: 'Правильный ответ :',
-          };
-        });
-        return false;
-      } else {
-        this.failed();
-        this.setState((state, props) => {
-          return {
-            answerWrong: true,
-          };
-        });
-      }
+      this.failed();
     }
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
@@ -316,13 +313,12 @@ class Game extends Component {
   };
 
   isAnswerCorrect = () => {
-    return (
-      this.state.submitted &&
-      this.state.value
-        .trim()
-        .toLowerCase()
-        .replace(/'/g, '"') === this.state.correctAnswer
-    );
+    return this.state.submitted && this.state.questionType === 'open'
+      ? this.state.value
+          .trim()
+          .toLowerCase()
+          .replace(/'/g, '"') === this.state.correctAnswer
+      : this.state.value === this.state.correctAnswer;
   };
 
   isLastQuestion = () => {
@@ -440,6 +436,7 @@ class Game extends Component {
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
+    //console.log(Array.from(this.state.answers));
     // let zeroCellDisplay =
     //   this.state.questionType === 'selective' ? 'none' : 'block';
     // let inputCellsWidth =
@@ -452,19 +449,6 @@ class Game extends Component {
     if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
-
-    let question = [];
-
-    for (let key in this.state.question) {
-      question.push(this.state.question[key]);
-    }
-
-    let questionDescription =
-      this.state.questionTitle === 'Правильный ответ :'
-        ? this.state.correctAnswer
-        : question.map((line, index) => {
-            return <div key={index}>{question[index]}</div>;
-          });
 
     return (
       <div className="game-wrapper game-component">
@@ -483,7 +467,7 @@ class Game extends Component {
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
               <div className="question-title">{this.state.questionTitle}</div>
-              <div className="question-text">{questionDescription}</div>
+              <div className="question-text">{this.state.question}</div>
             </div>
             <div>
               Additional Info:
@@ -522,23 +506,44 @@ class Game extends Component {
           className="keyboard"
           ref={node => {
             this.node = node;
-          }}
-          onClick={this.handleClick}>
-          <div className="keyboard-row">
-            <div
-              className="keyboard-cell clear-cell"
-              id="clear"
-              onClick={this.handleBackspace}
-              style={{width: '50vw'}}
-            />
-            <div
-              className="keyboard-cell ok-cell"
-              id="ok"
-              onClick={this.onSubmit}
-              style={{width: '50vw'}}>
-              OK
+          }}>
+          {this.state.questionType !== 'close' ? (
+            <div className="keyboard-row">
+              <div
+                className="keyboard-cell clear-cell"
+                id="clear"
+                onClick={this.handleBackspace}
+                style={{width: '50vw'}}
+              />
+              <div
+                className="keyboard-cell ok-cell"
+                id="ok"
+                onClick={this.onSubmit}
+                style={{width: '50vw'}}>
+                OK
+              </div>
             </div>
-          </div>
+          ) : (
+            <div
+              onClick={this.handleClick}
+              style={{
+                borderBottom: '3px solid #b1d4df',
+                backgroundColor: '#5e9aa4',
+              }}>
+              {this.state.answers.map((answer, index) => {
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      textAlign: 'center',
+                      borderTop: '3px solid #b1d4df',
+                    }}>
+                    {answer}
+                  </div>
+                );
+              })}
+            </div>
+          )}
           <audio
             ref={audio => {
               this.beepSound = audio;

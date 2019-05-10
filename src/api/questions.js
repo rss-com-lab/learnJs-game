@@ -87,13 +87,14 @@ export function generateQuestionsList(
         result.question.push(questions[randomOpen].questionDescription[j]);
       }
 
-      for (let j = 0; j < ANSWERS_NUM - 1; j++) {
-        result.question.push(questions[randomOpen].answers[j]);
+      for (let j = 0; j < ANSWERS_NUM; j++) {
+        result.answers.push(questions[randomOpen].answers[j]);
       }
     }
 
     questionsList.push(result);
     result = {};
   }
+  console.log(questionsList);
   return questionsList;
 }
