@@ -54,7 +54,8 @@
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "style-css": "csscomb --tty-mode --",
-    "style-all-css": "csscomb src/"
+    "style-all-css": "csscomb src/",
+    "process": "node src/data/script"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.4.11",
