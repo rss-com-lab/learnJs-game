@@ -30,6 +30,13 @@ import {logInUser} from '../ducks/users';
 
 import '../style/app.css';
 
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const mapStateToProps = state => {
   return {
     progress: state.progress,
@@ -56,8 +63,17 @@ class Game extends Component {
       stageCompleted: false,
       levelCompleted: false,
       answerWrong: true,
+      openModalWindow: false,
     };
   }
+
+  handleOpenModalWindow = () => {
+    this.setState({openModalWindow: true});
+  };
+
+  handleCloseModalWindow = () => {
+    this.setState({openModalWindow: false});
+  };
 
   nextQuestion = () => {
     if (this.questionsList.length !== 0) {
@@ -255,14 +271,15 @@ class Game extends Component {
     } else {
       if (this.state.answerWrong) {
         this.wrongAnswerSound.play();
+        this.handleOpenModalWindow();
         this.setState((state, props) => {
           return {
             answerWrong: false,
-            questionTitle: 'Правильный ответ :',
           };
         });
         return false;
       } else {
+        this.handleCloseModalWindow();
         this.failed();
         this.setState((state, props) => {
           return {
@@ -448,7 +465,6 @@ class Game extends Component {
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
     }
-
     if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
@@ -459,12 +475,9 @@ class Game extends Component {
       question.push(this.state.question[key]);
     }
 
-    let questionDescription =
-      this.state.questionTitle === 'Правильный ответ :'
-        ? this.state.correctAnswer
-        : question.map((line, index) => {
-            return <div key={index}>{question[index]}</div>;
-          });
+    let questionDescription = question.map((line, index) => {
+      return <div key={index}>{question[index]}</div>;
+    });
 
     return (
       <div className="game-wrapper game-component">
@@ -576,6 +589,23 @@ class Game extends Component {
               : 'hidden')
           }
         />
+        <React.Fragment>
+          <Dialog
+            open={this.state.openModalWindow}
+            onClose={this.handleCloseModalWindow}>
+            <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Правильный ответ : {this.state.correctAnswer}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleInputChange} color="primary">
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
       </div>
     );
   }
