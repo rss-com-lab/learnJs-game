@@ -590,23 +590,22 @@ class Game extends Component {
               : 'hidden')
           }
         />
-        <React.Fragment>
-          <Dialog
-            open={this.state.openModalWindow}
-            onClose={this.handleCloseModalWindow}>
-            <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Правильный ответ : {this.state.correctAnswer}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleInputChange} color="primary">
-                Ok
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </React.Fragment>
+        <Dialog
+          open={this.state.openModalWindow}
+          onClose={this.handleCloseModalWindow}
+          disableBackdropClick={true}>
+          <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Правильный ответ : {this.state.correctAnswer}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleInputChange} color="primary">
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
