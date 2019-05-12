@@ -480,7 +480,9 @@ class Game extends Component {
     });
 
     return (
-      <div className="game-wrapper game-component">
+      <div
+        className="game-wrapper game-component"
+        onKeyPress={this.handleKeyPress}>
         <div className="header">
           <ProgressLine
             questions={this.state.numberOfQuestions}
@@ -517,7 +519,6 @@ class Game extends Component {
                 <div className="answer-input">
                   <input
                     type="text"
-                    onKeyPress={this.handleKeyPress}
                     onChange={this.handleInput}
                     placeholder="your answer..."
                     autoFocus
