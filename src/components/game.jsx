@@ -29,7 +29,7 @@ import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import {logInUser} from '../ducks/users';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {docco} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {a11yLight} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import '../style/app.css';
 
@@ -453,14 +453,13 @@ class Game extends Component {
       return <Redirect push to="/stages" />;
     }
 
-    const questionDescription =
-      this.state.questionTitle === 'Что вернет следующий код?' ? (
-        <SyntaxHighlighter language="javascript" style={docco}>
-          {this.state.question}
-        </SyntaxHighlighter>
-      ) : (
-        this.state.question
-      );
+    const questionDescription = this.state.question ? (
+      <SyntaxHighlighter language="javascript" style={a11yLight}>
+        {this.state.question.reduce((sum, item) => sum + `${item}\n`, '')}
+      </SyntaxHighlighter>
+    ) : (
+      this.state.question
+    );
 
     return (
       <div className="game-wrapper game-component">
