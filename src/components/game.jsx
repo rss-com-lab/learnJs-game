@@ -29,7 +29,7 @@ import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import {logInUser} from '../ducks/users';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {a11yLight} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {vs} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import '../style/app.css';
 
@@ -454,7 +454,7 @@ class Game extends Component {
     }
 
     const questionDescription = this.state.question ? (
-      <SyntaxHighlighter language="javascript" style={a11yLight}>
+      <SyntaxHighlighter language="javascript" style={vs}>
         {this.state.question.reduce((sum, item) => sum + `${item}\n`, '')}
       </SyntaxHighlighter>
     ) : (
