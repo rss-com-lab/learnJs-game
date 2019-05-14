@@ -28,6 +28,9 @@ import {generateQuestionsList} from '../api/questions';
 import {convertSecondsToTime} from '../api/convertSecondsToTime';
 import {logInUser} from '../ducks/users';
 
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {vs} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
 import '../style/app.css';
 
 import Button from '@material-ui/core/Button';
@@ -482,6 +485,14 @@ class Game extends Component {
       return <Redirect push to="/stages" />;
     }
 
+    const questionDescription = this.state.question ? (
+      <SyntaxHighlighter language="javascript" style={vs}>
+        {this.state.question.reduce((sum, item) => sum + `${item}\n`, '')}
+      </SyntaxHighlighter>
+    ) : (
+      this.state.question
+    );
+
     return (
       <div
         className="game-wrapper game-component"
@@ -501,7 +512,7 @@ class Game extends Component {
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
               <div className="question-title">{this.state.questionTitle}</div>
-              <div className="question-text">{this.state.question}</div>
+              <div className="question-text">{questionDescription}</div>
             </div>
             <div>
               Additional Info:
