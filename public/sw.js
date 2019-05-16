@@ -1,5 +1,3 @@
-const self = this;
-
 self.addEventListener('install', event => {
   console.log('Установлен');
 });
