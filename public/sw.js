@@ -1,23 +1,9 @@
-self.addEventListener('install', event => {
-  console.log('Установлен');
-});
-
-self.addEventListener('activate', event => {
-  console.log('Активирован');
-});
-
-self.addEventListener('fetch', event => {
-  console.log('Происходит запрос на сервер');
-});
+const self = this;
 
 const CACHE = 'offline-fallback-v1';
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches
-      .open(CACHE)
-      .then(() => self.skipWaiting()),
-  );
+  event.waitUntil(caches.open(CACHE).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
