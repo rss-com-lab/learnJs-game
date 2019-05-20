@@ -101,7 +101,7 @@ const makeQuestionsFile = async () => {
       }
     }
 }`;
-  fs.writeFile(`${__dirname}/questions-all.json`, main, errorFirstCb);
+  fs.writeFile(`${__dirname}/questions-all-new.json`, main, errorFirstCb);
 };
 
 makeQuestionsFile();

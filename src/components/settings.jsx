@@ -35,7 +35,7 @@ class Settings extends Component {
 
   createOptions = () => {
     fetch(
-      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all.json',
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all-new.json',
     )
       .then(results => {
         return results.json();

@@ -183,11 +183,11 @@
           "for (var i = 0; i < arr.length; i++) {",
           "setTimeout(function() {",
           "console.log('Index: ' + i +'",
-          "element: ' + arr[i]);",
+          ", element: ' + arr[i]);",
           "}, 3000);",
           "}"
         ],
-        "correctAnswer": "",
+        "correctAnswer": "Index: 4, element: undefined",
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Closures",
         "complexity": "3",
         "theme": "Closures"
