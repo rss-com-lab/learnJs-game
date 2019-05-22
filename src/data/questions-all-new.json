@@ -251,7 +251,7 @@
         "data":[
           {
                     "questionTitle": "Кто является основным создателем языка Java Script?",
-                    "questionDescription": null,
+                    "questionDescription": [],
                     "answers": [
                               "Бил Гейтс",
                               "Линус Торвальдс",
@@ -450,26 +450,10 @@
                     "theme": "Операторы в JS"
           },
           {
-                    "questionTitle": "Какие методы массива вернут строку как результат?",
-                    "questionDescription": null,
-                    "answers": [
-                              "slice()",
-                              "toString()",
-                              "join()",
-                              "splice()",
-                              "concat()"
-                    ],
-                    "correctAnswer": [
-                              "toString()",
-                              "join()"
-                    ],
-                    "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array",
-                    "complexity": "2",
-                    "theme": "Массивы"
-          },
-          {
                     "questionTitle": "Что вернет метод fill?",
-                    "questionDescription": "[1,2.3,4,5,6].fil(0,2,3)",
+                    "questionDescription": [
+                              "[1,2.3,4,5,6].fil(0,2,3)"
+                    ],
                     "answers": [
                               "[0,2,3,4,5,6]",
                               "[1,2,0,4,5,6]",
@@ -483,7 +467,7 @@
           },
           {
                     "questionTitle": "Какой из методов массива удалит и вернет первый элемент массива?",
-                    "questionDescription": null,
+                    "questionDescription": [],
                     "answers": [
                               "pop()",
                               "shift()",
@@ -497,7 +481,9 @@
           },
           {
                     "questionTitle": "Что вернет метод slice?",
-                    "questionDescription": "[1, 2, 3, 4, 5, 6].slice(2,3)",
+                    "questionDescription": [
+                              "[1, 2, 3, 4, 5, 6].slice(2,3)"
+                    ],
                     "answers": [
                               "3",
                               [
@@ -529,7 +515,7 @@
           },
           {
                     "questionTitle": "Number в JS по умолчанию хранятся в:",
-                    "questionDescription": null,
+                    "questionDescription": [],
                     "answers": [
                               "64 бита",
                               "32 бита",
@@ -545,45 +531,102 @@
           },
           {
                     "questionTitle": "Что выведет  в консоль?",
-                    "questionDescription": "-\"var scope = \"global\";\" -\"function outer() {\" -\"function scope() {\" -\"console.log(scope);\" -\"}\" -\"scope();\" -\"}\" -\"outer();\"",
-                    "answers": "-\"global\" -\"object window\" -\"ReferenceError\" -\"тело функции scope\"",
-                    "correctAnswer": "-\"тело функции scope\"",
+                    "questionDescription": [
+                              "var scope = \"global\";",
+                              "function outer() {",
+                              "function scope() {",
+                              "console.log(scope);",
+                              "}",
+                              "scope();",
+                              "}",
+                              "outer();"
+                    ],
+                    "answers": [
+                              "global",
+                              "object window",
+                              "ReferenceError",
+                              "тело функции scope"
+                    ],
+                    "correctAnswer": [
+                              "тело функции scope"
+                    ],
                     "explanation": "http://speakingjs.com/es5/ch16.html",
                     "complexity": "2",
                     "theme": "Scope"
           },
           {
                     "questionTitle": "Что выведет  в консоль?",
-                    "questionDescription": "-\"var b = 1;\" -\"function outer() {\" -\"var b = 2\" -\"function inner() {\" -\"b++;\" -\"var b = 3;\" -\"console.log(b);\" -\"}\" -\"inner();\" -\"}\" -\"outer();\"",
-                    "answers": "-\"undefined\" -\"NaN\" -\"2\" -\"3\" -\"4\"",
-                    "correctAnswer": "-\"3\"",
+                    "questionDescription": [
+                              "var b = 1;",
+                              "function outer() {",
+                              "var b = 2",
+                              "function inner() {",
+                              "b++;",
+                              "var b = 3;",
+                              "console.log(b);",
+                              "}",
+                              "inner();",
+                              "}",
+                              "outer();"
+                    ],
+                    "answers": [
+                              "undefined",
+                              "NaN",
+                              "2",
+                              "3",
+                              "4"
+                    ],
+                    "correctAnswer": [
+                              "3"
+                    ],
                     "explanation": "http://speakingjs.com/es5/ch16.html",
                     "complexity": "2",
                     "theme": "Scope"
           },
           {
-                    "questionTitle": "Что выведет  в консоль?",
-                    "questionDescription": "-\"var x = 21;\" -\"var girl = function () {\" -\"console.log(x);\" -\"var x = 20; -\"};\" -\"girl ();\"",
-                    "answers": "-\"undefined\" -\"20\" -\"21\" -\"ReferenceError\"",
-                    "correctAnswer": "-\"undefined\"",
-                    "explanation": "http://speakingjs.com/es5/ch16.html",
-                    "complexity": "1",
-                    "theme": "Scope"
-          },
-          {
-                    "questionTitle": "Что выведет  в консоль?",
-                    "questionDescription": "-\"function () {\" -\"try {\" \"throw new Error();\" -\"} catch (x) {\" -\"var x = 1, y = 2;\" -\"console.log(x);\" -\"}\" -\"console.log(x);\" -\"console.log(y);\" -\"})();\"",
-                    "answers": "-\"1, undefined, 2\" -\"1, 1, 2\" -\"1, undefined, undefined\"",
-                    "correctAnswer": "-\"1, undefined, 2\"",
+                    "questionTitle": "Что выведет в консоль?",
+                    "questionDescription": [
+                              "function () {",
+                              "try {",
+                              "throw new Error();",
+                              "} catch (x) {",
+                              "var x = 1, y = 2;",
+                              "console.log(x);",
+                              "}",
+                              "console.log(x);",
+                              "console.log(y);",
+                              "})();"
+                    ],
+                    "answers": [
+                              "1, undefined, 2",
+                              "1, 1, 2",
+                              "1, undefined, undefined"
+                    ],
+                    "correctAnswer": [
+                              "1, undefined, 2"
+                    ],
                     "explanation": "https://dev.opera.com/articles/efficient-javascript/?page=2#trycatch",
                     "complexity": "3",
                     "theme": "Scope"
           },
           {
                     "questionTitle": "Что выведет  в консоль?",
-                    "questionDescription": "-\"(function(x) {\" -\"return (function(y) {\" -\"console.log(x);\" -\"})(2)\" -\"})(1);\"",
-                    "answers": "-\"undefined\" -\"2\" -\"1\" -\"ReferenceError\"",
-                    "correctAnswer": "-\"1\"",
+                    "questionDescription": [
+                              "(function(x) {",
+                              "return (function(y) {",
+                              "console.log(x);",
+                              "})(2)",
+                              "})(1);"
+                    ],
+                    "answers": [
+                              "undefined",
+                              "2",
+                              "1",
+                              "ReferenceError"
+                    ],
+                    "correctAnswer": [
+                              "1"
+                    ],
                     "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Closures",
                     "complexity": "1",
                     "theme": "Замыкание"

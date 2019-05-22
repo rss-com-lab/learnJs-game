@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import Select from 'react-select';
 import {Link} from 'react-router-dom';
@@ -29,6 +30,8 @@ class Settings extends Component {
     this.state = {
       value: store.getState().complexity,
       theme: store.getState().theme,
+      placeholder: typeof store.getState().theme === 'object' ? '...' : store.getState().theme,
+      default: null,
       themes: [],
     };
   }
@@ -42,6 +45,7 @@ class Settings extends Component {
       })
       .then(data => {
         let temp = [];
+        temp.push({value: null, label: 'Все темы'});
         for (let i = 0; i < data.questionType.open.data.length; i++) {
           if (
             data.questionType.open.data[i].complexity ===
@@ -55,8 +59,8 @@ class Settings extends Component {
         }
         for (let i = 0; i < data.questionType.close.data.length; i++) {
           if (
-            data.questionType.open.data[i].complexity ===
-            store.getState().complexity
+            data.questionType.close.data[i].complexity ===
+            `${store.getState().complexity}`
           ) {
             temp.push({
               value: data.questionType.close.data[i].theme,
@@ -75,8 +79,6 @@ class Settings extends Component {
           return unique;
         }, []);
         this.setState({themes: themes});
-        this.setState({theme: this.state.themes[0].value});
-        console.log(this.state.themes[0].value);
       });
   };
 
@@ -84,24 +86,34 @@ class Settings extends Component {
     this.unsubscribe = store.subscribe(() => this.forceUpdate());
   };
 
+  componentWillUnmount = () => {
+    this.unsubscribe();
+  };
+
   componentWillMount = () => {
     this.createOptions();
   };
+ 
 
   select = e => {
     console.log(typeof this.state.value, typeof store.getState().complexity);
     store.dispatch(complexitySelected(parseInt(e.target.value, 10)));
+    store.dispatch(themeSelected({value: null}));
     this.setState({
       value: store.getState().complexity,
+      theme: store.getState().theme,
+      placeholder: '...',
+      default: null,
     });
+    console.log(this.state);
     this.createOptions();
-    store.dispatch(themeSelected({value: null}));
   };
 
   selectTheme = theme => {
     store.dispatch(themeSelected(theme));
     this.setState({
       theme: store.getState().theme,
+      default: theme,
     });
   };
 
@@ -111,10 +123,6 @@ class Settings extends Component {
 
   timeoutDecreased = () => {
     store.dispatch(timeoutDecreased());
-  };
-
-  componentWillUnmount = () => {
-    this.unsubscribe();
   };
 
   render() {
@@ -128,7 +136,7 @@ class Settings extends Component {
         <ul className="settings-list">
           <li className="settings-item">
             <div className="settings-item-description">
-              Выбери сложность задач
+              Сложность
             </div>
             <FormControl component="fieldset">
               <RadioGroup
@@ -192,6 +200,7 @@ class Settings extends Component {
           <li className="settings-item">
             <div className="settings-item-description">Выбери тему</div>
             <Select
+              value={this.state.default}
               options={this.state.themes}
               className="settings-item__topic-select"
               placeholder={

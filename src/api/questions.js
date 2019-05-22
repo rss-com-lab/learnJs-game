@@ -1,3 +1,5 @@
+const ANSWERS_NUM = 4;
+
 export function generateQuestionsList(
   complexityLevel,
   selectedTheme,
@@ -18,6 +20,16 @@ export function generateQuestionsList(
         questions.push(config.questionType.open.data[i]);
       }
     }
+    for (let i = 0; i < config.questionType.close.data.length; i++) {
+      if (
+        complexityLevel /
+          Number(config.questionType.close.data[i].complexity) ===
+          1 &&
+        selectedTheme === config.questionType.close.data[i].theme
+      ) {
+        questions.push(config.questionType.close.data[i]);
+      }
+    }
   } else {
     for (let i = 0; i < config.questionType.open.data.length; i++) {
       if (
@@ -28,22 +40,61 @@ export function generateQuestionsList(
         questions.push(config.questionType.open.data[i]);
       }
     }
+    for (let i = 0; i < config.questionType.close.data.length; i++) {
+      if (
+        complexityLevel /
+          Number(config.questionType.close.data[i].complexity) ===
+        1
+      ) {
+        questions.push(config.questionType.close.data[i]);
+      }
+    }
   }
 
+  console.log(questions);
   for (let i = 1; i <= numberOfQuestions; i++) {
     let randomOpen = Math.floor(Math.random() * questions.length);
-    result.questionType = 'open';
-    result.correctAnswer = questions[randomOpen].correctAnswer;
-    result.responseTime = config.questionType['open'].responseTime;
-    result.questionTitle = questions[randomOpen].questionTitle;
-    result.question = [];
-    result.explanation = questions[randomOpen].explanation;
 
-    for (let j = 0; j < questions[randomOpen].questionDescription.length; j++) {
-      result.question.push(questions[randomOpen].questionDescription[j]);
+    if (!questions[randomOpen].hasOwnProperty('answers')) {
+      result.questionType = 'open';
+      result.question = [];
+      result.correctAnswer = questions[randomOpen].correctAnswer;
+      result.responseTime = config.questionType['open'].responseTime;
+      result.questionTitle = questions[randomOpen].questionTitle;
+      result.explanation = questions[randomOpen].explanation;
+
+      for (
+        let j = 0;
+        j < questions[randomOpen].questionDescription.length;
+        j++
+      ) {
+        result.question.push(questions[randomOpen].questionDescription[j]);
+      }
+    } else {
+      result.questionType = 'close';
+      result.question = [];
+      result.answers = [];
+      result.correctAnswer = questions[randomOpen].correctAnswer;
+      result.responseTime = config.questionType['close'].responseTime;
+      result.questionTitle = questions[randomOpen].questionTitle;
+      //result.explanation = questions[randomOpen].explanation;
+
+      for (
+        let j = 0;
+        j < questions[randomOpen].questionDescription.length;
+        j++
+      ) {
+        result.question.push(questions[randomOpen].questionDescription[j]);
+      }
+
+      for (let j = 0; j < ANSWERS_NUM; j++) {
+        result.answers.push(questions[randomOpen].answers[j]);
+      }
     }
+
     questionsList.push(result);
     result = {};
   }
+  console.log(questionsList);
   return questionsList;
 }
