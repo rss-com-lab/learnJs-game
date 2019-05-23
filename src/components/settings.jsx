@@ -13,6 +13,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import '../style/app.css';
 
@@ -37,7 +38,7 @@ class Settings extends Component {
 
   createOptions = () => {
     fetch(
-      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all.json',
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all-new.json',
     )
       .then(results => {
         return results.json();
@@ -95,6 +96,7 @@ class Settings extends Component {
  
 
   select = e => {
+    console.log(typeof this.state.value, typeof store.getState().complexity);
     store.dispatch(complexitySelected(parseInt(e.target.value, 10)));
     store.dispatch(themeSelected({value: null}));
     this.setState({
@@ -196,12 +198,16 @@ class Settings extends Component {
             </div> */}
           </li>
           <li className="settings-item">
-            <div className="settings-item-description">Тема</div>
+            <div className="settings-item-description">Выбери тему</div>
             <Select
               value={this.state.default}
               options={this.state.themes}
               className="settings-item__topic-select"
-              placeholder={this.state.placeholder}
+              placeholder={
+                typeof store.getState().theme === 'string'
+                  ? `${store.getState().theme}`
+                  : '...'
+              }
               onChange={this.selectTheme}
             />
           </li>
