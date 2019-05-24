@@ -354,7 +354,7 @@ class Game extends Component {
           .trim()
           .toLowerCase()
           .replace(/'/g, '"') === this.state.correctAnswer
-      : this.state.value === this.state.correctAnswer;
+      : this.state.value === this.state.correctAnswer.toString();
   };
 
   isLastQuestion = () => {
