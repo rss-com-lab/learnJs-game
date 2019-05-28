@@ -316,11 +316,16 @@ body {
 .settings-item {
   display: flex;
   flex-direction: column;
-  margin-right: 10vw;
-  margin-bottom: 2vh;
-  margin-left: 10vw;
+  align-items: center;
+  margin: 0 0 1rem 0.5rem;
 
   font-size: calc(2vh + 2vw);
+}
+.settings-item-description {
+  margin-bottom: 0.5rem;
+}
+.settings-item__topic-select {
+  width: 100%;
 }
 
 .settings-buttons {
@@ -756,10 +761,6 @@ body {
     height: 50px;
   }
   .settings__topic-select {
-    width: 300px;
-    margin: 0 auto;
-
-    font-size: 20px;
-    text-align: center;
+    font-size: 0.5rem;
   }
 }
