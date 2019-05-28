@@ -49,6 +49,7 @@ const mapStateToProps = state => {
 };
 
 let figures = ['star', 'circle', 'flower'];
+const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
 
 class Game extends Component {
   constructor(props) {
@@ -469,6 +470,76 @@ class Game extends Component {
     }
   };
 
+  keyboard = questionType => {
+    switch (questionType) {
+      case types.open:
+        return (
+          <div className="keyboard-row">
+            <div
+              className="keyboard-cell clear-cell"
+              id="clear"
+              onClick={this.handleBackspace}
+              style={{width: '50vw'}}
+            />
+            <div
+              className="keyboard-cell ok-cell"
+              id="ok"
+              onClick={this.onSubmit}
+              style={{width: '50vw'}}>
+              OK
+            </div>
+          </div>
+        );
+      case types.close:
+        return (
+          <div
+            onClick={this.handleClick}
+            style={{
+              borderBottom: '3px solid #b1d4df',
+              backgroundColor: '#5e9aa4',
+            }}>
+            {this.state.answers.map((answer, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    textAlign: 'center',
+                    borderTop: '3px solid #b1d4df',
+                  }}>
+                  {answer}
+                </div>
+              );
+            })}
+          </div>
+        );
+      case types.closeMultiple:
+        return (
+          <div
+            onClick={this.handleClick}
+            style={{
+              borderBottom: '3px solid #b1d4df',
+              backgroundColor: '#5e9aa4',
+            }}>
+            {this.state.answers.map((answer, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    textAlign: 'center',
+                    borderTop: '3px solid #b1d4df',
+                  }}>
+                  {answer}
+                </div>
+              );
+            })}
+            <div style={{backgroundColor: 'green'}}>OK</div>
+          </div>
+        );
+      default:
+        return 0;
+    }
+  };
+
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
@@ -552,43 +623,7 @@ class Game extends Component {
           ref={node => {
             this.node = node;
           }}>
-          {this.state.questionType !== 'close' ? (
-            <div className="keyboard-row">
-              <div
-                className="keyboard-cell clear-cell"
-                id="clear"
-                onClick={this.handleBackspace}
-                style={{width: '50vw'}}
-              />
-              <div
-                className="keyboard-cell ok-cell"
-                id="ok"
-                onClick={this.onSubmit}
-                style={{width: '50vw'}}>
-                OK
-              </div>
-            </div>
-          ) : (
-            <div
-              onClick={this.handleClick}
-              style={{
-                borderBottom: '3px solid #b1d4df',
-                backgroundColor: '#5e9aa4',
-              }}>
-              {this.state.answers.map((answer, index) => {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      textAlign: 'center',
-                      borderTop: '3px solid #b1d4df',
-                    }}>
-                    {answer}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          {this.keyboard(this.state.questionType)}
           <audio
             ref={audio => {
               this.beepSound = audio;
