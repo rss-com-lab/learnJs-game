@@ -31,8 +31,13 @@ const urlQuestionsOpen =
   'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-open.md';
 const urlQuestionsChoice =
   'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-choice.md';
+
+const urlQuestionsChoiceMultiple =
+  'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-choice-multiple.md';
 const fileNameOpen = 'open';
 const fileNameChoice = 'choice';
+const fileNameChoiceMultiple = 'choiceMultiple';
+// closeMultiple
 const responseTime = 300000;
 
 const errorFirstCb = error => {
@@ -62,6 +67,11 @@ const getQuestions = async (url, fileName) => {
 const makeQuestionsFile = async () => {
   const open = await getQuestions(urlQuestionsOpen, fileNameOpen);
   const close = await getQuestions(urlQuestionsChoice, fileNameChoice);
+  const closeMultiple = await getQuestions(
+    urlQuestionsChoiceMultiple,
+    fileNameChoiceMultiple,
+  );
+
   const main = `{  
     "numberOfLevels":2,
     "numberOfStages":2,
@@ -98,10 +108,14 @@ const makeQuestionsFile = async () => {
       "close":{  
         "data":${JSON.stringify(close.chooseOptions.data, 0, 10)},
         "responseTime":${responseTime}
+      },
+      "closeMultiple":{
+        "data":${JSON.stringify(closeMultiple.closeMultiple.data, 0, 10)},
+        "responseTime":${responseTime}
       }
     }
 }`;
-  fs.writeFile(`${__dirname}/questions-all-new.json`, main, errorFirstCb);
+  fs.writeFile(`${__dirname}/questions-all-1.json`, main, errorFirstCb);
 };
 
 makeQuestionsFile();
