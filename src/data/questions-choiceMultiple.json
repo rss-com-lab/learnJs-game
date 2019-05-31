@@ -35,7 +35,7 @@
           "includes()"
         ],
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array",
-        "complexity": "1",
+        "complexity": "2",
         "theme": "Массивы"
       },
       {
@@ -70,7 +70,7 @@
           "filter()"
         ],
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array",
-        "complexity": "1",
+        "complexity": "2",
         "theme": "Массивы"
       },
       {
@@ -107,7 +107,7 @@
           "Object.entries()"
         ],
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Object",
-        "complexity": "1",
+        "complexity": "2",
         "theme": "Объекты"
       },
       {
@@ -125,7 +125,7 @@
           "Object.defineProperties()"
         ],
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Object",
-        "complexity": "1",
+        "complexity": "2",
         "theme": "Объекты"
       },
       {
@@ -144,8 +144,27 @@
           "SpiderMonkey"
         ],
         "explanation": "https://habr.com/ru/company/otus/blog/446446/",
-        "complexity": "1",
+        "complexity": "2",
         "theme": null
+      },
+      {
+        "questionTitle": "Какие методы массива изменяют исходный массив?",
+        "questionDescription": [],
+        "answers": [
+          "pop",
+          "slice",
+          "splice",
+          "reverse",
+          "some"
+        ],
+        "correctAnswer": [
+          "pop",
+          "splice",
+          "reverse"
+        ],
+        "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Array",
+        "complexity": "3",
+        "theme": "Массивы"
       }
     ]
   }
