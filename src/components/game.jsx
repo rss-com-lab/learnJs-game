@@ -48,16 +48,22 @@ const mapStateToProps = state => {
   };
 };
 
-let figures = ['star', 'circle', 'flower'];
+const figures = ['star', 'circle', 'flower'];
 const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
+const colors = {
+  default: 'rgb(94, 154, 164)',
+  active: 'rgb(119, 185, 196)',
+  transparent: 'transparent',
+};
 
 class Game extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      active: false,
       user: store.getState().currentUser.user.name,
-      value: '',
+      value: null,
       submitted: false,
       remainingTime: 0,
       colors: [],
@@ -68,6 +74,7 @@ class Game extends Component {
       levelCompleted: false,
       answerWrong: true,
       openModalWindow: false,
+      keyboardUpdate: false,
     };
   }
 
@@ -204,22 +211,41 @@ class Game extends Component {
   };
 
   handleClick = e => {
-    if (this.state.questionType === 'open') {
-      if (
-        this.node.contains(e.target) &&
-        e.target.id !== 'clear' &&
-        e.target.id !== 'ok'
-      ) {
-        this.setState({
-          value: this.state.value + e.target.innerHTML,
-        });
-      }
-    } else {
-      const value = e.target.innerText;
-      this.setState(() => {
-        return {value: value};
+    if (this.state.questionType === types.open) {
+      this.setState({
+        value: e.target.value,
+      });
+    }
+
+    if (this.state.questionType === types.close) {
+      this.setState({
+        value: e.target.innerText,
       });
       this.onSubmit();
+    }
+
+    if (this.state.questionType === types.closeMultiple) {
+      if (e.target.className !== 'ok-cell--multiple') {
+        let text = e.target.innerText;
+
+        this.setState(prevState => {
+          return {
+            value:
+              prevState.value.indexOf(text) !== -1
+                ? this.state.value
+                    .split(',,,')
+                    .filter(value => {
+                      return value !== text;
+                    })
+                    .join(',,,')
+                : this.state.value + text + ',,,',
+          };
+        });
+        e.target.style.backgroundColor === colors.transparent ||
+        e.target.style.backgroundColor === colors.default
+          ? (e.target.style.backgroundColor = colors.active)
+          : (e.target.style.backgroundColor = colors.transparent);
+      }
     }
     this.beepSound.play();
   };
@@ -235,6 +261,7 @@ class Game extends Component {
       this.setState(
         {
           submitted: true,
+          keyboardUpdate: true,
         },
         function() {
           this.handleInputChange();
@@ -282,6 +309,12 @@ class Game extends Component {
     clearTimeout(this.timeout);
     clearInterval(this.countdown);
     this.restartCountdown();
+
+    if (this.state.questionType === types.closeMultiple) {
+      this.setState({
+        keyboardUpdate: false,
+      });
+    }
 
     if (this.isAnswerCorrect()) {
       this.passed();
@@ -350,12 +383,39 @@ class Game extends Component {
   };
 
   isAnswerCorrect = () => {
-    return this.state.submitted && this.state.questionType === 'open'
-      ? this.state.value
-          .trim()
-          .toLowerCase()
-          .replace(/'/g, '"') === this.state.correctAnswer
-      : this.state.value === this.state.correctAnswer.toString();
+    if (this.state.submitted) {
+      if (this.state.questionType === types.open) {
+        return (
+          this.state.value
+            .trim()
+            .toLowerCase()
+            .replace(/'/g, '"')
+            .replace(/\s/g, '') ===
+          this.state.correctAnswer
+            .trim()
+            .toLowerCase()
+            .replace(/'/g, '"')
+            .replace(/\s/g, '')
+        );
+      }
+
+      if (this.state.questionType === types.close) {
+        return this.state.value === this.state.correctAnswer.toString();
+      }
+
+      if (this.state.questionType === types.closeMultiple) {
+        if (Array.isArray(this.state.correctAnswer)) {
+          return this.state.correctAnswer.every(answer => {
+            return (
+              this.state.value.indexOf(answer) !== -1 &&
+              this.state.value.split(',,,').length - 1 ===
+                this.state.correctAnswer.length
+            );
+          });
+        }
+      }
+    }
+    return false;
   };
 
   isLastQuestion = () => {
@@ -457,16 +517,7 @@ class Game extends Component {
 
   handleKeyPress = event => {
     if (event.key === 'Enter') {
-      if (store.getState().progress.total < this.state.numberOfQuestions) {
-        this.setState(
-          {
-            submitted: true,
-          },
-          function() {
-            this.handleInputChange();
-          },
-        );
-      }
+      this.onSubmit();
     }
   };
 
@@ -518,36 +569,43 @@ class Game extends Component {
             onClick={this.handleClick}
             style={{
               borderBottom: '3px solid #b1d4df',
-              backgroundColor: '#5e9aa4',
+              backgroundColor: colors.default,
             }}>
             {this.state.answers.map((answer, index) => {
               return (
                 <div
                   key={index}
                   style={{
+                    dataUpdate: `${this.state.keyboardUpdate}`,
                     textAlign: 'center',
                     borderTop: '3px solid #b1d4df',
+                    backgroundColor: this.state.keyboardUpdate
+                      ? colors.transparent
+                      : colors.default,
                   }}>
                   {answer}
                 </div>
               );
             })}
-            <div style={{backgroundColor: 'green'}}>OK</div>
+            <div
+              className="ok-cell--multiple"
+              onClick={this.onSubmit}
+              style={{
+                borderTop: '3px solid #b1d4df',
+                backgroundColor: 'rgb(255, 255, 255)',
+              }}>
+              OK
+            </div>
           </div>
         );
       default:
-        return 0;
+        return <div />;
     }
   };
 
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
-    //console.log(Array.from(this.state.answers));
-    // let zeroCellDisplay =
-    //   this.state.questionType === 'selective' ? 'none' : 'block';
-    // let inputCellsWidth =
-    //   this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
@@ -599,14 +657,15 @@ class Game extends Component {
                 {convertSecondsToTime(this.state.remainingTime)}
               </div>
               <div className={muteBtnStyle} onClick={this.muteSounds} />
-              {this.state.questionType === 'open' ? (
+              {this.state.questionType === types.open ? (
                 <div className="answer-field">
                   <div className="answer-text">Ответ: </div>
                   <div className="answer-input">
                     <input
                       type="text"
                       onKeyPress={this.handleKeyPress}
-                      onChange={this.handleInput}
+                      //onChange={this.handleInput}
+                      onChange={this.handleClick}
                       placeholder="your answer..."
                       autoFocus
                       value={this.state.value}

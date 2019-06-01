@@ -13,9 +13,10 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 
 import '../style/app.css';
+
+const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
 
 const mapStateToProps = state => {
   return {
@@ -46,28 +47,20 @@ class Settings extends Component {
       .then(data => {
         let temp = [];
         temp.push({value: null, label: 'Все темы'});
-        for (let i = 0; i < data.questionType.open.data.length; i++) {
-          if (
-            data.questionType.open.data[i].complexity ===
-            `${store.getState().complexity}`
-          ) {
-            temp.push({
-              value: data.questionType.open.data[i].theme,
-              label: data.questionType.open.data[i].theme,
-            });
+        for (let key in types ) {
+          for (let i = 0; i < data.questionType[types[key]].data.length; i++) {
+            if (
+              data.questionType[types[key]].data[i].complexity ===
+              `${store.getState().complexity}`
+            ) {
+              temp.push({
+                value: data.questionType[types[key]].data[i].theme,
+                label: data.questionType[types[key]].data[i].theme,
+              });
+            }
           }
         }
-        for (let i = 0; i < data.questionType.close.data.length; i++) {
-          if (
-            data.questionType.close.data[i].complexity ===
-            `${store.getState().complexity}`
-          ) {
-            temp.push({
-              value: data.questionType.close.data[i].theme,
-              label: data.questionType.close.data[i].theme,
-            });
-          }
-        }
+
         let themes = temp.reduce((unique, el) => {
           if (
             !unique.some(
@@ -104,8 +97,9 @@ class Settings extends Component {
       theme: store.getState().theme,
       placeholder: '...',
       default: null,
+    }, () => {
+      console.log(this.state);
     });
-    console.log(this.state);
     this.createOptions();
   };
 
