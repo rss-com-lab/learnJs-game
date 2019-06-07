@@ -153,30 +153,6 @@
         "theme": "Объекты в JS"
       },
       {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "2",
-        "theme": null
-      },
-      {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "2",
-        "theme": null
-      },
-      {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "2",
-        "theme": null
-      },
-      {
         "questionTitle": "Что вернёт следующий код?",
         "questionDescription": [
           "const arr = [10, 12, 15, 21];",
@@ -191,30 +167,6 @@
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Closures",
         "complexity": "3",
         "theme": "Closures"
-      },
-      {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "3",
-        "theme": null
-      },
-      {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "3",
-        "theme": null
-      },
-      {
-        "questionTitle": null,
-        "questionDescription": [],
-        "correctAnswer": "",
-        "explanation": null,
-        "complexity": "3",
-        "theme": null
       }
     ]
   }
