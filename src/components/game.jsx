@@ -587,15 +587,6 @@ class Game extends Component {
                 </div>
               );
             })}
-            {/* <div
-              className="ok-cell--multiple"
-              onClick={this.onSubmit}
-              style={{
-                borderTop: '3px solid #b1d4df',
-                backgroundColor: 'rgb(255, 255, 255)',
-              }}>
-              OK
-            </div> */}
           </div>
         );
       default:
