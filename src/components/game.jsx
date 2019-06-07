@@ -109,7 +109,7 @@ class Game extends Component {
             .responseTime,
           remainingTime:
             this.questionsList[store.getState().progress.total].responseTime /
-            1000,
+              1000 || 300000,
         },
         () => {
           this.timeout = setTimeout(

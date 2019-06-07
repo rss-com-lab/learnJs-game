@@ -89,6 +89,9 @@ export function generateQuestionsList(
       for (let j = 0; j < questions[random].answers.length; j++) {
         result.answers.push(questions[random].answers[j]);
       }
+
+      result.answers = shuffle(result.answers);
+      console.log(result.answers);
     }
 
     questionsList.push(result);
@@ -96,4 +99,21 @@ export function generateQuestionsList(
   }
   console.log(questionsList);
   return questionsList;
+}
+
+function shuffle(array) {
+  let length = array.length,
+    temp,
+    i;
+  // While there remain elements to shuffle…
+  while (length) {
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * length--);
+
+    // And swap it with the current element.
+    temp = array[length];
+    array[length] = array[i];
+    array[i] = temp;
+  }
+  return array;
 }
