@@ -587,7 +587,7 @@ class Game extends Component {
                 </div>
               );
             })}
-            <div
+            {/* <div
               className="ok-cell--multiple"
               onClick={this.onSubmit}
               style={{
@@ -595,7 +595,48 @@ class Game extends Component {
                 backgroundColor: 'rgb(255, 255, 255)',
               }}>
               OK
+            </div> */}
+          </div>
+        );
+      default:
+        return <div />;
+    }
+  };
+
+  panel = questionType => {
+    switch (questionType) {
+      case types.open:
+        return (
+          <div className="answer-field">
+            <div className="answer-text">Ответ: </div>
+            <div className="answer-input">
+              <input
+                type="text"
+                onKeyPress={this.handleKeyPress}
+                //onChange={this.handleInput}
+                onChange={this.handleClick}
+                placeholder="your answer..."
+                autoFocus
+                value={this.state.value}
+                style={{height: '100%', outline: 'none'}}
+              />
             </div>
+          </div>
+        );
+      case types.close:
+        return null;
+      case types.closeMultiple:
+        return (
+          <div
+            className="ok-cell--multiple"
+            onClick={this.onSubmit}
+            style={{
+              height: '90%',
+              width: '50%',
+              backgroundColor: '#e6b3ff',
+              textAlign: 'center',
+            }}>
+            OK
           </div>
         );
       default:
@@ -657,23 +698,7 @@ class Game extends Component {
                 {convertSecondsToTime(this.state.remainingTime)}
               </div>
               <div className={muteBtnStyle} onClick={this.muteSounds} />
-              {this.state.questionType === types.open ? (
-                <div className="answer-field">
-                  <div className="answer-text">Ответ: </div>
-                  <div className="answer-input">
-                    <input
-                      type="text"
-                      onKeyPress={this.handleKeyPress}
-                      //onChange={this.handleInput}
-                      onChange={this.handleClick}
-                      placeholder="your answer..."
-                      autoFocus
-                      value={this.state.value}
-                      style={{height: '100%', outline: 'none'}}
-                    />
-                  </div>
-                </div>
-              ) : null}
+              {this.panel(this.state.questionType)}
             </div>
           </div>
         </div>
