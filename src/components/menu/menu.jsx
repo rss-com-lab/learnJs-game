@@ -38,8 +38,6 @@ class Menu extends Component {
     this.isLoggedIn() ? store.dispatch(logOutUser()) : null;
 
   render() {
-    console.log(store.getState());
-
     return (
       <div className="game-wrapper">
         <div className="menu-screen">
