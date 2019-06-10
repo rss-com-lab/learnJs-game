@@ -2,26 +2,24 @@ $color-background: #ecf7fd;
 $color-text: #b1d6df;
 
 .stages-screen {
-  width: 100%;
-  height: 100%;
-
   background: $color-background;
+  height: 100%;
+  width: 100%;
 
   h3 {
-    text-align: center;
     color: $color-text;
+    text-align: center;
   }
 }
 
-.stage-circle {
+.stage-circle{
+  margin: 100px auto;
   width: 50vmin;
   height: 50vmin;
-  margin: 100px auto;
-
   border: 5px solid $color-text;
   border-radius: 50%;
 
-  a {
+  a{
     display: inline-block;
     width: 100%;
     height: 100%;
