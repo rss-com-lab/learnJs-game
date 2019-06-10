@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router';
@@ -8,6 +7,8 @@ import {logInUser} from '../ducks/users';
 import {complexitySelected} from '../ducks/complexity';
 
 import '../style/app.css';
+
+let testQuestions = ['10 x 2', '16 : 2'];
 
 class Register extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class Register extends Component {
       instructionsStep: false,
       complexitySelectionStep: false,
       setupCompleted: false,
-      complexity: 1
+      complexity: 1,
+      questionNumber: 0,
     };
   }
 
@@ -56,6 +58,7 @@ class Register extends Component {
             value: '',
             warningMessage: true,
           });
+
           return;
         }
 
@@ -75,42 +78,36 @@ class Register extends Component {
     });
   };
 
-  isBasic = () => {
-    this.setState({
-        complexity: 1
-      },
+  isEasy = () => {
+    this.setState(
+      prevState => ({
+        questionNumber: prevState.questionNumber + 1,
+        complexity: prevState.complexity + 1,
+      }),
       () => {
-        this.setUser();
+        this.islastQuestion();
+        return;
       },
     );
   };
 
-  isIntermediate = () => {
-    this.setState({
-        complexity: 2,
-      },
+  isTough = () => {
+    this.setState(
+      prevState => ({
+        questionNumber: prevState.questionNumber + 1,
+        complexity: prevState.complexity,
+      }),
       () => {
-        this.setUser();
+        this.islastQuestion();
+        return;
       },
     );
   };
 
-  isAdvanced = () => {
-    this.setState({
-        complexity: 3, 
-      },
-      () => {
-        this.setUser();
-      },
-    );
-  };
-
-  setUser = () => {
+  islastQuestion = () => {
+    if (this.state.questionNumber === testQuestions.length) {
       this.setState({
         setupCompleted: true,
-        instructionsStep: false,
-        value: '',
-        complexitySelectionStep: true,
       });
       let users = JSON.parse(localStorage.getItem('users')) || [];
       let currentUser = {
@@ -128,9 +125,12 @@ class Register extends Component {
       store.dispatch(complexitySelected(this.state.complexity));
       users.push(currentUser);
       localStorage.setItem('users', JSON.stringify(users));
+    }
   };
 
   render() {
+    let question = testQuestions[this.state.questionNumber];
+
     if (this.state.setupCompleted) {
       return <Redirect push to="/menu" />;
     }
@@ -182,25 +182,41 @@ class Register extends Component {
             }}>
             <div className="step-two-description">
               <p className="step-two-text">
-                Выбери уровень сложности для тренировки: <b>basic</b>, если
-                хочешь потренировать базовые навыки JS, <b>intermediate</b>,
-                если уже освоил основы и <b>advanced</b>, если хочешь настоящих
-                испытаний!
+                Давай подберем тебе уровень сложности.
               </p>
-              <div className="step-two-text">
-                <span className="complexity-btn-image" onClick={this.isBasic}>
-                  Basic
-                </span>
+              <p className="step-two-text">
+                Нажми на кнопку
+                <span className="complexity-btn-image">Легко</span> если задание
+                кажется тебе легким.
+              </p>
+              <p className="step-two-text">
+                Или на кнопку
+                <span className="complexity-btn-image tough">Сложно</span> если
+                кажется сложным.
+              </p>
+            </div>
+            <div
+              className="step-two-confirm-btn"
+              onClick={this.instructionsRead}
+            />
+          </div>
+          <div
+            className="step step-three"
+            style={{
+              display: this.state.complexitySelectionStep ? 'flex' : ' none',
+            }}>
+            <div className="step-three-title">
+              Настраиваем уровень сложности
+            </div>
+            <div className="step-three-question">{question} = ?</div>
+            <div className="complexity-setup-wrapper">
+              <div className="complexity-btn-image" onClick={this.isEasy}>
+                Легко
               </div>
-              <div className="step-two-text">
-                <span className="complexity-btn-image" onClick={this.isIntermediate}>
-                  Intermediate
-                </span>
-              </div>
-              <div className="step-two-text">
-                <span className="complexity-btn-image tough" onClick={this.isAdvanced}>
-                  Advanced
-                </span>
+              <div
+                className="complexity-btn-image tough"
+                onClick={this.isTough}>
+                Сложно
               </div>
             </div>
           </div>

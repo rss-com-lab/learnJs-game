@@ -6,7 +6,7 @@ import store from './store/store';
 
 import './index.css';
 import App from './components/app';
-import * as serviceWorker from './serviceWorker';
+import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -18,4 +18,4 @@ ReactDOM.render(
   document.getElementById('root'),
 );
 
-serviceWorker.register();
+registerServiceWorker();

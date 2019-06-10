@@ -1,119 +1,101 @@
-const RESPONSE_TIME = 300000;
-//const types = ['open', 'close', 'closeMultiple'];
-const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
-
 export function generateQuestionsList(
   complexityLevel,
-  selectedTheme,
   config,
   numberOfQuestions,
 ) {
-  let questions = [];
   let questionsList = [];
-  let result = {};
+  let operators = config.complexity[complexityLevel].operators;
+  let maxNumber = config.complexity[complexityLevel].maxNumber;
+  let firstNumber, secondNumber, operator;
 
-  if (typeof selectedTheme === 'string') {
-    for (let key in types) {
-      if (config.questionType.hasOwnProperty([types[key]])) {
-        for (let j = 0; j < config.questionType[types[key]].data.length; j++) {
-          if (
-            complexityLevel /
-              Number(config.questionType[types[key]].data[j].complexity) ===
-              1 &&
-            selectedTheme === config.questionType[types[key]].data[j].theme
-          ) {
-            questions.push(config.questionType[types[key]].data[j]);
-          }
-        }
-      }
-    }
-  } else {
-    for (let key in types) {
-      if (config.questionType.hasOwnProperty([types[key]])) {
-        for (let j = 0; j < config.questionType[types[key]].data.length; j++) {
-          if (
-            complexityLevel /
-              Number(config.questionType[types[key]].data[j].complexity) ===
-            1
-          ) {
-            questions.push(config.questionType[types[key]].data[j]);
-          }
-        }
-      }
-    }
-  }
-
-  console.log(questions);
   for (let i = 1; i <= numberOfQuestions; i++) {
-    let random = Math.floor(Math.random() * questions.length);
+    let result = {};
+    let remainder = i % 3;
 
-    if (!questions[random].hasOwnProperty('answers')) {
-      result.questionType = types.open;
-      result.question = [];
-      result.correctAnswer = questions[random].correctAnswer;
-      result.responseTime =
-        config.questionType[types.open].responseTime || RESPONSE_TIME;
-      result.questionTitle = questions[random].questionTitle;
-      result.explanation = questions[random].explanation;
+    if (remainder !== 0) {
+      operator = operators[Math.floor(Math.random() * operators.length)];
+      result.asnwers = 0;
+      result.questionType = 'open';
+      result.responseTime = config.questionType['open'].responseTime;
 
-      for (let j = 0; j < questions[random].questionDescription.length; j++) {
-        result.question.push(questions[random].questionDescription[j]);
+      if (operator === ':') {
+        secondNumber = Math.floor(Math.random() * (maxNumber / 2) + 1);
+        firstNumber = secondNumber * 2;
+        result.correctAnswer = firstNumber / secondNumber;
+      }
+
+      if (operator === 'x') {
+        firstNumber = Math.floor(Math.random() * maxNumber + 1);
+        secondNumber = 2;
+        result.correctAnswer = firstNumber * secondNumber;
+      }
+
+      if (operator === '+') {
+        firstNumber = Math.floor(Math.random() * maxNumber);
+        secondNumber = Math.floor(Math.random() * maxNumber);
+        result.correctAnswer = firstNumber + secondNumber;
+      }
+
+      result.question =
+        'Cколько будет ' +
+        firstNumber +
+        ' ' +
+        operator +
+        ' ' +
+        secondNumber +
+        '?';
+
+      if (operator === '-') {
+        firstNumber = Math.floor(Math.random() * maxNumber);
+        secondNumber = Math.floor(Math.random() * maxNumber);
+        if (secondNumber >= firstNumber) {
+          result.correctAnswer = secondNumber - firstNumber;
+          result.question =
+            'Cколько будет ' +
+            secondNumber +
+            ' ' +
+            operator +
+            ' ' +
+            firstNumber +
+            '?';
+        } else {
+          result.correctAnswer = firstNumber - secondNumber;
+          result.question =
+            'Cколько будет ' +
+            firstNumber +
+            ' ' +
+            operator +
+            ' ' +
+            secondNumber +
+            '?';
+        }
       }
     } else {
-      result.question = [];
-      result.answers = [];
-      result.correctAnswer = [];
-      result.questionTitle = questions[random].questionTitle;
-      if (
-        questions[random].correctAnswer instanceof Array &&
-        questions[random].correctAnswer.length > 1
-      ) {
-        result.questionType = types.closeMultiple;
-        for (let j = 0; j < questions[random].correctAnswer.length; j++) {
-          result.correctAnswer.push(questions[random].correctAnswer[j]);
-          result.responseTime =
-            config.questionType[types.closeMultiple].responseTime ||
-            RESPONSE_TIME;
-        }
-      } else {
-        result.questionType = types.close;
-        result.correctAnswer = questions[random].correctAnswer;
-        result.responseTime =
-          config.questionType[types.close].responseTime || RESPONSE_TIME;
-      }
-
-      for (let j = 0; j < questions[random].questionDescription.length; j++) {
-        result.question.push(questions[random].questionDescription[j]);
-      }
-
-      for (let j = 0; j < questions[random].answers.length; j++) {
-        result.answers.push(questions[random].answers[j]);
-      }
-
-      result.answers = shuffle(result.answers);
-      console.log(result.answers);
+      let randomSelective = Math.floor(
+        Math.random() * config.questionType.selective.data.length,
+      );
+      let randomDescriptive = Math.floor(
+        Math.random() * config.questionType.descriptive.data.length,
+      );
+      result = {
+        question: config.questionType.selective.data[randomSelective].question,
+        answers: config.questionType.selective.data[randomSelective].answers,
+        correctAnswer:
+          config.questionType.selective.data[randomSelective].correctAnswer,
+        questionType: 'selective',
+        responseTime: config.questionType['selective'].responseTime,
+      } || {
+        question:
+          config.questionType.descriptive.data[randomDescriptive].question,
+        answers:
+          config.questionType.descriptive.data[randomDescriptive].answers,
+        correctAnswer:
+          config.questionType.descriptive.data[randomDescriptive].correctAnswer,
+        questionType: 'descriptive',
+        responseTime: config.questionType['descriptive'].responseTime,
+      };
     }
-
     questionsList.push(result);
-    result = {};
   }
-  console.log(questionsList);
   return questionsList;
-}
-
-function shuffle(array) {
-  let length = array.length,
-    temp,
-    i;
-  // While there remain elements to shuffle…
-  while (length) {
-    // Pick a remaining element…
-    i = Math.floor(Math.random() * length--);
-
-    // And swap it with the current element.
-    temp = array[length];
-    array[length] = array[i];
-    array[i] = temp;
-  }
-  return array;
 }
