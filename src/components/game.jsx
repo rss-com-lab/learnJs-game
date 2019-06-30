@@ -742,10 +742,16 @@ class Game extends Component {
           open={this.state.openModalWindow}
           onClose={this.handleCloseModalWindow}
           disableBackdropClick={true}>
-          <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
+          <DialogTitle id="max-width-dialog-title">
+            Правильный ответ
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Правильный ответ : {this.state.correctAnswer}
+              {Array.isArray(this.state.correctAnswer)
+                ? this.state.correctAnswer.map(answer => {
+                    return <div>{answer}</div>;
+                  })
+                : this.state.correctAnswer}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
