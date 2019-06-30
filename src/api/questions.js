@@ -1,5 +1,4 @@
 const RESPONSE_TIME = 300000;
-//const types = ['open', 'close', 'closeMultiple'];
 const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
 
 export function generateQuestionsList(
@@ -11,7 +10,7 @@ export function generateQuestionsList(
   let questions = [];
   let questionsList = [];
   let result = {};
-
+  console.log(complexityLevel);
   if (typeof selectedTheme === 'string') {
     for (let key in types) {
       if (config.questionType.hasOwnProperty([types[key]])) {
@@ -43,7 +42,6 @@ export function generateQuestionsList(
     }
   }
 
-  console.log(questions);
   for (let i = 1; i <= numberOfQuestions; i++) {
     let random = Math.floor(Math.random() * questions.length);
 
@@ -91,7 +89,6 @@ export function generateQuestionsList(
       }
 
       result.answers = shuffle(result.answers);
-      console.log(result.answers);
     }
 
     questionsList.push(result);
@@ -105,12 +102,8 @@ function shuffle(array) {
   let length = array.length,
     temp,
     i;
-  // While there remain elements to shuffle…
   while (length) {
-    // Pick a remaining element…
     i = Math.floor(Math.random() * length--);
-
-    // And swap it with the current element.
     temp = array[length];
     array[length] = array[i];
     array[i] = temp;
