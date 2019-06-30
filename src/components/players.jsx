@@ -115,7 +115,10 @@ class Players extends Component {
     }
   };
 
-  handlePlayerChoice = player => store.dispatch(logInUser(player));
+  handlePlayerChoice = player => {
+    localStorage.setItem('user', JSON.stringify(player));
+    store.dispatch(logInUser(player));
+  };
 
   render() {
     let users = JSON.parse(localStorage.getItem('users')) || [];

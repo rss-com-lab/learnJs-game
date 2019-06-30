@@ -128,6 +128,7 @@ class Register extends Component {
       store.dispatch(complexitySelected(this.state.complexity));
       users.push(currentUser);
       localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('user', JSON.stringify(currentUser));
   };
 
   render() {

@@ -34,9 +34,12 @@ class Menu extends Component {
 
   getLink = () => (this.isLoggedIn() ? '/menu' : '/player');
 
-  handleLogLink = () =>
-    this.isLoggedIn() ? store.dispatch(logOutUser()) : null;
-
+  handleLogLink = () => {
+    if (this.isLoggedIn()) {
+      localStorage.setItem('user', '');
+      store.dispatch(logOutUser());
+    }
+  };
   render() {
     return (
       <div className="game-wrapper">
