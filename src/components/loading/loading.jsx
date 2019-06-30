@@ -20,7 +20,7 @@ class Loading extends Component {
     // eslint-disable-next-line no-unused-expressions
     localStorage.getItem('user')
       ? store.dispatch(logInUser(JSON.parse(localStorage.getItem('user'))))
-      : localStorage.setItem('user', ''); //console.log(store) : console.log('FALSE')
+      : localStorage.setItem('user', '');
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/levels.json')
       .then(result => result.json())

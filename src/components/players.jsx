@@ -117,8 +117,6 @@ class Players extends Component {
 
   handlePlayerChoice = player => {
     localStorage.setItem('user', JSON.stringify(player));
-    console.log(player, 'player');
-    console.log(localStorage.getItem('user'));
     store.dispatch(logInUser(player));
   };
 

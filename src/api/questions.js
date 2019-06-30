@@ -10,7 +10,6 @@ export function generateQuestionsList(
   let questions = [];
   let questionsList = [];
   let result = {};
-  console.log(complexityLevel);
   if (typeof selectedTheme === 'string') {
     for (let key in types) {
       if (config.questionType.hasOwnProperty([types[key]])) {
