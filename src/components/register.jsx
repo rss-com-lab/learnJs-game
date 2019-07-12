@@ -116,6 +116,7 @@ class Register extends Component {
       let currentUser = {
         name: this.state.name,
         score: [],
+        correctAnswers: [],
         complexity: this.state.complexity,
         currentSession: {
           level: 1,

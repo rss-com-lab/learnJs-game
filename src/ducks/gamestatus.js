@@ -4,6 +4,7 @@
 export const START_GAME = 'math-game-web/gamestatus/START_GAME';
 export const PLAY_GAME = 'math-game-web/gamestatus/PLAY_GAME';
 export const NEXT_STAGE = 'math-game-web/gamestatus/NEXT_STAGE';
+export const STAGE_AGAIN = 'math-game-web/gamestatus/STAGE_AGAIN';
 export const NEXT_LEVEL = 'math-game-web/gamestatus/NEXT_LEVEL';
 export const GAME_OVER = 'math-game-web/gamestatus/GAME_OVER';
 
@@ -37,6 +38,15 @@ export default function gameStatus(state = initialState, action) {
         currentStatus: action.currentStatus,
       };
     case NEXT_STAGE:
+      return {
+        ...state,
+        stageCount: state.stageCount + action.stageCount,
+        levelCount: state.levelCount,
+        actionText: action.actionText,
+        playStatus: action.playStatus,
+        currentStatus: action.currentStatus,
+      };
+    case STAGE_AGAIN:
       return {
         ...state,
         stageCount: state.stageCount + action.stageCount,
@@ -98,6 +108,17 @@ export function nextStage(text) {
     levelCount: 0,
     actionText: text,
     currentStatus: 'next_stage',
+    playStatus: false,
+  };
+}
+
+export function stageAgain(text) {
+  return {
+    type: STAGE_AGAIN,
+    stageCount: 0,
+    levelCount: 0,
+    actionText: text,
+    currentStatus: 'stage_again',
     playStatus: false,
   };
 }

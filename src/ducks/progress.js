@@ -5,6 +5,7 @@ export const TEST_PASSED = 'math-game-web/progress/TEST_PASSED';
 export const TEST_FAILED = 'math-game-web/progress/TEST_FAILED';
 export const TEST_NEXT_LEVEL = 'math-game-web/progress/TEST_NEXT_LEVEL';
 export const TEST_NEXT_STAGE = 'math-game-web/progress/TEST_NEXT_STAGE';
+export const TEST_STAGE_AGAIN = 'math-game-web/progress/TEST_STAGE_AGAIN';
 export const TEST_NEW_GAME = 'math-game-web/progress/TEST_NEW_GAME';
 
 // Reducer
@@ -50,6 +51,16 @@ export default function progress(state = initialState, action) {
         color: action.color,
       };
     case TEST_NEXT_STAGE:
+      return {
+        ...state,
+        passed: action.passed,
+        failed: action.failed,
+        total: action.total,
+        gamePassed: state.gamePassed + action.gamePassed,
+        gameTotal: state.gameTotal + action.gameTotal,
+        color: action.color,
+      };
+    case TEST_STAGE_AGAIN:
       return {
         ...state,
         passed: action.passed,
@@ -114,6 +125,18 @@ export function testNextLevel() {
 export function testNextStage() {
   return {
     type: TEST_NEXT_STAGE,
+    passed: 0,
+    failed: 0,
+    total: 0,
+    gamePassed: 0,
+    gameTotal: 0,
+    color: true,
+  };
+}
+
+export function testStageAgain() {
+  return {
+    type: TEST_STAGE_AGAIN,
     passed: 0,
     failed: 0,
     total: 0,

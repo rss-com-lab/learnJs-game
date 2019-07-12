@@ -10,6 +10,7 @@ import {
   testNewGame,
   testNextLevel,
   testNextStage,
+  testStageAgain,
 } from '../ducks/progress';
 import {
   gameOver,
@@ -17,6 +18,7 @@ import {
   gamePlay,
   nextLevel,
   nextStage,
+  stageAgain,
 } from '../ducks/gamestatus';
 
 import ProgressLine from './progress-line';
@@ -48,6 +50,16 @@ const mapStateToProps = state => {
   };
 };
 
+const levelsConfig = [
+  [2, 3, 4], // 2,3,4 - количество подряд отвеченных вопросов
+  [2, 3, 3, 4], // вместо 2, 3 -  можно будет потом добавить сложность например
+  // и будет тогда конфиг выглядеть как [2. [2, 1], [3, 1], [3, 2], [4, 1], [4, 2]], где 1 - 2 - сложность
+  [3, 4, 3, 4, 4],
+  [3, 4, 4, 4, 5],
+  [3, 4, 5, 4, 5],
+  [3, 4, 5, 5, 5],
+];
+
 const figures = ['star', 'circle', 'flower'];
 const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
 const colors = {
@@ -75,6 +87,7 @@ class Game extends Component {
       answerWrong: true,
       openModalWindow: false,
       keyboardUpdate: false,
+      stageWindow: false,
     };
   }
 
@@ -194,10 +207,12 @@ class Game extends Component {
       ) + '%' || '0%';
 
     let record = [this.state.figure, percent];
+    let answers = [this.state.figure, ''];
 
     users = users.map(elem => {
       if (elem.name === this.state.user) {
         elem.score.push(record);
+        elem.correctAnswers.push(answers);
       }
       return elem;
     });
@@ -352,7 +367,7 @@ class Game extends Component {
               });
             }, 2000);
           } else {
-            store.dispatch(nextLevel('И еще один уровень'));
+            store.dispatch(nextLevel('Новый уровень'));
             store.dispatch(testNextLevel());
             setTimeout(() => {
               this.updateCurrentSession();
@@ -365,15 +380,31 @@ class Game extends Component {
             }, 2000);
           }
         } else {
-          store.dispatch(nextStage('Следующий этап'));
-          store.dispatch(testNextStage());
-          this.updateCurrentSession();
-          this.setState({
-            colors: [],
-            figure: figures[Math.floor(Math.random() * figures.length)],
-            percent: '0%',
-            stageCompleted: true,
-          });
+          if (
+            store.getState().progress.passed <
+            levelsConfig[
+              store.getState().currentUser.user.currentSession.level - 1
+            ][store.getState().currentUser.user.currentSession.stage - 1]
+          ) {
+            store.dispatch(stageAgain('Вы не прошли текущий этап'));
+            store.dispatch(testStageAgain());
+            this.setState({
+              colors: [],
+              figure: figures[Math.floor(Math.random() * figures.length)],
+              percent: '0%',
+              stageCompleted: true,
+            });
+          } else {
+            store.dispatch(nextStage('Следующий этап'));
+            store.dispatch(testNextStage());
+            this.updateCurrentSession();
+            this.setState({
+              colors: [],
+              figure: figures[Math.floor(Math.random() * figures.length)],
+              percent: '0%',
+              stageCompleted: true,
+            });
+          }
         }
       }, ANIMATION_CACTUS_TIME);
     } else {
@@ -458,6 +489,11 @@ class Game extends Component {
     }
 
     if (store.getState().gameStatus.currentStatus === 'next_stage') {
+      this.setQuestionsNextLevel();
+      store.dispatch(gamePlay());
+    }
+
+    if (store.getState().gameStatus.currentStatus === 'stage_again') {
       this.setQuestionsNextLevel();
       store.dispatch(gamePlay());
     }
@@ -742,11 +778,11 @@ class Game extends Component {
           open={this.state.openModalWindow}
           onClose={this.handleCloseModalWindow}
           disableBackdropClick={true}>
-          <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
+          <DialogTitle id="max-width-dialog-title">
+            Правильный ответ:
+          </DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Правильный ответ : {this.state.correctAnswer}
-            </DialogContentText>
+            <DialogContentText>{this.state.correctAnswer}</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleInputChange} color="primary">

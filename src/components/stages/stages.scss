@@ -8,6 +8,14 @@ $color-text: #b1d6df;
   background: $color-background;
 
   h3 {
+    margin: 0 30px;
+
+    color: $color-text;
+  }
+
+  h6 {
+    margin: 0;
+
     text-align: center;
     color: $color-text;
   }

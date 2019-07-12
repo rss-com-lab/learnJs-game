@@ -15,7 +15,7 @@ class ProgressLine extends Component {
     }
 
     let coloredArray = this.props.colors.map(item => {
-      return item ? '#ffffff' : '#f4ea77';
+      return item ? '#f4ea77' : '#ffffff';
     });
 
     function color(i) {
