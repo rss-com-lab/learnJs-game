@@ -144,7 +144,7 @@ class Game extends Component {
     });
 
     fetch(
-      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all-1.json',
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all-2.json',
     )
       .then(results => {
         return results.json();

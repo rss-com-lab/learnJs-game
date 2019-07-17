@@ -274,6 +274,25 @@
         "theme": "Типы данных"
       },
       {
+        "questionTitle": "Что выведет в консоль?",
+        "questionDescription": [
+          "const x = null || 0 || {name: false};",
+          "console.log(x);"
+        ],
+        "answers": [
+          "0",
+          "undefined",
+          "null",
+          "{name: false}"
+        ],
+        "correctAnswer": [
+          "{name: false}"
+        ],
+        "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Operators/%D0%9B%D0%BE%D0%B3%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5_%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B",
+        "complexity": "1",
+        "theme": "Типы данных"
+      },
+      {
         "questionTitle": "Что выведет  в консоль?",
         "questionDescription": [
           "var scope = \"global\";",
@@ -459,7 +478,7 @@
         "theme": "Функции"
       },
       {
-        "questionTitle": "Что выведет в консоль??",
+        "questionTitle": "Что выведет в консоль?",
         "questionDescription": [
           "var obj = {",
           "a: 1",
@@ -482,6 +501,272 @@
         "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Functions",
         "complexity": "3",
         "theme": "Функции"
+      },
+      {
+        "questionTitle": "С помощью какого метода объекта события можно отменить стандартное поведение браузера?",
+        "questionDescription": [],
+        "answers": [
+          "cancelEvents()",
+          "preventEvent()",
+          "preventDefault()",
+          "stopPropagation()"
+        ],
+        "correctAnswer": [
+          "preventDefault()"
+        ],
+        "explanation": "https://learn.javascript.ru/default-browser-action",
+        "complexity": "1",
+        "theme": "События"
+      },
+      {
+        "questionTitle": "Какой будет результат выполнения?",
+        "questionDescription": [
+          "function Car(color) {",
+          "this.color = color;",
+          "}",
+          "var lada = new Car(\"Black\");",
+          "Car.prototype.currentGear = 1;",
+          "console.log(++lada.currentGear);",
+          "console.log(Car.prototype.currentGear);"
+        ],
+        "answers": [
+          "1, 2",
+          "2, 1",
+          "1, 1",
+          "2, 2"
+        ],
+        "correctAnswer": [
+          "2, 1"
+        ],
+        "explanation": "https://hackernoon.com/prototypes-in-javascript-5bba2990e04b",
+        "complexity": "2",
+        "theme": "Объекты"
+      },
+      {
+        "questionTitle": "В каком порядке выводятся значения в консоль?",
+        "questionDescription": [
+          "(function() {",
+          "console.log(1);",
+          "setTimeout(function(){console.log(2)}, 1000);",
+          "setTimeout(function(){console.log(3)}, 0);",
+          "console.log(4);",
+          "})();"
+        ],
+        "answers": [
+          "1, 2, 3, 4",
+          "1, 3, 2, 4",
+          "1, 4, 2, 3",
+          "1, 4, 3, 2"
+        ],
+        "correctAnswer": [
+          "1, 4, 3, 2"
+        ],
+        "explanation": "https://medium.com/front-end-weekly/javascript-event-loop-explained-4cd26af121d4",
+        "complexity": "3",
+        "theme": "События"
+      },
+      {
+        "questionTitle": "В чем особенность событий focus/blur?",
+        "questionDescription": [],
+        "answers": [
+          "у них нет объекта события",
+          "они не всплывают",
+          "можно назначить только один обработчик событий",
+          "нельзя отменить действия браузера по умолчанию"
+        ],
+        "correctAnswer": [
+          "они не всплывают"
+        ],
+        "explanation": "https://learn.javascript.ru/focus-blur",
+        "complexity": "2",
+        "theme": "События"
+      },
+      {
+        "questionTitle": "В какой момент времени определяется значение this для метода?",
+        "questionDescription": [],
+        "answers": [
+          "при создании объекта",
+          "при каждом вызове метода",
+          "в момент первого вызова метода",
+          "при создании метода"
+        ],
+        "correctAnswer": [
+          "при каждом вызове метода"
+        ],
+        "explanation": "https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Operators/this",
+        "complexity": "2",
+        "theme": "Объекты"
+      },
+      {
+        "questionTitle": "В каком порядке выведутся значения в консоль?",
+        "questionDescription": [
+          "(function() {",
+          "console.log(1);",
+          "setTimeout(() => console.log(2), 1000);",
+          "setTimeout(() => console.log(3), 0);",
+          "Promise.resolve(true).then(() => console.log(4));",
+          "console.log(5);",
+          "})();"
+        ],
+        "answers": [
+          "1, 2, 3, 4, 5",
+          "1, 5, 3, 2, 4",
+          "1, 3, 5, 2, 4",
+          "1, 5, 4, 3, 2"
+        ],
+        "correctAnswer": [
+          "1, 5, 4, 3, 2"
+        ],
+        "explanation": "https://blog.bitsrc.io/understanding-asynchronous-javascript-the-event-loop-74cd408419ff",
+        "complexity": "3",
+        "theme": "События"
+      },
+      {
+        "questionTitle": "В каком порядке выведутся значения в консоль?",
+        "questionDescription": [
+          "let promise = new Promise((resolve, reject) => {",
+          "console.log(1);",
+          "resolve(2);",
+          "});",
+          "promise.then(res => console.log(res));",
+          "console.log(3);"
+        ],
+        "answers": [
+          "1, 2, 3",
+          "3, 1, 2",
+          "1, 3, 2",
+          "3, 2, 1"
+        ],
+        "correctAnswer": [
+          "1, 3, 2"
+        ],
+        "explanation": "https://levelup.gitconnected.com/javascript-and-asynchronous-magic-bee537edc2da",
+        "complexity": "3",
+        "theme": "События"
+      },
+      {
+        "questionTitle": "Какой будет результат выполнения?",
+        "questionDescription": [
+          "function test() {",
+          "console.log(a);",
+          "console.log(foo());",
+          "var a = 1;",
+          "function foo() {",
+          "return 2;",
+          "}",
+          "}",
+          "test();"
+        ],
+        "answers": [
+          "undefined, undefined",
+          "undefined, 2",
+          "1, 2",
+          "undefined, function foo()"
+        ],
+        "correctAnswer": [
+          "undefined, function foo()"
+        ],
+        "explanation": "https://dev.to/ddhogan/scope-and-hoisting-of-variables-functions-and-this-in-javascript-5176",
+        "complexity": "2",
+        "theme": "Всплытие"
+      },
+      {
+        "questionTitle": "Какой будет результат выполнения?",
+        "questionDescription": [
+          "function doSomething() {",
+          "console.log(bar);",
+          "console.log(foo);",
+          "var bar = 1;",
+          "let foo = 2;",
+          "}"
+        ],
+        "answers": [
+          "undefined, undefined",
+          "undefined,  ReferenceError",
+          "1, undefined",
+          "1, 2"
+        ],
+        "correctAnswer": [
+          "undefined,  ReferenceError"
+        ],
+        "explanation": "https://dev.to/ddhogan/scope-and-hoisting-of-variables-functions-and-this-in-javascript-5176",
+        "complexity": "2",
+        "theme": "Всплытие"
+      },
+      {
+        "questionTitle": "Какой будет результат фызова функции?",
+        "questionDescription": [
+          "function varTest() {",
+          "var x = 1;",
+          "if (true) {",
+          "var x = 2;",
+          "console.log(x);",
+          "}",
+          "console.log(x);",
+          "}"
+        ],
+        "answers": [
+          "2, undefined",
+          "2, 1",
+          "2, 2",
+          "SyntaxError"
+        ],
+        "correctAnswer": [
+          "2, 2"
+        ],
+        "explanation": "https://dev.to/ddhogan/scope-and-hoisting-of-variables-functions-and-this-in-javascript-5176",
+        "complexity": "2",
+        "theme": "Всплытие"
+      },
+      {
+        "questionTitle": "Какой будет результат фызова функции?",
+        "questionDescription": [
+          "function letTest() {",
+          "let x = 1;",
+          "if (true) {",
+          "let x = 2;",
+          "console.log(x);",
+          "}",
+          "console.log(x);",
+          "}"
+        ],
+        "answers": [
+          "2, undefined",
+          "2, 1",
+          "2, 2",
+          "SyntaxError"
+        ],
+        "correctAnswer": [
+          "2, 1"
+        ],
+        "explanation": "https://dev.to/ddhogan/scope-and-hoisting-of-variables-functions-and-this-in-javascript-5176",
+        "complexity": "2",
+        "theme": "Всплытие"
+      },
+      {
+        "questionTitle": "Какой будет результат фызова функции?",
+        "questionDescription": [
+          "function test() {",
+          "let x = 1;",
+          "if (true) {",
+          "var x = 2;",
+          "console.log(x);",
+          "}",
+          "console.log(x);",
+          "}"
+        ],
+        "answers": [
+          "2, undefined",
+          "2, 1",
+          "2, 2",
+          "SyntaxError"
+        ],
+        "correctAnswer": [
+          "SyntaxError"
+        ],
+        "explanation": "https://dev.to/ddhogan/scope-and-hoisting-of-variables-functions-and-this-in-javascript-5176",
+        "complexity": "2",
+        "theme": "Всплытие"
       }
     ]
   }
