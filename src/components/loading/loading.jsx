@@ -5,6 +5,7 @@ import '../../style/app.css';
 import './loading.css';
 
 import {setLevelsConfig} from '../../ducks/levels';
+import {logInUser} from '../../ducks/users';
 import store from '../../store/store';
 
 class Loading extends Component {
@@ -16,6 +17,10 @@ class Loading extends Component {
 
   componentDidMount() {
     setTimeout(this.finishLoading, 5000);
+    // eslint-disable-next-line no-unused-expressions
+    localStorage.getItem('user')
+      ? store.dispatch(logInUser(JSON.parse(localStorage.getItem('user'))))
+      : localStorage.setItem('user', '');
 
     fetch('https://rawgit.com/ivan-kolesen/hello-world/master/levels.json')
       .then(result => result.json())
