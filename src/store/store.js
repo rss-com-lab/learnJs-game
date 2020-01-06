@@ -1,5 +1,5 @@
-import { createStore } from "redux";
-import reducer from "../ducks/index";
+import {createStore} from 'redux';
+import reducer from '../ducks/index';
 
 let store = createStore(reducer);
 

@@ -20,16 +20,25 @@ import {
 } from '../ducks/gamestatus';
 
 import ProgressLine from './progress-line';
-import Keyboard from './keyboard';
-
 import beepSound from '../audio/Button-click-sound.mp3';
 import correctAnswerSound from '../audio/Correct-answer-sound.mp3';
 import wrongAnswerSound from '../audio/Wrong-answer-sound.mp3';
 
 import {generateQuestionsList} from '../api/questions';
 import {convertSecondsToTime} from '../api/convertSecondsToTime';
-import '../style/app.css';
 import {logInUser} from '../ducks/users';
+
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {vs} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+
+import '../style/app.css';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const mapStateToProps = state => {
   return {
@@ -39,15 +48,22 @@ const mapStateToProps = state => {
   };
 };
 
-let figures = ['star', 'circle', 'flower'];
+const figures = ['star', 'circle', 'flower'];
+const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
+const colors = {
+  default: 'rgb(94, 154, 164)',
+  active: 'rgb(119, 185, 196)',
+  transparent: 'transparent',
+};
 
 class Game extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      active: false,
       user: store.getState().currentUser.user.name,
-      value: '',
+      value: null,
       submitted: false,
       remainingTime: 0,
       colors: [],
@@ -56,32 +72,54 @@ class Game extends Component {
       muted: false,
       stageCompleted: false,
       levelCompleted: false,
+      answerWrong: true,
+      openModalWindow: false,
+      keyboardUpdate: false,
     };
   }
 
+  handleOpenModalWindow = () => {
+    this.setState({openModalWindow: true});
+  };
+
+  handleCloseModalWindow = () => {
+    this.setState({openModalWindow: false});
+  };
+
   nextQuestion = () => {
-    this.setState(
-      {
-        question: this.questionsList[store.getState().progress.total].question,
-        response: this.questionsList[store.getState().progress.total]
-          .correctAnswer,
-        questionType: this.questionsList[store.getState().progress.total]
-          .questionType,
-        answers: this.questionsList[store.getState().progress.total].answers,
-        responseTime: this.questionsList[store.getState().progress.total]
-          .responseTime,
-        remainingTime:
-          this.questionsList[store.getState().progress.total].responseTime /
-          1000,
-      },
-      () => {
-        this.timeout = setTimeout(
-          this.handleInputChange,
-          this.state.responseTime,
-        );
-        this.countdown = setInterval(this.countRemainingTime, 1000);
-      },
-    );
+    if (this.questionsList.length !== 0) {
+      this.setState(
+        {
+          question: this.questionsList[store.getState().progress.total]
+            .question,
+          questionType: this.questionsList[store.getState().progress.total]
+            .questionType,
+          explanation: this.questionsList[store.getState().progress.total]
+            .explanation,
+          questionTitle: this.questionsList[store.getState().progress.total]
+            .questionTitle,
+          correctAnswer: this.questionsList[store.getState().progress.total]
+            .correctAnswer,
+          answers: this.questionsList[
+            store.getState().progress.total
+          ].hasOwnProperty('answers')
+            ? this.questionsList[store.getState().progress.total].answers
+            : null,
+          responseTime: this.questionsList[store.getState().progress.total]
+            .responseTime,
+          remainingTime:
+            this.questionsList[store.getState().progress.total].responseTime /
+              1000 || 300000,
+        },
+        () => {
+          this.timeout = setTimeout(
+            this.handleInputChange,
+            this.state.responseTime,
+          );
+          this.countdown = setInterval(this.countRemainingTime, 1000);
+        },
+      );
+    }
   };
 
   clearInputField = () => {
@@ -105,13 +143,14 @@ class Game extends Component {
         .questions.length,
     });
 
-    fetch('https://rawgit.com/ivan-kolesen/hello-world/master/config.json')
+    fetch(
+      'https://raw.githubusercontent.com/rss-com-lab/learnJs-game-data/master/questions-all-1.json',
+    )
       .then(results => {
         return results.json();
       })
       .then(data => {
         this.setState({
-          maxNumber: data.complexity[store.getState().complexity].maxNumber,
           config: data,
         });
         this.setQuestionsNextLevel();
@@ -134,7 +173,6 @@ class Game extends Component {
   };
 
   failed = () => {
-    this.wrongAnswerSound.play();
     store.dispatch(testFailed());
     store.dispatch(gamePlay());
     this.setState({
@@ -173,14 +211,41 @@ class Game extends Component {
   };
 
   handleClick = e => {
-    if (
-      this.node.contains(e.target) &&
-      e.target.id !== 'clear' &&
-      e.target.id !== 'ok'
-    ) {
+    if (this.state.questionType === types.open) {
       this.setState({
-        value: this.state.value + e.target.innerHTML,
+        value: e.target.value,
       });
+    }
+
+    if (this.state.questionType === types.close) {
+      this.setState({
+        value: e.target.innerText,
+      });
+      this.onSubmit();
+    }
+
+    if (this.state.questionType === types.closeMultiple) {
+      if (e.target.className !== 'ok-cell--multiple') {
+        let text = e.target.innerText;
+
+        this.setState(prevState => {
+          return {
+            value:
+              prevState.value.indexOf(text) !== -1
+                ? this.state.value
+                    .split(',,,')
+                    .filter(value => {
+                      return value !== text;
+                    })
+                    .join(',,,')
+                : this.state.value + text + ',,,',
+          };
+        });
+        e.target.style.backgroundColor === colors.transparent ||
+        e.target.style.backgroundColor === colors.default
+          ? (e.target.style.backgroundColor = colors.active)
+          : (e.target.style.backgroundColor = colors.transparent);
+      }
     }
     this.beepSound.play();
   };
@@ -196,6 +261,7 @@ class Game extends Component {
       this.setState(
         {
           submitted: true,
+          keyboardUpdate: true,
         },
         function() {
           this.handleInputChange();
@@ -204,15 +270,15 @@ class Game extends Component {
     }
   };
 
-  setQuestionsNextLevel = data => {
+  setQuestionsNextLevel = () => {
     this.clearInputField();
     store.dispatch(testNextLevel());
     this.questionsList = generateQuestionsList(
       store.getState().complexity,
+      store.getState().theme,
       this.state.config,
       this.state.numberOfQuestions,
     );
-
     this.nextQuestion();
   };
 
@@ -244,12 +310,34 @@ class Game extends Component {
     clearInterval(this.countdown);
     this.restartCountdown();
 
+    if (this.state.questionType === types.closeMultiple) {
+      this.setState({
+        keyboardUpdate: false,
+      });
+    }
+
     if (this.isAnswerCorrect()) {
       this.passed();
     } else {
-      this.failed();
+      if (this.state.answerWrong) {
+        this.wrongAnswerSound.play();
+        this.handleOpenModalWindow();
+        this.setState((state, props) => {
+          return {
+            answerWrong: false,
+          };
+        });
+        return false;
+      } else {
+        this.handleCloseModalWindow();
+        this.failed();
+        this.setState((state, props) => {
+          return {
+            answerWrong: true,
+          };
+        });
+      }
     }
-
     if (this.isLastQuestion()) {
       this.recordScoresHistory();
       setTimeout(() => {
@@ -295,10 +383,39 @@ class Game extends Component {
   };
 
   isAnswerCorrect = () => {
-    return (
-      this.state.submitted &&
-      parseInt(this.state.value, 10) === this.state.response
-    );
+    if (this.state.submitted) {
+      if (this.state.questionType === types.open) {
+        return (
+          this.state.value
+            .trim()
+            .toLowerCase()
+            .replace(/'/g, '"')
+            .replace(/\s/g, '') ===
+          this.state.correctAnswer
+            .trim()
+            .toLowerCase()
+            .replace(/'/g, '"')
+            .replace(/\s/g, '')
+        );
+      }
+
+      if (this.state.questionType === types.close) {
+        return this.state.value === this.state.correctAnswer.toString();
+      }
+
+      if (this.state.questionType === types.closeMultiple) {
+        if (Array.isArray(this.state.correctAnswer)) {
+          return this.state.correctAnswer.every(answer => {
+            return (
+              this.state.value.indexOf(answer) !== -1 &&
+              this.state.value.split(',,,').length - 1 ===
+                this.state.correctAnswer.length
+            );
+          });
+        }
+      }
+    }
+    return false;
   };
 
   isLastQuestion = () => {
@@ -392,25 +509,155 @@ class Game extends Component {
     });
   };
 
+  handleInput = event => {
+    this.setState({
+      value: event.target.value,
+    });
+  };
+
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.onSubmit();
+    }
+  };
+
+  keyboard = questionType => {
+    switch (questionType) {
+      case types.open:
+        return (
+          <div className="keyboard-row">
+            <div
+              className="keyboard-cell clear-cell"
+              id="clear"
+              onClick={this.handleBackspace}
+              style={{width: '50vw'}}
+            />
+            <div
+              className="keyboard-cell ok-cell"
+              id="ok"
+              onClick={this.onSubmit}
+              style={{width: '50vw'}}>
+              OK
+            </div>
+          </div>
+        );
+      case types.close:
+        return (
+          <div
+            onClick={this.handleClick}
+            style={{
+              borderBottom: '3px solid #b1d4df',
+              backgroundColor: '#5e9aa4',
+            }}>
+            {this.state.answers.map((answer, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    textAlign: 'center',
+                    borderTop: '3px solid #b1d4df',
+                  }}>
+                  {answer}
+                </div>
+              );
+            })}
+          </div>
+        );
+      case types.closeMultiple:
+        return (
+          <div
+            onClick={this.handleClick}
+            style={{
+              borderBottom: '3px solid #b1d4df',
+              backgroundColor: colors.default,
+            }}>
+            {this.state.answers.map((answer, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    dataUpdate: `${this.state.keyboardUpdate}`,
+                    textAlign: 'center',
+                    borderTop: '3px solid #b1d4df',
+                    backgroundColor: this.state.keyboardUpdate
+                      ? colors.transparent
+                      : colors.default,
+                  }}>
+                  {answer}
+                </div>
+              );
+            })}
+          </div>
+        );
+      default:
+        return <div />;
+    }
+  };
+
+  panel = questionType => {
+    switch (questionType) {
+      case types.open:
+        return (
+          <div className="answer-field">
+            <div className="answer-text">Ответ: </div>
+            <div className="answer-input">
+              <input
+                type="text"
+                onKeyPress={this.handleKeyPress}
+                //onChange={this.handleInput}
+                onChange={this.handleClick}
+                placeholder="your answer..."
+                autoFocus
+                value={this.state.value}
+                style={{height: '100%', outline: 'none'}}
+              />
+            </div>
+          </div>
+        );
+      case types.close:
+        return null;
+      case types.closeMultiple:
+        return (
+          <div
+            className="ok-cell--multiple"
+            onClick={this.onSubmit}
+            style={{
+              height: '90%',
+              width: '50%',
+              backgroundColor: '#e6b3ff',
+              textAlign: 'center',
+            }}>
+            OK
+          </div>
+        );
+      default:
+        return <div />;
+    }
+  };
+
   render() {
     let playStatus = store.getState().gameStatus.playStatus;
     let currentStatus = store.getState().gameStatus.currentStatus;
-    let zeroCellDisplay =
-      this.state.questionType === 'selective' ? 'none' : 'block';
-    let inputCellsWidth =
-      this.state.questionType === 'selective' ? '50%' : '33%';
     let muteBtnStyle = this.state.muted ? 'mute-btn' : 'unmute-btn';
-
     if (this.state.levelCompleted) {
       return <Redirect push to="/shelve" />;
     }
-
     if (this.state.stageCompleted) {
       return <Redirect push to="/stages" />;
     }
 
+    const questionDescription = this.state.question ? (
+      <SyntaxHighlighter language="javascript" style={vs}>
+        {this.state.question.reduce((sum, item) => sum + `${item}\n`, '')}
+      </SyntaxHighlighter>
+    ) : (
+      this.state.question
+    );
+
     return (
-      <div className="game-wrapper game-component">
+      <div
+        className="game-wrapper game-component"
+        onKeyPress={this.handleKeyPress}>
         <div className="header">
           <ProgressLine
             questions={this.state.numberOfQuestions}
@@ -425,55 +672,39 @@ class Game extends Component {
           }}>
           <div className="question-answer-wrapper">
             <div className="question-field-wrapper">
-              <div className="question-title">Задача</div>
-              <div className="question-text">{this.state.question}</div>
+              <div className="question-title">{this.state.questionTitle}</div>
+              <div className="question-text">{questionDescription}</div>
+            </div>
+            <div>
+              Additional Info:
+              <a
+                href={this.state.explanation}
+                target="_blank"
+                style={{textAlign: 'start'}}>
+                link
+              </a>
             </div>
             <div className="answer-field-wrapper">
               <div className="answer-time-count">
                 {convertSecondsToTime(this.state.remainingTime)}
               </div>
               <div className={muteBtnStyle} onClick={this.muteSounds} />
-              <div className="answer-field">
-                <div className="answer-text">Ответ: </div>
-                <div className="answer-input">{this.state.value}</div>
-              </div>
+              {this.panel(this.state.questionType)}
             </div>
           </div>
-          <div
-            className="keyboard"
-            ref={node => {
-              this.node = node;
-            }}
-            onClick={this.handleClick}>
-            <Keyboard
-              questionType={this.state.questionType}
-              answers={this.state.answers}
-            />
-            <div className="keyboard-row">
-              <div
-                className="keyboard-cell clear-cell"
-                id="clear"
-                onClick={this.handleBackspace}
-                style={{width: inputCellsWidth}}
-              />
-              <div className="keyboard-cell" style={{display: zeroCellDisplay}}>
-                0
-              </div>
-              <div
-                className="keyboard-cell ok-cell"
-                id="ok"
-                onClick={this.onSubmit}
-                style={{width: inputCellsWidth}}>
-                OK
-              </div>
-            </div>
-            <audio
-              ref={audio => {
-                this.beepSound = audio;
-              }}>
-              <source src={beepSound} />
-            </audio>
-          </div>
+        </div>
+        <div
+          className="keyboard"
+          ref={node => {
+            this.node = node;
+          }}>
+          {this.keyboard(this.state.questionType)}
+          <audio
+            ref={audio => {
+              this.beepSound = audio;
+            }}>
+            <source src={beepSound} />
+          </audio>
         </div>
         <div
           className="game-wrapper-overlay"
@@ -507,6 +738,22 @@ class Game extends Component {
               : 'hidden')
           }
         />
+        <Dialog
+          open={this.state.openModalWindow}
+          onClose={this.handleCloseModalWindow}
+          disableBackdropClick={true}>
+          <DialogTitle id="max-width-dialog-title">Неправильно!</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Правильный ответ : {this.state.correctAnswer}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleInputChange} color="primary">
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
