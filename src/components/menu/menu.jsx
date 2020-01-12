@@ -27,6 +27,8 @@ class Menu extends Component {
 
   linkClass = () => (this.isLoggedIn() ? 'available' : 'not-available');
 
+  registerClass = () => (this.isLoggedIn() ? 'not-available' : 'available');
+
   playGameClass = () =>
     this.isLoggedIn() && !this.isGameFinished() ? 'available' : 'not-available';
 
@@ -55,7 +57,7 @@ class Menu extends Component {
               </Link>
             </li>
             <li>
-              <Link className="available" to="/register">
+              <Link className={this.registerClass()} to="/register">
                 Регистрация
               </Link>
             </li>

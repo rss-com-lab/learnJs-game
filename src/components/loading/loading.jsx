@@ -29,7 +29,6 @@ class Loading extends Component {
 
   render() {
     if (this.state.isLoaded) {
-      //window.sessionStorage.setItem('loaded', true);
       return <Redirect to="/menu" />;
     }
 
