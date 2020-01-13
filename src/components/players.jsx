@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
-import '../style/app.css';
+import '../style/app.scss';
 import {logInUser} from '../ducks/users';
 import store from '../store/store';
 

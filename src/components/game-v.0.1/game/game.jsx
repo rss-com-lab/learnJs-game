@@ -11,7 +11,7 @@ import {
 
 import {} from '@fortawesome/fontawesome-free-solid';
 
-import './game.css';
+import './game.scss';
 
 class Game extends Component {
   render() {

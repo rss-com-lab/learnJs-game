@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import './Buttons.css';
+import './Buttons.scss';
 
 export const CloseBtn = () => {
   return (

@@ -2,7 +2,7 @@
 
 // Actions
 export const COMPLEXITY_SELECTED =
-  "math-game-web/complexity/COMPLEXITY_SELECTED";
+  'math-game-web/complexity/COMPLEXITY_SELECTED';
 
 // Reducer
 export default function complexity(state = 2, action) {
@@ -18,6 +18,6 @@ export default function complexity(state = 2, action) {
 export function complexitySelected(text) {
   return {
     type: COMPLEXITY_SELECTED,
-    level: text
+    level: text,
   };
 }

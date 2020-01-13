@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import '../style/app.css';
+import '../style/app.scss';
 
 class Figure extends Component {
   selectFigure = () => {
@@ -9,6 +9,7 @@ class Figure extends Component {
         className="star"
         points="100,10 40,198 190,78 10,78 160,198"
         fill="url(#gradient)"
+        key="polygon_1"
       />,
       <circle
         className="circle"
@@ -16,11 +17,13 @@ class Figure extends Component {
         cy="100"
         r="100"
         fill="url(#gradient)"
+        key="circle"
       />,
       <polygon
         className="triangle"
         points="100,0 200,200 0,200"
         fill="url(#gradient)"
+        key="polygon_2"
       />,
     ];
 

@@ -14,7 +14,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 
-import '../style/app.css';
+import '../style/app.scss';
 
 const types = {open: 'open', close: 'close', closeMultiple: 'closeMultiple'};
 
@@ -83,7 +83,7 @@ class Settings extends Component {
     this.unsubscribe();
   };
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.createOptions();
   };
  

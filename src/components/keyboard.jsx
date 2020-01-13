@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import '../style/app.css';
+import '../style/app.scss';
 
 class Keyboard extends Component {
   render() {

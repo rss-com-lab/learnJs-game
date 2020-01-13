@@ -3,8 +3,8 @@ import {Link} from 'react-router-dom';
 
 import store from '../../store/store';
 
-import '../../style/app.css';
-import './shelve.css';
+import '../../style/app.scss';
+import './shelve.scss';
 
 const PI = 3.14;
 const radius = 35;

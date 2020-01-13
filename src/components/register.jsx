@@ -7,7 +7,7 @@ import store from '../store/store';
 import {logInUser} from '../ducks/users';
 import {complexitySelected} from '../ducks/complexity';
 
-import '../style/app.css';
+import '../style/app.scss';
 
 class Register extends Component {
   constructor(props) {
