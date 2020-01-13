@@ -748,8 +748,8 @@ class Game extends Component {
           <DialogContent>
             <DialogContentText>
               {Array.isArray(this.state.correctAnswer)
-                ? this.state.correctAnswer.map(answer => {
-                    return <div>{answer}</div>;
+                ? this.state.correctAnswer.map((answer, index) => {
+                    return <div key={'answer_' + index}>{answer}</div>;
                   })
                 : this.state.correctAnswer}
             </DialogContentText>

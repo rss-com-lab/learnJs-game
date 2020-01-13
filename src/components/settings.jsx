@@ -83,7 +83,7 @@ class Settings extends Component {
     this.unsubscribe();
   };
 
-  componentWillMount = () => {
+  UNSAFE_componentWillMount = () => {
     this.createOptions();
   };
  
