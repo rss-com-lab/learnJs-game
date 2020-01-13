@@ -236,11 +236,7 @@ body {
   height: calc(5vh + 5vw);
   height: 80%;
   margin: 0 3vw;
-  overflow: hidden;//line-height: 120%;  font-size: calc(2.5vh + 2.5vh);  text-align: center;
-
-  color: #000000;
-
-  border: calc(0.3vh + 0.3vw) solid #b1d4df;
+  overflow: hidden;//line-height: 120%;  font-size: calc(2.5vh + 2.5vh);  text-align: center;  color: #000000;  border: calc(0.3vh + 0.3vw) solid #b1d4df;
   border-radius: 3vw;
 }
 
@@ -537,6 +533,7 @@ body {
 .step-one-confirm-btn {
   display: block;
   -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   width: 16vw;
   height: 16vw;
   padding: 0;
@@ -558,10 +555,6 @@ body {
   font-size: calc(2vh + 2vw);
   text-align: center;
   color: #d49266;
-}
-
-.step-two {
-  //width: 80%;
 }
 
 .complexity-btn-image {
@@ -608,6 +601,7 @@ body {
 .step-two-confirm-btn {
   display: block;
   -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   width: 16vw;
   height: 16vw;
 

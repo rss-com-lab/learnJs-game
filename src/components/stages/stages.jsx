@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import store from '../../store/store';
 
-import '../../style/app.css';
-import './stages.css';
+import '../../style/app.scss';
+import './stages.scss';
 
 class Stages extends Component {
   getStageNumber = () => {

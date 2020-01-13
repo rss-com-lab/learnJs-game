@@ -680,6 +680,7 @@ class Game extends Component {
               <a
                 href={this.state.explanation}
                 target="_blank"
+                rel="noopener noreferrer"
                 style={{textAlign: 'start'}}>
                 link
               </a>
@@ -748,8 +749,8 @@ class Game extends Component {
           <DialogContent>
             <DialogContentText>
               {Array.isArray(this.state.correctAnswer)
-                ? this.state.correctAnswer.map(answer => {
-                    return <div>{answer}</div>;
+                ? this.state.correctAnswer.map((answer, index) => {
+                    return <div key={'answer_' + index}>{answer}</div>;
                   })
                 : this.state.correctAnswer}
             </DialogContentText>

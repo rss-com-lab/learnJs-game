@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import '../style/app.css';
+import '../style/app.scss';
 import {Route, Switch} from 'react-router-dom';
 
 import Players from './players';

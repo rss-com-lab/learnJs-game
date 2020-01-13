@@ -1,9 +1,24 @@
 {
-  "extends": "react-app",
-  "plugins": [
-    "prettier"
-  ],
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "pragma": "React", // Pragma to use, default to "React"
+      "version": "detect", // React version. "detect" automatically picks the version you have installed.
+      "flowVersion": "0.53" // Flow version
+    }
+  },
+  "parser": "babel-eslint",
+  "extends": ["plugin:react/recommended"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": ["error", "fb"]
+    "prettier/prettier": ["error", "fb"],
+    "no-console": "off",
+    "react/prop-types": 0
   }
 }

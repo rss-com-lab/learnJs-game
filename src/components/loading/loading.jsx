@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Redirect} from 'react-router';
 
-import '../../style/app.css';
-import './loading.css';
+import '../../style/app.scss';
+import './loading.scss';
 
 import {setLevelsConfig} from '../../ducks/levels';
 import {logInUser} from '../../ducks/users';

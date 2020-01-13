@@ -4,8 +4,8 @@ import {Link} from 'react-router-dom';
 import store from '../../store/store';
 import {logOutUser} from '../../ducks/users';
 
-import '../../style/app.css';
-import './menu.css';
+import '../../style/app.scss';
+import './menu.scss';
 
 class Menu extends Component {
   isLoggedIn = () => store.getState().currentUser.status;

@@ -1,7 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
-import './ProgressLine.css';
+import './ProgressLine.scss';
 
 const ProgressLine = () => {
   return (
