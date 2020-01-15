@@ -2,7 +2,7 @@ $color-background: #ecf7fd;
 $color-text: #b1d6df;
 $color-spinner-ring: #c3e8f1;
 $screen-height: 100vh;
-$spinner-height: $screen-height*0.33;
+$spinner-height: $screen-height*0.23;
 
 .loading-screen {
   width: 100%;
@@ -23,7 +23,9 @@ $spinner-height: $screen-height*0.33;
   align-items: center;
   box-sizing: border-box;
   width: $spinner-height;
+  min-width: 250px;
   height: $spinner-height;
+  min-height: 250px;
   margin: $spinner-height auto 0;
 
   background: #c3e8f1;

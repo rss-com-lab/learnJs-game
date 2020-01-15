@@ -105,8 +105,9 @@ body {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
-  padding: 4vh 0;
+  padding: 0;
 
   text-align: right;
 
@@ -152,11 +153,11 @@ body {
   align-items: center;
   width: 95%;
   height: 100%;
-  margin-top: 5vh;
+  margin-top: 15px;
 }
 
 .question-title {
-  margin-bottom: 1.5vh;
+  margin-bottom: 5px;
 
   font-weight: bold;
   font-size: calc(2.3vh + 2.3vw);
@@ -164,19 +165,31 @@ body {
 }
 
 .question-text {
+  display: flex;
+  align-items: center;
   width: 100%;
+  height: 100%;
   padding: 0 10px;
+  overflow: hidden;
 
+  font-size: 1rem;
   color: #000000;
+  pre {
+    height: 100%;
+    margin: 0;
+  }
 }
 
 .answer-field-wrapper {
+  position: relative;
+
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 10vh;
+  max-height: 50px;
 
   border-top: calc(0.3vh + 0.3vw) solid #b1d4df;
 }
@@ -222,30 +235,44 @@ body {
 .answer-field {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  width: 100%;
   height: 100%;
 }
 
 .answer-text {
+  padding-right: 10px;
+
   color: #000000;
 }
 
 .answer-input {
   width: calc(7vh + 7vw);
-  height: calc(5vh + 5vw);
-  height: 80%;
-  margin: 0 3vw;
-  overflow: hidden;//line-height: 120%;  font-size: calc(2.5vh + 2.5vh);  text-align: center;
+  max-width: 150px;
+  height: 100%;
+  overflow: hidden;
 
   color: #000000;
 
   border: calc(0.3vh + 0.3vw) solid #b1d4df;
-  border-radius: 3vw;
+
+  input {
+    margin-top: -5px;
+    padding: 0 15px;
+
+    font-size: 20px;
+  }
 }
 
 .keyboard {
   width: 100%;
+
+  font-size: 20px;
+  line-height: 22px;
+  color: #ffffff;
+
+  cursor: pointer;
 }
 
 .keyboard-row {
@@ -320,9 +347,11 @@ body {
   margin: 0 0 1rem 0.5rem;
 
   font-size: calc(2vh + 2vw);
+
   &-description {
     margin-bottom: 0.5rem;
   }
+
   &__topic-select {
     width: 100%;
   }
@@ -384,13 +413,14 @@ body {
 .progress-line {
   display: flex;
   justify-content: center;
+  align-items: center;
   height: 10vh;
+  max-height: 70px;
   margin-left: 4vw;
 }
 
 .progress-line-item {
   position: relative;
-  top: 2vh;
 
   width: calc(4vh + 4vw);
   height: calc(4vh + 4vw);
@@ -718,10 +748,6 @@ body {
     font-size: 1rem;
   }
 
-  .question-text {
-    font-size: 1rem;
-  }
-
   .answer-time-count {
     bottom: 0;
     left: 0;
@@ -766,6 +792,32 @@ body {
     bottom: 10vh;
 
     width: 300px;
+  }
+
+  .ok-cell--multiple {
+    width: 40%;
+    max-width: 45px;
+    height: 90%;
+    max-height: 45px;
+    margin: 0 auto;
+
+    font-weight: 800;
+    line-height: 45px;
+    text-align: center;
+    color: #ffffff;
+
+    background-color: #41f315;
+            border-radius: 50%;
+    -webkit-transform: translateX(-100%);
+        -ms-transform: translateX(-100%);
+            transform: translateX(-100%);
+
+    -webkit-border-radius: 50%;
+       -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+         -o-border-radius: 50%;
+       -moz-transform: translateX(-100%);
+         -o-transform: translateX(-100%);
   }
 
   .step-two-text {
