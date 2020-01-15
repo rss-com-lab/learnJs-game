@@ -555,6 +555,7 @@ class Game extends Component {
                   key={index}
                   style={{
                     textAlign: 'center',
+                    padding: '5px',
                     borderTop: '3px solid #b1d4df',
                   }}>
                   {answer}
@@ -577,6 +578,7 @@ class Game extends Component {
                   key={index}
                   style={{
                     dataUpdate: `${this.state.keyboardUpdate}`,
+                    padding: '5px',
                     textAlign: 'center',
                     borderTop: '3px solid #b1d4df',
                     backgroundColor: this.state.keyboardUpdate
@@ -618,15 +620,7 @@ class Game extends Component {
         return null;
       case types.closeMultiple:
         return (
-          <div
-            className="ok-cell--multiple"
-            onClick={this.onSubmit}
-            style={{
-              height: '90%',
-              width: '50%',
-              backgroundColor: '#e6b3ff',
-              textAlign: 'center',
-            }}>
+          <div className="ok-cell--multiple" onClick={this.onSubmit}>
             OK
           </div>
         );
